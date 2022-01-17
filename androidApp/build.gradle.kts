@@ -10,13 +10,13 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = ConfigData.compileSdkVersion
     defaultConfig {
         applicationId = "com.eliasasskali.tfg.android"
-        minSdk = 21
-        targetSdk = 31
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
+        versionCode = ConfigData.versionCode
+        versionName = ConfigData.versionName
     }
     buildTypes {
         getByName("release") {
@@ -27,17 +27,20 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("com.google.android.material:material:1.5.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
 
-    // Import firebase BoM (chooses firebase versions automatically)
-    implementation(platform("com.google.firebase:firebase-bom:29.0.3"))
+    with(Dependencies.Android) {
+        implementation(material)
+        implementation(appCompat)
+        implementation(constraintLayout)
+    }
 
-    // Dependency for Firebase SDK for Google Analytics, no need to specify version (BoM)
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    // Firebase Crashlytics dependency
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    // Firebase Authentication dependency
-    implementation("com.google.firebase:firebase-auth-ktx")
+    with(Dependencies.Firebase) {
+        // Import firebase BoM (chooses firebase versions automatically)
+        implementation(platform(firebaseBoM))
+
+        implementation(analytics)
+        implementation(crashlytics)
+        implementation(auth)
+    }
+
 }
