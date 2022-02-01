@@ -7,6 +7,10 @@ plugins {
 
     // Crashlytics plugin
     id("com.google.firebase.crashlytics")
+
+    //Secrets to store api keys in local.properties
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
 }
 
 android {
@@ -23,6 +27,14 @@ android {
             isMinifyEnabled = false
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose
+    }
 }
 
 dependencies {
@@ -32,6 +44,26 @@ dependencies {
         implementation(material)
         implementation(appCompat)
         implementation(constraintLayout)
+        implementation(hilt)
+        implementation(hiltNavigation)
+        implementation(maps)
+        implementation(mapsKtx)
+        constraints {
+            // Volley is a transitive dependency of maps
+            implementation(volley) {
+                because("Only volley 1.2.0 or newer are available on maven.google.com")
+            }
+        }
+
+    }
+
+    with(Dependencies.Compose) {
+        implementation(ui)
+        implementation(uiGraphics)
+        implementation(uiTooling)
+        implementation(foundationLayout)
+        implementation(materialCompose)
+        implementation(navigation)
     }
 
     with(Dependencies.Firebase) {
@@ -41,6 +73,7 @@ dependencies {
         implementation(analytics)
         implementation(crashlytics)
         implementation(auth)
+        implementation(authUi)
+        implementation(firestore)
     }
-
 }

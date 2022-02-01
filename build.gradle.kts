@@ -9,6 +9,7 @@ buildscript {
         classpath(BuildPlugins.android)
         classpath(BuildPlugins.googleServices)
         classpath(BuildPlugins.crashlytics)
+        classpath(Dependencies.Android.secrets)
     }
 }
 
