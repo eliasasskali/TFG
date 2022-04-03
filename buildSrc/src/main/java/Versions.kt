@@ -20,6 +20,7 @@ object Versions {
     // Compose
     const val compose = "1.2.0-alpha01"
     const val navCompose = "2.4.0-rc01"
+    const val accompanistPager = "0.24.4-alpha"
 
     // Firebase
     const val firebaseBoM = "29.0.3"

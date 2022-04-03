@@ -19,5 +19,19 @@
             android:name=".ui.features.loginSignup.MainActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".ui.features.completeProfile.CompleteProfileActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ui.features.clubs.HomeActivity"
+            android:exported="true">
+        </activity>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}"/>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.LOCATION"/>
 </manifest> 
