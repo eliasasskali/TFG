@@ -8,6 +8,7 @@ import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileV
 import com.eliasasskali.tfg.android.ui.features.completeProfile.MapViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
 import com.eliasasskali.tfg.android.ui.features.splash.SplashViewModel
+import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
@@ -21,6 +22,8 @@ val appModule = module {
     single { ErrorHandler(get()) }
     viewModel { LoginSignupViewModel(get(), get(), get()) }
     viewModel { CompleteProfileViewModel() }
+    viewModel { ClubsViewModel(get(), get(), get()) }
+    //viewModel { ClubDetailViewModel(get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get()) }
 }

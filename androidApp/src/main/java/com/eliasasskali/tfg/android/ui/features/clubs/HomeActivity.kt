@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.eliasasskali.tfg.android.navigation.HomeNavigation
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 
 class HomeActivity: AppCompatActivity() {
@@ -19,7 +18,8 @@ class HomeActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                Text(text = "Home", modifier = Modifier.fillMaxSize())
+                val navController = rememberNavController()
+                HomeNavigation(navController)
             }
         }
     }
