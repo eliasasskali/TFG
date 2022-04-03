@@ -4,15 +4,12 @@ import android.content.Context
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
-import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
-import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.MapViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
 import com.eliasasskali.tfg.android.ui.features.splash.SplashViewModel
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -25,8 +22,6 @@ val appModule = module {
     viewModel { LoginSignupViewModel(get(), get(), get()) }
     viewModel { CompleteProfileViewModel() }
     viewModel { MapViewModel() }
-    viewModel { ClubsViewModel(get(), get(), get()) }
-    viewModel { ClubDetailViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get(), get(), get()) }
 }
 
@@ -37,7 +32,7 @@ fun dataModule(context: Context) = module {
         )
     }
 
-    single<ClubAthleteRepository> {
+    single {
         ClubAthleteRepository(
             FirebaseFirestore.getInstance().collection("Clubs")
         )
@@ -45,5 +40,5 @@ fun dataModule(context: Context) = module {
 }
 
 val remoteModule = module {
-    single<FirebaseAuth> { Firebase.auth }
+    single { Firebase.auth }
 }
