@@ -28,6 +28,4 @@ interface AuthRepository {
     fun isUserLoggedIn(): Boolean
 
     fun isProfileCompleted(onTrue: () -> Unit = {}, onFalse: () -> Unit = {})
-
-    suspend fun hasCompletedProfile() : Either<DomainError, Boolean>
 }

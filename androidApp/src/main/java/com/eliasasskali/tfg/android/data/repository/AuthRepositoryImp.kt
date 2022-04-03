@@ -119,28 +119,4 @@ class AuthRepositoryImp constructor(
             }
         }
     }
-
-    override suspend fun hasCompletedProfile(): Either<DomainError, Boolean> {
-        println("Enter hasCompletedProfile()")
-        val uid = getCurrentUser()?.uid
-        val db = Firebase.firestore
-        uid?.let {
-            try {
-                if (db.collection("Clubs").document(uid).get().await().exists()) {
-                    println("CLUB EXISTS")
-                    return Either.Right(true)
-                }
-                if (db.collection("Users").document(uid).get().await().exists()) {
-                    println("USER EXISTS")
-                    return Either.Right(true)
-                }
-                println("NO CLUB NOR USER EXISTS")
-                return Either.Right(false)
-            } catch (e: Exception) {
-                return Either.Left(DomainError.ErrorNotHandled(e.toString()))
-            }
-        }
-        return Either.Left(DomainError.ErrorNotHandled("hasCompletedProfile() error.")) //TODO
-    }
-
 }
