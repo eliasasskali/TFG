@@ -146,16 +146,18 @@ class CompleteProfileViewModel : ViewModel() {
             val uid = Firebase.auth.currentUser?.uid
             val db = Firebase.firestore
             if (state.value.isClub) {
-                val club = Club(
-                    state.value.name,
-                    state.value.contactEmail,
-                    state.value.contactPhone,
-                    state.value.description,
-                    state.value.address,
-                    state.value.location,
-                    state.value.services.toList()
-                )
                 uid?.let {
+                    val club = Club(
+                        uid,
+                        state.value.name,
+                        state.value.contactEmail,
+                        state.value.contactPhone,
+                        state.value.description,
+                        state.value.address,
+                        state.value.location,
+                        state.value.services.toList()
+                    )
+
                     db.collection("Clubs").document(uid).set(club.toModel()).addOnCompleteListener {
                         if (it.isSuccessful) {
                             onCompleteProfileSuccess()
