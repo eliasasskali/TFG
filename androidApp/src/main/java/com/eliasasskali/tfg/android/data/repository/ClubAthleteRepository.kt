@@ -16,14 +16,19 @@ class ClubAthleteRepository(
     suspend fun getClubsFromFirestore() : Either<DomainError, List<Club>> {
         return try {
             Either.Right(queryClubsByName.get().await().map { document ->
-                document.toObject(ClubDto::class.java).toModel()
+                var images = listOf<Bitmap?>()
+                getClubImages(document.id).fold(
+                    error = {},
+                    success = { images = it }
+                )
+                document.toObject(ClubDto::class.java).toModel(images)
             })
         } catch (e: FirebaseFirestoreException) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))
         }
     }
 
-    suspend fun getClubById(clubId: String) : Either<DomainError, Club?> { // TODO: Return club not club?
+    suspend fun getClubById(clubId: String) : Either<DomainError, Club?> {
         return try {
             Either.Right(
                 FirebaseFirestore.getInstance().collection("Clubs")
@@ -31,7 +36,7 @@ class ClubAthleteRepository(
                     .get()
                     .await()
                     .toObject(ClubDto::class.java)
-                    ?.toModel()
+                    ?.toModel(listOf()) // TODO : pass imgs
             )
         } catch (e: FirebaseFirestoreException) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))
@@ -65,6 +70,5 @@ class ClubAthleteRepository(
         } catch (e: Exception) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))
         }
-
     }
 }

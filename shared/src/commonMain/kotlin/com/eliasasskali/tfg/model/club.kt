@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.model
 
+import android.graphics.Bitmap
 import android.location.Location
 
 data class ClubDto(
@@ -11,7 +12,7 @@ data class ClubDto(
     val location: ClubLocation? = null,
     val services: List<String>? = listOf()
 ) {
-    fun toModel() : Club {
+    fun toModel(images: List<Bitmap?>) : Club {
         val location = Location("")
         location.latitude = this.location?.latitude ?: 0.0
         location.longitude = this.location?.longitude ?: 0.0
@@ -23,7 +24,8 @@ data class ClubDto(
             description = this.description,
             address = this.address,
             location = location,
-            services = this.services
+            services = this.services,
+            images = images
         )
     }
 }
@@ -35,7 +37,8 @@ data class Club(
     val description: String? = "",
     val address: String? = "",
     val location: Location? = null,
-    val services: List<String>? = listOf()
+    val services: List<String>? = listOf(),
+    val images: List<Bitmap?> = listOf()
 ) {
     fun toModel() : ClubDto {
         return ClubDto(
