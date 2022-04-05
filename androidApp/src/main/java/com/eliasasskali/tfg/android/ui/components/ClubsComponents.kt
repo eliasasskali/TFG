@@ -1,16 +1,23 @@
 package com.eliasasskali.tfg.android.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,25 +40,38 @@ fun CircularProgressBar(
 fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
     Card(
         modifier = Modifier
+            .padding(8.dp)
+            .clickable { onClubClicked("AqbBcJrJhPX4pg62aw8yhn1BzL82") } // TODO: id
             .padding(
                 horizontal = 8.dp,
                 vertical = 4.dp
             )
             .clickable { onClubClicked(club.id) }
             .fillMaxWidth(),
-        elevation = 3.dp,
+        elevation = 2.dp,
+        backgroundColor = MaterialTheme.colors.background,
+        shape = RoundedCornerShape(corner = CornerSize(16.dp))
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            Box(modifier = Modifier
-                .size(100.dp)
-                .clip(RectangleShape)
-                .background(Color.Cyan))
-            Spacer(modifier = Modifier.size(8.dp))
-            Column {
+        Row {
+            if (club.images.isNotEmpty()) {
+                club.images[0]?.asImageBitmap()?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Club Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.CenterVertically)
+            ) {
                 Text(text = club.name, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.size(4.dp))
                 club.address?.let {
@@ -86,9 +106,18 @@ fun clubCardPreview() {
                 "Així doncs, el Bisbat de Vic amb el suport de vàries famílies i personalitats col·laboradores, entre les quals va destacar el Sr. Joan Riera Rius, van tirar endavant el projecte al terreny que més endavant s’anomenaria Estadi Torres i Bages. A aquestes instal·lacions, poc temps després, s’hi van afegir una pista d’atletisme i un camp de futbol.",
         address = "Carrer de Josep Maria Pallàs, 1, 08500 Vic, Barcelona",
         location = ClubLocation(41.92055251450252, 2.2564390268134584),
-        services = listOf("Swimming", "Running", "Gym", "Triathlon", "Body Pump", "Spinning", "Core", "Open Waters")
+        services = listOf(
+            "Swimming",
+            "Running",
+            "Gym",
+            "Triathlon",
+            "Body Pump",
+            "Spinning",
+            "Core",
+            "Open Waters"
+        )
     )
     AppTheme {
-        ClubCard(club = club.toModel("")) {}
+        ClubCard(club = club.toModel(listOf())) {}
     }
 }
