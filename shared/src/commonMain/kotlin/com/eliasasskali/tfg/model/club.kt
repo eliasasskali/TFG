@@ -12,8 +12,7 @@ data class ClubDto(
     val location: ClubLocation? = null,
     val services: List<String>? = listOf()
 ) {
-    fun toModel(images: List<Bitmap?>) : Club {
-    fun toModel(id: String) : Club {
+    fun toModel(id: String, images: List<Bitmap?>) : Club {
         val location = Location("")
         location.latitude = this.location?.latitude ?: 0.0
         location.longitude = this.location?.longitude ?: 0.0

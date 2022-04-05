@@ -78,7 +78,7 @@ fun ClubDetailScreenPreview() {
         location = ClubLocation(41.92055251450252, 2.2564390268134584),
         services = listOf("Swimming", "Running", "Gym", "Triathlon", "Body Pump", "Spinning", "Core", "Open Waters")
     )
-    val clubDetailState = ClubDetailState(club = club.toModel(""))
+    val clubDetailState = ClubDetailState(club = club.toModel("", listOf()))
     AppTheme {
         ClubDetailScreen(clubDetailState)
     }

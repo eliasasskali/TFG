@@ -1,7 +1,6 @@
 package com.eliasasskali.tfg.android.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -14,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -41,11 +38,6 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onClubClicked("AqbBcJrJhPX4pg62aw8yhn1BzL82") } // TODO: id
-            .padding(
-                horizontal = 8.dp,
-                vertical = 4.dp
-            )
             .clickable { onClubClicked(club.id) }
             .fillMaxWidth(),
         elevation = 2.dp,
@@ -118,6 +110,6 @@ fun clubCardPreview() {
         )
     )
     AppTheme {
-        ClubCard(club = club.toModel(listOf())) {}
+        ClubCard(club = club.toModel("", listOf())) {}
     }
 }

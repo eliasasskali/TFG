@@ -21,8 +21,7 @@ class ClubAthleteRepository(
                     error = {},
                     success = { images = it }
                 )
-                document.toObject(ClubDto::class.java).toModel(images)
-                document.toObject(ClubDto::class.java).toModel(document.id)
+                document.toObject(ClubDto::class.java).toModel(document.id, images)
             })
         } catch (e: FirebaseFirestoreException) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))
@@ -37,8 +36,7 @@ class ClubAthleteRepository(
                     .get()
                     .await()
                     .toObject(ClubDto::class.java)
-                    ?.toModel(clubId)
-                    ?.toModel(listOf()) // TODO : pass imgs
+                    ?.toModel(clubId, listOf()) // TODO : pass imgs
             )
         } catch (e: FirebaseFirestoreException) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))
