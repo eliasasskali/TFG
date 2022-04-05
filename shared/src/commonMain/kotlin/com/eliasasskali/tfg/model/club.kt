@@ -11,12 +11,13 @@ data class ClubDto(
     val location: ClubLocation? = null,
     val services: List<String>? = listOf()
 ) {
-    fun toModel() : Club {
+    fun toModel(id: String) : Club {
         val location = Location("")
         location.latitude = this.location?.latitude ?: 0.0
         location.longitude = this.location?.longitude ?: 0.0
 
         return Club(
+            id = id,
             name = this.name,
             contactEmail = this.contactEmail,
             contactPhone = this.contactPhone,
@@ -29,6 +30,7 @@ data class ClubDto(
 }
 
 data class Club(
+    val id: String = "",
     val name: String = "",
     val contactEmail: String? = "",
     val contactPhone: String? = "",

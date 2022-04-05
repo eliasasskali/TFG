@@ -4,6 +4,7 @@ import android.content.Context
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.MapViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
@@ -23,7 +24,7 @@ val appModule = module {
     viewModel { LoginSignupViewModel(get(), get(), get()) }
     viewModel { CompleteProfileViewModel() }
     viewModel { ClubsViewModel(get(), get(), get()) }
-    //viewModel { ClubDetailViewModel(get(), get()) }
+    viewModel { ClubDetailViewModel(get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get()) }
 }

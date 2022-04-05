@@ -4,9 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
+import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeScreen
 import org.koin.androidx.compose.get
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeNavigation(
@@ -23,12 +26,24 @@ fun HomeNavigation(
                 dataOrException,
                 viewModel,
                 onClubClicked = { clubId ->
-                    /*navController.navigate(
+                    navController.navigate(
                         HomeRoutesClub.ClubDetail.routeName.plus(
                             "/$clubId"
                         )
-                    )*/
+                    )
                 }
+            )
+        }
+
+        composable(route = HomeRoutesClub.ClubDetail.routeName.plus("/{${HomeRoutesClub.ARG_PAYMENTMEAN_ID}}")) { entry ->
+            val viewModel = getViewModel<ClubDetailViewModel>()
+            val clubId = entry.arguments?.getString(HomeRoutesClub.ARG_PAYMENTMEAN_ID)
+            if (clubId != null) {
+                viewModel.initClubDetailScreen(clubId)
+            }
+            ClubDetailScreen(
+                clubDetailState = viewModel.clubState.value,
+                //onBackClicked = { navController.popBackStack() }
             )
         }
     }

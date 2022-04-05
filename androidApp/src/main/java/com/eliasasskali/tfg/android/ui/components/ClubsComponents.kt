@@ -37,7 +37,7 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
                 horizontal = 8.dp,
                 vertical = 4.dp
             )
-            .clickable { onClubClicked("AqbBcJrJhPX4pg62aw8yhn1BzL82") } // TODO: id
+            .clickable { onClubClicked(club.id) }
             .fillMaxWidth(),
         elevation = 3.dp,
     ) {
@@ -89,6 +89,6 @@ fun clubCardPreview() {
         services = listOf("Swimming", "Running", "Gym", "Triathlon", "Body Pump", "Spinning", "Core", "Open Waters")
     )
     AppTheme {
-        ClubCard(club = club.toModel()) {}
+        ClubCard(club = club.toModel("")) {}
     }
 }
