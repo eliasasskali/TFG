@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +40,6 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
             .clickable { onClubClicked(club.id) }
             .fillMaxWidth(),
         elevation = 2.dp,
-        backgroundColor = MaterialTheme.colors.background,
         shape = RoundedCornerShape(corner = CornerSize(16.dp))
     ) {
         Row {
@@ -55,28 +53,32 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
                             .padding(8.dp)
                             .size(100.dp)
                             .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                            .align(Alignment.CenterVertically)
                     )
                 }
             }
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(8.dp)
                     .fillMaxWidth()
                     .align(Alignment.CenterVertically)
             ) {
-                Text(text = club.name, fontWeight = FontWeight.Bold)
+                Text(
+                    text = club.name,
+                    style = MaterialTheme.typography.h1
+                )
                 Spacer(modifier = Modifier.size(4.dp))
                 club.address?.let {
                     Text(
                         text = it,
-                        fontWeight = FontWeight.Thin
+                        style = MaterialTheme.typography.h2
                     )
                 }
                 Spacer(modifier = Modifier.size(4.dp))
                 club.services?.let {
                     Text(
                         text = it.joinToString(", "),
-                        fontWeight = FontWeight.Thin,
+                        style = MaterialTheme.typography.caption,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

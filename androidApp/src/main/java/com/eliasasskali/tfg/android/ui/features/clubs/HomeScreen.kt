@@ -1,11 +1,10 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.ui.components.CircularProgressBar
 import com.eliasasskali.tfg.android.ui.components.ClubCard
 import com.eliasasskali.tfg.model.Club
-import com.eliasasskali.tfg.model.ClubDto
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Either
 
@@ -36,7 +34,12 @@ fun HomeScreen(
     )
 
     clubs?.let {
-        LazyColumn {
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
+                .fillMaxSize()
+        ) {
             items(
                 items = it
             ) { club ->
