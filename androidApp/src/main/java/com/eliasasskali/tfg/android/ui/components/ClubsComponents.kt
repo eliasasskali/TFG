@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.ui.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,11 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
@@ -44,18 +45,7 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
     ) {
         Row {
             if (club.images.isNotEmpty()) {
-                club.images[0]?.asImageBitmap()?.let {
-                    Image(
-                        bitmap = it,
-                        contentDescription = "Club Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
-                            .align(Alignment.CenterVertically)
-                    )
-                }
+                ImageLoader(imageUrl = club.clubImages[0], modifier = Modifier.align(Alignment.CenterVertically))
             }
             Column(
                 modifier = Modifier
@@ -88,6 +78,19 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
     }
 }
 
+@Composable
+fun ImageLoader(imageUrl: Uri, modifier: Modifier = Modifier) {
+    Image(
+        painter = rememberAsyncImagePainter(imageUrl),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .padding(8.dp)
+            .size(100.dp)
+            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun clubCardPreview() {
@@ -112,6 +115,6 @@ fun clubCardPreview() {
         )
     )
     AppTheme {
-        ClubCard(club = club.toModel(listOf())) {}
+        ClubCard(club = club.toModel("", listOf(), listOf())) {}
     }
 }
