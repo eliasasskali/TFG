@@ -1,6 +1,5 @@
 package com.eliasasskali.tfg.android.ui.components
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -45,7 +44,7 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
     ) {
         Row {
             if (club.images.isNotEmpty()) {
-                ImageLoader(imageUrl = club.clubImages[0], modifier = Modifier.align(Alignment.CenterVertically))
+                ImageLoader(imageUrl = club.images[0], modifier = Modifier.align(Alignment.CenterVertically))
             }
             Column(
                 modifier = Modifier
@@ -58,16 +57,16 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
                     style = MaterialTheme.typography.h1
                 )
                 Spacer(modifier = Modifier.size(4.dp))
-                club.address?.let {
+                if (club.address.isNotEmpty()) {
                     Text(
-                        text = it,
+                        text = club.address,
                         style = MaterialTheme.typography.h2
                     )
                 }
                 Spacer(modifier = Modifier.size(4.dp))
-                club.services?.let {
+                if (club.services.isNotEmpty()) {
                     Text(
-                        text = it.joinToString(", "),
+                        text = club.services.joinToString(", "),
                         style = MaterialTheme.typography.caption,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -79,7 +78,7 @@ fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
 }
 
 @Composable
-fun ImageLoader(imageUrl: Uri, modifier: Modifier = Modifier) {
+fun ImageLoader(imageUrl: String, modifier: Modifier = Modifier) {
     Image(
         painter = rememberAsyncImagePainter(imageUrl),
         contentDescription = null,
@@ -115,6 +114,6 @@ fun clubCardPreview() {
         )
     )
     AppTheme {
-        ClubCard(club = club.toModel("", listOf(), listOf())) {}
+        ClubCard(club = club.toModel()) {}
     }
 }
