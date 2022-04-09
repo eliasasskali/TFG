@@ -27,8 +27,8 @@ fun ClubDetailScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            if (clubDetailState.clubImages.isNotEmpty()) {
-                ImagePager(imageList = clubDetailState.clubImages)
+            if (clubDetailState.club.images.isNotEmpty()) {
+                ImagePager(imageList = clubDetailState.club.images)
             }
             Spacer(modifier = Modifier.size(8.dp))
             Row(
@@ -78,7 +78,7 @@ fun ClubDetailScreenPreview() {
         location = ClubLocation(41.92055251450252, 2.2564390268134584),
         services = listOf("Swimming", "Running", "Gym", "Triathlon", "Body Pump", "Spinning", "Core", "Open Waters")
     )
-    val clubDetailState = ClubDetailState(club = club.toModel("", listOf()))
+    val clubDetailState = ClubDetailState(club = club.toModel(""))
     AppTheme {
         ClubDetailScreen(clubDetailState)
     }

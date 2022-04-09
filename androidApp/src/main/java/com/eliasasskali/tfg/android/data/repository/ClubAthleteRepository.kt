@@ -16,7 +16,7 @@ class ClubAthleteRepository(
     suspend fun getClubsFromFirestore(): Either<DomainError, List<Club>> {
         return try {
             Either.Right(queryClubsByName.get().await().map { document ->
-                document.toObject(ClubDto::class.java).toModel()
+                document.toObject(ClubDto::class.java).toModel(document.id)
             })
         } catch (e: FirebaseFirestoreException) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))
@@ -31,7 +31,7 @@ class ClubAthleteRepository(
                     .get()
                     .await()
                     .toObject(ClubDto::class.java)
-                    ?.toModel()
+                    ?.toModel(clubId)
             )
         } catch (e: FirebaseFirestoreException) {
             Either.Left(DomainError.ErrorNotHandled(e.toString()))

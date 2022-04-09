@@ -32,15 +32,6 @@ class ClubDetailViewModel(
                     clubState.value = clubState.value.copy(club = it ?: Club())
                 }
             )
-
-            execute {
-                repository.getClubImages(clubId)
-            }.fold(
-                error = {},
-                success = {
-                    clubState.value = clubState.value.copy(clubImages = it)
-                }
-            )
         }
     }
 }

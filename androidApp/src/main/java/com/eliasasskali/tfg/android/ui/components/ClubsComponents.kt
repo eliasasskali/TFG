@@ -114,6 +114,6 @@ fun clubCardPreview() {
         )
     )
     AppTheme {
-        ClubCard(club = club.toModel()) {}
+        ClubCard(club = club.toModel("")) {}
     }
 }

@@ -12,7 +12,7 @@ data class ClubDto(
     val services: List<String> = listOf(),
     val images: List<String> = listOf()
 ) {
-    fun toModel() : Club {
+    fun toModel(id: String) : Club {
         val location = Location("")
         location.latitude = this.location.latitude
         location.longitude = this.location.longitude
