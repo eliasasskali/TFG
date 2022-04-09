@@ -30,7 +30,7 @@ fun ImagePager(imageList: List<String>) {
                     painter = rememberAsyncImagePainter(imageUrl),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxWidth().height(300.dp)
+                    modifier = Modifier.fillMaxWidth().height(250.dp)
                 )
             }
         }
