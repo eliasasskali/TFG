@@ -73,6 +73,7 @@ dependencies {
         implementation(materialCompose)
         implementation(navigation)
         implementation(accompanistPager)
+        implementation(coilCompose)
     }
 
     with(Dependencies.Firebase) {

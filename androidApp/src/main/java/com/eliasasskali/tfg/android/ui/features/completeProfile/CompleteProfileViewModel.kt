@@ -11,8 +11,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eliasasskali.tfg.android.core.ui.RootViewModel
+import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.AthleteDto
+import com.eliasasskali.tfg.ui.error.ErrorHandler
+import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -24,7 +28,12 @@ import java.util.*
 
 private const val TAG = "RegisterViewModel"
 
-class CompleteProfileViewModel : ViewModel() {
+class CompleteProfileViewModel(
+    private val repository: ClubAthleteRepository,
+    executor: Executor,
+    errorHandler: ErrorHandler
+) : RootViewModel(executor, errorHandler) {
+
     val state: MutableState<CompleteProfileState> = mutableStateOf(CompleteProfileState())
     val location = MutableStateFlow(getInitialLocation())
     val addressText = mutableStateOf("")
@@ -64,22 +73,22 @@ class CompleteProfileViewModel : ViewModel() {
         state.value = state.value.copy(clubImages = images)
     }
 
-    fun isValidName() : Boolean {
+    fun isValidName(): Boolean {
         if (state.value.name.isBlank()) {
             return false
         }
         return true
     }
 
-    fun getInitialLocation() : Location{
+    fun getInitialLocation(): Location {
         val initialLocation = Location("")
         initialLocation.latitude = 51.506874
         initialLocation.longitude = -0.139800
         return initialLocation
     }
 
-    fun updateLocation(latitude: Double, longitude: Double){
-        if(latitude != location.value.latitude) {
+    fun updateLocation(latitude: Double, longitude: Double) {
+        if (latitude != location.value.latitude) {
             val location = Location("")
             location.latitude = latitude
             location.longitude = longitude
@@ -97,8 +106,9 @@ class CompleteProfileViewModel : ViewModel() {
         var addresses: List<Address>? = null
 
         try {
-            addresses = geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
-        } catch(ex: Exception){
+            addresses =
+                geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
 
@@ -110,19 +120,22 @@ class CompleteProfileViewModel : ViewModel() {
     }
 
     fun onTextChanged(context: Context, text: String) {
-        if(text == "")
+        if (text == "")
             return
         timer?.cancel()
         timer = object : CountDownTimer(1000, 1500) {
-            override fun onTick(millisUntilFinished: Long) { }
+            override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 location.value = getLocationFromAddress(context, text)
-                state.value = state.value.copy(location = getLocationFromAddress(context, text), address = text)
+                state.value = state.value.copy(
+                    location = getLocationFromAddress(context, text),
+                    address = text
+                )
             }
         }.start()
     }
 
-    fun getLocationFromAddress(context: Context, strAddress: String): Location{
+    fun getLocationFromAddress(context: Context, strAddress: String): Location {
         val geocoder = Geocoder(context, Locale.getDefault())
         val address: Address?
 
@@ -132,8 +145,8 @@ class CompleteProfileViewModel : ViewModel() {
             address = addresses[0]
 
             val loc = Location("")
-            loc.latitude = address.getLatitude()
-            loc.longitude = address.getLongitude()
+            loc.latitude = address.latitude
+            loc.longitude = address.longitude
             return loc
         }
 
@@ -188,20 +201,7 @@ class CompleteProfileViewModel : ViewModel() {
         }
     }
 
-    fun uploadImages(clubImages: List<Uri>) {
-        if (clubImages.isNotEmpty()) {
-            val storage = FirebaseStorage.getInstance()
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            clubImages.mapIndexed { index, uri ->
-                val storageReference = storage.reference.child("clubImages/$uid-$index")
-                storageReference.putFile(uri)
-                    .addOnSuccessListener {
-                        println("Upload image #$index")
-                    }
-                    .addOnFailureListener {
-                        println("Upload failed for image #$index")
-                    }
-            }
-        }
+    private fun uploadImages(clubImages: List<Uri>) {
+        repository.uploadImages(clubImages)
     }
 }
