@@ -1,22 +1,21 @@
 package com.eliasasskali.tfg.model
 
-import android.graphics.Bitmap
 import android.location.Location
-import android.net.Uri
 
 data class ClubDto(
     val name: String = "",
     val contactEmail: String? = "",
     val contactPhone: String? = "",
     val description: String? = "",
-    val address: String? = "",
-    val location: ClubLocation? = null,
-    val services: List<String>? = listOf()
+    val address: String = "",
+    val location: ClubLocation = ClubLocation(0.0, 0.0),
+    val services: List<String> = listOf(),
+    val images: List<String> = listOf()
 ) {
-    fun toModel(id: String, images: List<Bitmap?>, clubImages: List<Uri>) : Club {
+    fun toModel() : Club {
         val location = Location("")
-        location.latitude = this.location?.latitude ?: 0.0
-        location.longitude = this.location?.longitude ?: 0.0
+        location.latitude = this.location.latitude
+        location.longitude = this.location.longitude
 
         return Club(
             name = this.name,
@@ -26,8 +25,7 @@ data class ClubDto(
             address = this.address,
             location = location,
             services = this.services,
-            images = images,
-            clubImages = clubImages
+            images = this.images
         )
     }
 }
@@ -37,11 +35,10 @@ data class Club(
     val contactEmail: String? = "",
     val contactPhone: String? = "",
     val description: String? = "",
-    val address: String? = "",
-    val location: Location? = null,
-    val services: List<String>? = listOf(),
-    val images: List<Bitmap?> = listOf(),
-    val clubImages: List<Uri> = listOf()
+    val address: String = "",
+    val location: Location = Location(""),
+    val services: List<String> = listOf(),
+    val images: List<String> = listOf()
 ) {
     fun toModel() : ClubDto {
         return ClubDto(
@@ -50,8 +47,9 @@ data class Club(
             contactPhone = this.contactPhone,
             description = this.description,
             address = this.address,
-            location = ClubLocation(this.location?.latitude ?: 0.0, this.location?.longitude ?: 0.0),
-            services = this.services
+            location = ClubLocation(this.location.latitude, this.location.longitude),
+            services = this.services,
+            images = this.images
         )
     }
 }
