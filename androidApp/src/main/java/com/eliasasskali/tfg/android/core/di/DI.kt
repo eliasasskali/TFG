@@ -22,7 +22,7 @@ val appModule = module {
     single { Executor() }
     single { ErrorHandler(get()) }
     viewModel { LoginSignupViewModel(get(), get(), get()) }
-    viewModel { CompleteProfileViewModel() }
+    viewModel { CompleteProfileViewModel(get(), get(), get()) }
     viewModel { ClubsViewModel(get(), get(), get()) }
     viewModel { ClubDetailViewModel(get(), get()) }
     viewModel { MapViewModel() }
