@@ -60,6 +60,9 @@ fun ClubDetailScreen(
                 )
             }
             ClubDetailMapView(clubDetailState.club)
+            if (clubDetailState.club.location.latitude != 0.0 && clubDetailState.club.location.longitude != 0.0) {
+                ClubDetailMap(clubDetailState.club)
+            }
         }
     }
 }

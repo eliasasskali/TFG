@@ -1,6 +1,7 @@
 package com.eliasasskali.tfg.android.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,7 +40,9 @@ fun HomeNavigation(
             val viewModel = getViewModel<ClubDetailViewModel>()
             val clubId = entry.arguments?.getString(HomeRoutesClub.ARG_PAYMENTMEAN_ID)
             if (clubId != null) {
-                viewModel.initClubDetailScreen(clubId)
+                LaunchedEffect(Unit) {
+                    viewModel.initClubDetailScreen(clubId)
+                }
             }
             ClubDetailScreen(
                 clubDetailState = viewModel.clubState.value,

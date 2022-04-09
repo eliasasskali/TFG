@@ -14,8 +14,8 @@ data class ClubDto(
 ) {
     fun toModel(id: String) : Club {
         val location = Location("")
-        location.latitude = this.location.latitude
-        location.longitude = this.location.longitude
+        location.latitude = this.location.longitude
+        location.longitude = this.location.latitude
 
         return Club(
             id = id,
@@ -57,6 +57,6 @@ data class Club(
 }
 
 data class ClubLocation(
-    val longitude: Double = 0.0,
-    val latitude: Double = 0.0
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
 )
