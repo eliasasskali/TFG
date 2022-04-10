@@ -6,10 +6,12 @@ sealed class DomainError {
 
     object InvalidCredentials : DomainError()
     object SignUpError : DomainError()
+    object SignUpUserExistsError : DomainError()
     object SignInError : DomainError()
     object SignInCredentialError : DomainError()
     object SignInGoogleError : DomainError()
     object SignOutError : DomainError()
+    object SignUpPasswordsDoNotMatch : DomainError()
 
     data class ErrorNotHandled(val message: String) : DomainError()
 }

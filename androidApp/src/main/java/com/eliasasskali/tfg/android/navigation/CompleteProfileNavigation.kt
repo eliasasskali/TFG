@@ -53,7 +53,11 @@ fun CompleteProfileNavigation(
                 onContinueButtonClick = {
                     viewModel.completeProfile(onCompleteProfileSuccess = { onProfileCompleted() })
                 },
-                viewModel = viewModel
+                viewModel = viewModel,
+                onBackClicked = {
+                    viewModel.resetState()
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -62,6 +66,10 @@ fun CompleteProfileNavigation(
                 viewModel = viewModel,
                 onContinueButtonClick = {
                     navController.navigate(CompleteProfileRoutes.ClubCompleteProfileSecond.routeName)
+                },
+                onBackClicked = {
+                    viewModel.resetState()
+                    navController.popBackStack()
                 }
             )
         }
@@ -71,6 +79,9 @@ fun CompleteProfileNavigation(
                 viewModel = viewModel,
                 onContinueButtonClick = {
                     navController.navigate(CompleteProfileRoutes.ClubCompleteProfileMap.routeName)
+                },
+                onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -80,7 +91,8 @@ fun CompleteProfileNavigation(
                 onContinueButtonClick = {
                     viewModel.completeProfile(onCompleteProfileSuccess = { onProfileCompleted() })
                 },
-                viewModel = viewModel
+                viewModel = viewModel,
+                onBackClicked = { navController.popBackStack() }
             )
         }
     }

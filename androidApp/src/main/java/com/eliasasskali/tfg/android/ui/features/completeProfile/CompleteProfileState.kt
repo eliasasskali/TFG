@@ -5,7 +5,6 @@ import android.net.Uri
 
 data class CompleteProfileState(
     val error: String = "",
-    val isLoggedIn: Boolean = false,
     val hasCompletedProfile: Boolean = false,
     val isClub: Boolean = false,
     val name: String = "",

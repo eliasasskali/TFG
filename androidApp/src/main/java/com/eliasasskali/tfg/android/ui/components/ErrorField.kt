@@ -15,7 +15,7 @@ fun ErrorField(viewModel: LoginSignupViewModel) {
         text = viewModel.state.value.error,
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.error,
-        fontSize = 20.sp,
+        fontSize = 16.sp,
         fontWeight = FontWeight.Bold
     )
 }

@@ -38,6 +38,10 @@ class CompleteProfileViewModel(
     var timer: CountDownTimer? = null
 
     // Setters
+    fun resetState() {
+        state.value = CompleteProfileState()
+    }
+
     fun setName(name: String) {
         state.value = state.value.copy(name = name)
     }
@@ -71,10 +75,7 @@ class CompleteProfileViewModel(
     }
 
     fun isValidName(): Boolean {
-        if (state.value.name.isBlank()) {
-            return false
-        }
-        return true
+        return state.value.name.isNotBlank()
     }
 
     fun getInitialLocation(): Location {
