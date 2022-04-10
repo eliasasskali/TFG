@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Errors -->
     <string name="invalid_credentials">Invalid Credentials</string>
     <string name="nointernet_error">No internet Connection</string>
     <string name="notfound_error">Not found</string>
     <string name="signup_error">Sign up Error</string>
+    <string name="signup_user_exists_error">User already Exists</string>
     <string name="signin_error">Sign in Error</string>
     <string name="signinCredential_error">Sign in with credential Error</string>
     <string name="signinGoogle_error">Sign in with google Error</string>
     <string name="signout_error">Sign Out Error</string>
     <string name="error">Error</string>
+    <string name="passwordsDoNotMatch_error">Passwords do not match.</string>
+
+    <!-- Login -->
+    <string name="login_welcome_message">Welcome back!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Log in</string>
+    <string name="login_signup_message">Don\'t have an account? Sign up</string>
+    <string name="or">OR</string>
+    <string name="continue_with_google">Continue with Google</string>
+
+    <!-- Sign up -->
+    <string name="signup">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+
+
+
 
 </resources>

@@ -39,14 +39,10 @@ fun LoginSignUpNavigation(
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = LoginSignUpRoutes.Login.routeName) {
             LoginScreen(
-                emailLoginClick = { navController.navigate(LoginSignUpRoutes.EmailLogin.routeName) },
-                signUpLoginClick = { navController.navigate(LoginSignUpRoutes.SignUp.routeName) },
-                viewModel = viewModel,
-                onUserLogged = { onUserLogged() }
-            )
-        }
-        composable(route = LoginSignUpRoutes.EmailLogin.routeName) {
-            EmailLoginScreen(
+                signUpLoginClick = {
+                    viewModel.resetState()
+                    navController.navigate(LoginSignUpRoutes.SignUp.routeName)
+                },
                 viewModel = viewModel,
                 onUserLogged = { onUserLogged() }
             )
@@ -54,7 +50,11 @@ fun LoginSignUpNavigation(
         composable(route = LoginSignUpRoutes.SignUp.routeName) {
             SignUpScreen(
                 viewModel = viewModel,
-                onUserLogged = { onUserLogged() }
+                onUserLogged = { onUserLogged() },
+                onBackClicked = {
+                    viewModel.resetState()
+                    navController.popBackStack()
+                }
             )
         }
     }
