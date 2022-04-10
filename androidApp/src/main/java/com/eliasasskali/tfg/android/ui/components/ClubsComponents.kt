@@ -3,17 +3,20 @@ package com.eliasasskali.tfg.android.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,8 @@ import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
 import com.eliasasskali.tfg.model.ClubLocation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun CircularProgressBar(
@@ -87,6 +92,33 @@ fun ImageLoader(imageUrl: String, modifier: Modifier = Modifier) {
             .padding(8.dp)
             .size(100.dp)
             .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+    )
+}
+
+@Composable
+fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState) {
+    TopAppBar(
+        title = {
+            Text(
+                text = "Clubs", //TODO: stringResource(""),
+                style = MaterialTheme.typography.h5
+            )
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Menu, //painterResource(id = R.drawable.ic_menu),
+                    contentDescription = ""
+                )
+            }
+        },
+        backgroundColor = Color.White,
     )
 }
 

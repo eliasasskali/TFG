@@ -24,4 +24,7 @@
     <string name="welcome">Welcome</string>
     <string name="log_out">Log out</string>
     <string name="welcome_logged_in">Welcome! You\'re logged in!</string>
+    <string name="home">Home</string>
+    <string name="chats">Chats</string>
+    <string name="configuration">Configuration</string>
 </resources>
