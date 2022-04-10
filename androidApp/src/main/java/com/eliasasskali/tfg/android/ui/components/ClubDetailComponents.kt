@@ -13,10 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +26,7 @@ import com.eliasasskali.tfg.model.Club
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.eliasasskali.tfg.android.R
 
 @Composable
 fun ClubDetailMap(club: Club) {
@@ -79,7 +80,7 @@ fun ClubDetailHeader(club: Club) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "950m from your location",
+            text = "950m ${stringResource(R.string.club_detail_from_your_location)}",
             style = MaterialTheme.typography.caption,
             modifier = Modifier.align(CenterVertically)
             // TODO: Compute distance

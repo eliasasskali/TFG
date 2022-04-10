@@ -46,7 +46,7 @@ fun HomeNavigation(
             }
             ClubDetailScreen(
                 clubDetailState = viewModel.clubState.value,
-                //onBackClicked = { navController.popBackStack() }
+                onBackClicked = { navController.popBackStack() }
             )
         }
     }

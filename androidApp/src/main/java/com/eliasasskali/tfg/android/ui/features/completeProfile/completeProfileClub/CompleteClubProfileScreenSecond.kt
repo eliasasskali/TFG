@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.ui.components.ImagePager
+import com.eliasasskali.tfg.android.ui.components.ImagePagerBitmap
 import com.eliasasskali.tfg.android.ui.components.Mockup
 import com.eliasasskali.tfg.android.ui.components.ServicesGrid
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
@@ -117,7 +118,7 @@ fun CompleteClubProfileScreenSecond(
                         }
 
                         if (bitmapList.value.isNotEmpty()) {
-                            ImagePager(bitmapList.value)
+                            ImagePagerBitmap(bitmapList.value)
                         }
                     }
 
