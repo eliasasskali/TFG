@@ -1,13 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Errors -->
     <string name="invalid_credentials">Invalid Credentials</string>
     <string name="nointernet_error">No internet Connection</string>
     <string name="notfound_error">Not found</string>
     <string name="signup_error">Sign up Error</string>
+    <string name="signup_user_exists_error">User already Exists</string>
     <string name="signin_error">Sign in Error</string>
     <string name="signinCredential_error">Sign in with credential Error</string>
     <string name="signinGoogle_error">Sign in with google Error</string>
     <string name="signout_error">Sign Out Error</string>
     <string name="error">Error</string>
+    <string name="passwordsDoNotMatch_error">Passwords do not match.</string>
+
+    <!-- Login -->
+    <string name="login_welcome_message">Welcome back!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Log in</string>
+    <string name="login_signup_message">Don\'t have an account? Sign up</string>
+    <string name="or">OR</string>
+    <string name="continue_with_google">Continue with Google</string>
+
+    <!-- Sign up -->
+    <string name="signup">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <!-- Complete Profile -->
+    <string name="complete_profile_welcome">Welcome! Let\'s complete your profile:</string>
+    <string name="complete_profile_athlete_or_club">Are you an Athlete or a Club?</string>
+    <string name="complete_profile">Complete Profile</string>
+
+    <string name="athlete">Athlete</string>
+    <string name="club">Club</string>
+    <string name="next">Next</string>
+    <string name="edit">Edit</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="name">Name</string>
+
+    <string name="club_name">Club Name</string>
+    <string name="contact_phone">Contact Phone</string>
+    <string name="contact_email">Contact Email</string>
+    <string name="club_description">Club Description</string>
+
+
+    <string name="complete_profile_club_first_screen_title">Club Basic Info</string>
+    <string name="complete_profile_club_first_screen_message">Let\'s get some basic club information:</string>
+
+    <string name="complete_profile_club_second_screen_title">Club Additional Info</string>
+    <string name="complete_profile_club_second_screen_add_pictures">Let\'s add some club pictures:</string>
+    <string name="complete_profile_club_second_screen_select_pictures">Select pictures</string>
+    <string name="complete_profile_club_second_screen_add_services">Which services does the club offer?</string>
+
+    <string name="complete_profile_club_map_screen_title">Club Location</string>
+    <string name="complete_profile_club_map_screen_complete_profile">Complete Profile</string>
+
+    <string name="complete_profile_athlete_screen_title">Complete Athlete Profile</string>
+    <string name="complete_profile_athlete_screen_message">Welcome! Let\'s get to know you:</string>
+    <string name="complete_profile_athlete_add_name">What should we call you?</string>
+    <string name="complete_profile_athlete_add_interests">Which are your interests?</string>
+
+
+
 
 </resources>
