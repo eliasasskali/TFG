@@ -30,12 +30,15 @@
     <!-- Complete Profile -->
     <string name="complete_profile_welcome">Welcome! Let\'s complete your profile:</string>
     <string name="complete_profile_athlete_or_club">Are you an Athlete or a Club?</string>
+    <string name="complete_profile">Complete Profile</string>
+
     <string name="athlete">Athlete</string>
     <string name="club">Club</string>
     <string name="next">Next</string>
     <string name="edit">Edit</string>
     <string name="back">Back</string>
     <string name="save">Save</string>
+    <string name="name">Name</string>
 
     <string name="club_name">Club Name</string>
     <string name="contact_phone">Contact Phone</string>
@@ -44,7 +47,7 @@
 
 
     <string name="complete_profile_club_first_screen_title">Club Basic Info</string>
-    <string name="complete_profile_club_first_screen_message">Let\'s get some basic club information.</string>
+    <string name="complete_profile_club_first_screen_message">Let\'s get some basic club information:</string>
 
     <string name="complete_profile_club_second_screen_title">Club Additional Info</string>
     <string name="complete_profile_club_second_screen_add_pictures">Let\'s add some club pictures:</string>
@@ -53,6 +56,11 @@
 
     <string name="complete_profile_club_map_screen_title">Club Location</string>
     <string name="complete_profile_club_map_screen_complete_profile">Complete Profile</string>
+
+    <string name="complete_profile_athlete_screen_title">Complete Athlete Profile</string>
+    <string name="complete_profile_athlete_screen_message">Welcome! Let\'s get to know you:</string>
+    <string name="complete_profile_athlete_add_name">What should we call you?</string>
+    <string name="complete_profile_athlete_add_interests">Which are your interests?</string>
 
 
 

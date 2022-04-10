@@ -53,7 +53,11 @@ fun CompleteProfileNavigation(
                 onContinueButtonClick = {
                     viewModel.completeProfile(onCompleteProfileSuccess = { onProfileCompleted() })
                 },
-                viewModel = viewModel
+                viewModel = viewModel,
+                onBackClicked = {
+                    viewModel.resetState()
+                    navController.popBackStack()
+                }
             )
         }
 
