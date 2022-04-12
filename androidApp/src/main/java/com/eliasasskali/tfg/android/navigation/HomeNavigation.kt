@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.navigation
 
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -21,6 +22,23 @@ fun HomeNavigation(
         navController = navController,
         startDestination = HomeRoutesClub.Home.routeName
     ) {
+
+        composable(route = HomeRoutesClub.Notifications.routeName) {
+            route?.let { it1 -> Text(text = it1) }
+        }
+
+        composable(route = HomeRoutesClub.Chats.routeName) {
+            route?.let { it1 -> Text(text = it1) }
+        }
+
+        composable(route = HomeRoutesClub.Profile.routeName) {
+            route?.let { it1 -> Text(text = it1) }
+        }
+
+        composable(route = HomeRoutesClub.Post.routeName) {
+            route?.let { it1 -> Text(text = it1) }
+        }
+
         composable(route = HomeRoutesClub.Home.routeName) {
             val dataOrException = viewModel.state.value.data
             HomeScreen(

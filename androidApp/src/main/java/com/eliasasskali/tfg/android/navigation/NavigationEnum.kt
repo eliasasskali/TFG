@@ -24,7 +24,8 @@ sealed class HomeRoutesClub(val routeName: String) {
     object Notifications : HomeRoutesClub("notifications")
     object Chats : HomeRoutesClub("chats")
     object Profile : HomeRoutesClub("profile")
-    object ClubDetail: HomeRoutesClub("cardDetail")
+    object ClubDetail : HomeRoutesClub("cardDetail")
+    object Post : HomeRoutesClub("post")
 
     companion object {
         const val ARG_PAYMENTMEAN_ID = "paymentMeanId"
