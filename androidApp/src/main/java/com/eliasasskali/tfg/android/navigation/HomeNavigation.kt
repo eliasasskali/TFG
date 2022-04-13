@@ -42,6 +42,7 @@ fun HomeNavigation(
             if (clubId != null) {
                 LaunchedEffect(Unit) {
                     viewModel.initClubDetailScreen(clubId)
+                    viewModel.isClubOwner(clubId)
                 }
             }
             ClubDetailScreen(

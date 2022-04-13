@@ -113,6 +113,6 @@ fun ClubDetailScreenPreview() {
     )
     val clubDetailState = ClubDetailState(club = club.toModel(""))
     AppTheme {
-        ClubDetailScreen(clubDetailState) {}
+        ClubDetailScreen(clubDetailState, {})
     }
 }

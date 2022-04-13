@@ -23,6 +23,18 @@ class ClubAthleteRepository(
         }
     }
 
+    fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
+        try {
+            FirebaseAuth.getInstance().currentUser?.let { user ->
+                return Either.Right(user.uid == clubId)
+            }
+            return Either.Right(false)
+        } catch (e: Exception) {
+            // TODO: Change error
+            return Either.Left(DomainError.ErrorNotHandled("Error"))
+        }
+    }
+
     suspend fun getClubById(clubId: String): Either<DomainError, Club?> {
         return try {
             Either.Right(

@@ -34,4 +34,17 @@ class ClubDetailViewModel(
             )
         }
     }
+
+    fun isClubOwner(clubId: String) {
+        viewModelScope.launch {
+            execute {
+                repository.isClubOwner(clubId)
+            }.fold(
+                error = {},
+                success = {
+                    clubState.value = clubState.value.copy(isClubOwner = it)
+                }
+            )
+        }
+    }
 }
