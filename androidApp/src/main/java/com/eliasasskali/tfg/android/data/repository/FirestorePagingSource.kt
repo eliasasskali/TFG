@@ -10,15 +10,27 @@ import kotlinx.coroutines.tasks.await
 
 // Network Data Source
 class FirestorePagingSource(
-    private val queryClubs: Query
+    private val queryClubs: Query,
+    private val searchString: String = "",
 ) : PagingSource<QuerySnapshot, Club>() {
-    override fun getRefreshKey(state: PagingState<QuerySnapshot, Club>) : QuerySnapshot? = null
+    override fun getRefreshKey(state: PagingState<QuerySnapshot, Club>): QuerySnapshot? = null
 
     override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, Club> {
         return try {
-            val currentPage = params.key ?: queryClubs.get().await()
+            val currentPage = params.key ?: (if (searchString.isBlank()) queryClubs.get()
+                .await() else queryClubs.whereArrayContains("keywords", searchString.trim()).get()
+                .await())
+
             val lastVisibleClub = currentPage.documents[currentPage.size() - 1]
-            val nextPage = queryClubs.startAfter(lastVisibleClub).get().await()
+
+            val nextPage =
+                if (searchString.isBlank()) queryClubs.startAfter(lastVisibleClub).get().await()
+                else queryClubs
+                    .whereArrayContains("keywords", searchString.trim())
+                    .startAfter(lastVisibleClub)
+                    .get()
+                    .await()
+
             LoadResult.Page(
                 data = currentPage.toObjects(ClubDto::class.java).map { it.toModel() },
                 prevKey = null,

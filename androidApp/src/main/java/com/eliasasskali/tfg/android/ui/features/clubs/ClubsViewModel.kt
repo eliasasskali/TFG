@@ -1,6 +1,7 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -17,22 +18,14 @@ class ClubsViewModel(
 ) : RootViewModel(executor, errorHandler) {
 
     val state: MutableState<ClubsState> = mutableStateOf(ClubsState())
-    val clubs = repository.getClubs().cachedIn(viewModelScope)
+    var clubs = repository.getClubs(state.value.searchString).cachedIn(viewModelScope)
 
     fun setError(error: String) {
         state.value = state.value.copy(error = error)
     }
 
-    /*
-    init {
-        getClubs()
+    fun setSearchString(searchString: String) {
+        state.value = state.value.copy(searchString = searchString)
+        clubs = repository.getClubs(state.value.searchString).cachedIn(viewModelScope)
     }
-
-    private fun getClubs() {
-        viewModelScope.launch {
-            state.value = state.value.copy(isLoading = true)
-            state.value = state.value.copy(data = repository.getClubs().cachedIn(viewModelScope))
-            state.value = state.value.copy(isLoading = false)
-        }
-    }*/
 }
