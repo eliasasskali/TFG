@@ -22,6 +22,8 @@ import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
 import com.eliasasskali.tfg.model.ClubLocation
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun CircularProgressBar(
@@ -33,18 +35,19 @@ fun CircularProgressBar(
 }
 
 @Composable
-fun ClubCard(club: Club, onClubClicked: (clubId: String) -> Unit) {
+fun ClubCard(club: Club, onClubClicked: (Club) -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onClubClicked(club.id) }
+            .clickable { onClubClicked(club) }
             .fillMaxWidth(),
         elevation = 2.dp,
         shape = RoundedCornerShape(corner = CornerSize(16.dp))
     ) {
         Row {
             if (club.images.isNotEmpty()) {
-                ImageLoader(imageUrl = club.images[0], modifier = Modifier.align(Alignment.CenterVertically))
+                println(club.images[0])
+                ImageLoader(imageUrl = URLDecoder.decode(club.images[0], StandardCharsets.UTF_8.toString()), modifier = Modifier.align(Alignment.CenterVertically))
             }
             Column(
                 modifier = Modifier

@@ -1,6 +1,8 @@
 package com.eliasasskali.tfg.model
 
 import android.location.Location
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 data class ClubDto(
     val name: String = "",
@@ -12,10 +14,14 @@ data class ClubDto(
     val services: List<String> = listOf(),
     val images: List<String> = listOf()
 ) {
-    fun toModel(id: String) : Club {
+    fun toModel(id: String): Club {
         val location = Location("")
         location.latitude = this.location.longitude
         location.longitude = this.location.latitude
+
+        val encodedImages = this.images.map {
+            URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
+        }
 
         return Club(
             id = id,
@@ -26,7 +32,7 @@ data class ClubDto(
             address = this.address,
             location = location,
             services = this.services,
-            images = this.images
+            images = encodedImages
         )
     }
 }
@@ -42,7 +48,7 @@ data class Club(
     val services: List<String> = listOf(),
     val images: List<String> = listOf()
 ) {
-    fun toModel() : ClubDto {
+    fun toModel(): ClubDto {
         return ClubDto(
             name = this.name,
             contactEmail = this.contactEmail,

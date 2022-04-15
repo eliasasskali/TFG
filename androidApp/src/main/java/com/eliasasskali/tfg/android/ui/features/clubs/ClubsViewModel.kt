@@ -22,17 +22,4 @@ class ClubsViewModel(
     fun setError(error: String) {
         state.value = state.value.copy(error = error)
     }
-
-    /*
-    init {
-        getClubs()
-    }
-
-    private fun getClubs() {
-        viewModelScope.launch {
-            state.value = state.value.copy(isLoading = true)
-            state.value = state.value.copy(data = repository.getClubs().cachedIn(viewModelScope))
-            state.value = state.value.copy(isLoading = false)
-        }
-    }*/
 }

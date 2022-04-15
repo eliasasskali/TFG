@@ -50,7 +50,7 @@ fun dataModule(context: Context) = module {
                 queryClubs = FirebaseFirestore.getInstance().collection("Clubs")
             ),
             config = PagingConfig(
-                pageSize = PAGE_SIZE
+                pageSize = 10
             )
         )
     }

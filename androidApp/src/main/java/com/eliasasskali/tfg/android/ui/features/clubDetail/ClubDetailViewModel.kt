@@ -9,30 +9,21 @@ import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Either
 import com.eliasasskali.tfg.ui.executor.Executor
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ClubDetailViewModel(
     private val repository: ClubAthleteRepository,
     private val executor: Executor,
-) :
-    ViewModel() {
+) : ViewModel() {
 
     val clubState: MutableState<ClubDetailState> = mutableStateOf(ClubDetailState())
     private suspend fun <T> execute(f: suspend () -> Either<DomainError, T>): Either<DomainError, T> =
         withContext(executor.bg) { f() }
 
-    fun initClubDetailScreen(clubId: String) {
-        viewModelScope.launch {
-            execute {
-                repository.getClubById(clubId)
-            }.fold(
-                error = {},
-                success = {
-                    clubState.value = clubState.value.copy(club = it ?: Club())
-                }
-            )
-        }
+    fun initClubDetailScreen(club: Club) {
+        clubState.value = clubState.value.copy(club = club)
     }
 
     fun isClubOwner(clubId: String) {

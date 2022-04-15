@@ -3,12 +3,16 @@ package com.eliasasskali.tfg.android.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeScreen
+import com.eliasasskali.tfg.model.Club
+import com.google.gson.Gson
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
@@ -23,18 +27,25 @@ fun HomeNavigation(
     ) {
         composable(route = HomeRoutesClub.Home.routeName) {
             HomeScreen(
-                navController,
-                viewModel
+                viewModel,
+                onClubClicked = {
+                    val jsonClub = Gson().toJson(it)
+                    navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub"))
+                }
             )
         }
 
-        composable(route = HomeRoutesClub.ClubDetail.routeName.plus("/{${HomeRoutesClub.ARG_PAYMENTMEAN_ID}}")) { entry ->
+        composable(
+            route = HomeRoutesClub.ClubDetail.routeName.plus("/{${HomeRoutesClub.JSON_CLUB}}")
+        ) { entry ->
             val viewModel = getViewModel<ClubDetailViewModel>()
-            val clubId = entry.arguments?.getString(HomeRoutesClub.ARG_PAYMENTMEAN_ID)
-            if (clubId != null) {
+            val jsonClub = entry.arguments?.getString(HomeRoutesClub.JSON_CLUB)
+            println(jsonClub)
+            if (jsonClub != null) {
+                val club = Gson().fromJson(jsonClub, Club::class.java)
                 LaunchedEffect(Unit) {
-                    viewModel.initClubDetailScreen(clubId)
-                    viewModel.isClubOwner(clubId)
+                    viewModel.initClubDetailScreen(club)
+                    viewModel.isClubOwner(club.id)
                 }
             }
             ClubDetailScreen(
