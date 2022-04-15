@@ -18,7 +18,7 @@ class FirestorePagingSource(
     override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, Club> {
         return try {
             val currentPage = params.key ?: (if (searchString.isBlank()) queryClubs.get()
-                .await() else queryClubs.whereArrayContains("keywords", searchString.trim()).get()
+                .await() else queryClubs.whereArrayContains("keywords", searchString.lowercase().trim()).get()
                 .await())
 
             val lastVisibleClub = currentPage.documents[currentPage.size() - 1]
@@ -26,7 +26,7 @@ class FirestorePagingSource(
             val nextPage =
                 if (searchString.isBlank()) queryClubs.startAfter(lastVisibleClub).get().await()
                 else queryClubs
-                    .whereArrayContains("keywords", searchString.trim())
+                    .whereArrayContains("keywords", searchString.lowercase().trim())
                     .startAfter(lastVisibleClub)
                     .get()
                     .await()

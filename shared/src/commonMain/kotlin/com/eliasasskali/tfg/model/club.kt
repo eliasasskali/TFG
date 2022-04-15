@@ -64,9 +64,10 @@ data class ClubLocation(
 // Generate all possible keyword from string: Used for searching
 fun generateKeywords(name: String): List<String> {
     val keywords = mutableListOf<String>()
-    for (i in name.indices) {
-        for (j in (i+1)..name.length) {
-            keywords.add(name.slice(i until j))
+    val nameLowercase = name.lowercase()
+    for (i in nameLowercase.indices) {
+        for (j in (i+1)..nameLowercase.length) {
+            keywords.add(nameLowercase.slice(i until j))
         }
     }
     return keywords
