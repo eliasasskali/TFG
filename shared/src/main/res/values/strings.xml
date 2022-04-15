@@ -13,6 +13,7 @@
     <string name="signout_error">Sign Out Error</string>
     <string name="error">Error</string>
     <string name="passwordsDoNotMatch_error">Passwords do not match.</string>
+    <string name="clubs_load_error">Error loading Clubs.</string>
 
     <!-- Login -->
     <string name="login_welcome_message">Welcome back!</string>

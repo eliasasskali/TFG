@@ -1,6 +1,8 @@
 package com.eliasasskali.tfg.android.core.di
 
 import android.content.Context
+import androidx.paging.PagingConfig
+import com.eliasasskali.tfg.android.data.repository.*
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
@@ -39,6 +41,17 @@ fun dataModule(context: Context) = module {
     single {
         ClubAthleteRepository(
             FirebaseFirestore.getInstance().collection("Clubs")
+        )
+    }
+
+    single<ClubsRepository> {
+        ClubsRepositoryImpl(
+            source = FirestorePagingSource(
+                queryClubs = FirebaseFirestore.getInstance().collection("Clubs")
+            ),
+            config = PagingConfig(
+                pageSize = PAGE_SIZE
+            )
         )
     }
 }

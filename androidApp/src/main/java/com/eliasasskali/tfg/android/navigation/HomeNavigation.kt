@@ -22,17 +22,9 @@ fun HomeNavigation(
         startDestination = HomeRoutesClub.Home.routeName
     ) {
         composable(route = HomeRoutesClub.Home.routeName) {
-            val dataOrException = viewModel.state.value.data
             HomeScreen(
-                dataOrException,
-                viewModel,
-                onClubClicked = { clubId ->
-                    navController.navigate(
-                        HomeRoutesClub.ClubDetail.routeName.plus(
-                            "/$clubId"
-                        )
-                    )
-                }
+                navController,
+                viewModel
             )
         }
 
