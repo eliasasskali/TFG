@@ -8,7 +8,7 @@ import com.eliasasskali.tfg.ui.executor.Executor
 
 import kotlinx.coroutines.withContext
 
-open class RootViewModel(private val executor: Executor, private val errorHandler: ErrorHandler) :
+open class RootViewModel(private val executor: Executor, val errorHandler: ErrorHandler) :
     ViewModel() {
 
     protected suspend fun <T> execute(f: suspend () -> Either<DomainError, T>): Either<DomainError, T> =

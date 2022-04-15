@@ -39,13 +39,12 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-
     with(Dependencies.Android) {
         implementation(material)
         implementation(appCompat)
         implementation(constraintLayout)
-        implementation(hilt)
-        implementation(hiltNavigation)
+        implementation(kotlinxCoroutines)
+
         implementation(maps)
         implementation(mapsKtx)
         constraints {
@@ -55,6 +54,12 @@ dependencies {
             }
         }
 
+    }
+
+    with(Dependencies.DI) {
+        implementation(koinCore)
+        implementation(koinAndroid)
+        implementation(koinCompose)
     }
 
     with(Dependencies.Compose) {

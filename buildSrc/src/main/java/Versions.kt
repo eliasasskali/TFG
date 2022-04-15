@@ -10,10 +10,12 @@ object Versions {
     const val material = "1.5.0"
     const val appcompat = "1.4.1"
     const val constraintLayout = "2.1.3"
+    const val kotlinxCoroutines = "1.1.1"
+    const val coroutinesAndroid = "1.3.9"
+    const val coroutines = "1.5.1-native-mt"
 
-    // Hilt
-    const val hilt = "2.40.5"
-    const val hiltNavigation = "1.0.0-rc01"
+    // Koin
+    const val koin = "3.1.2"
 
     // Compose
     const val compose = "1.2.0-alpha01"

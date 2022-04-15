@@ -17,14 +17,15 @@ object Dependencies {
         const val google = "com.google.gms:google-services:4.3.10"
     }
 
+    object Main {
+        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
+    }
     object Android {
         const val material = "com.google.android.material:material:${Versions.material}"
         const val appCompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
-
-        // Hilt
-        const val hilt = "com.google.dagger:hilt-android:${Versions.hilt}"
-        const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigation}" // Inside Nav graph DI to work"
+        const val kotlinxCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.kotlinxCoroutines}"
+        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutinesAndroid}"
 
         // Google Maps
         const val secrets = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:${Versions.secrets}"
@@ -54,5 +55,12 @@ object Dependencies {
         const val firestore = "com.google.firebase:firebase-firestore-ktx"
         const val storage = "com.google.firebase:firebase-storage"
         const val authUi = "com.firebaseui:firebase-ui-auth:${Versions.authUi}"
+    }
+
+    object DI {
+        const val koinCore = "io.insert-koin:koin-core:${Versions.koin}"
+        const val koinAndroid = "io.insert-koin:koin-android:${Versions.koin}"
+        const val koinExt = "io.insert-koin:koin-android-ext:${Versions.koin}"
+        const val koinCompose = "io.insert-koin:koin-androidx-compose:${Versions.koin}"
     }
 }
