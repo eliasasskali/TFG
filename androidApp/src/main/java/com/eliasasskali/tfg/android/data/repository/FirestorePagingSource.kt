@@ -32,7 +32,9 @@ class FirestorePagingSource(
                     .await()
 
             LoadResult.Page(
-                data = currentPage.toObjects(ClubDto::class.java).map { it.toModel() },
+                data = currentPage.map { document ->
+                    document.toObject(ClubDto::class.java).toModel(document.id)
+                },
                 prevKey = null,
                 nextKey = nextPage
             )

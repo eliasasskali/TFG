@@ -46,7 +46,6 @@
     <string name="contact_email">Contact Email</string>
     <string name="club_description">Club Description</string>
 
-
     <string name="complete_profile_club_first_screen_title">Club Basic Info</string>
     <string name="complete_profile_club_first_screen_message">Let\'s get some basic club information:</string>
 
@@ -63,7 +62,8 @@
     <string name="complete_profile_athlete_add_name">What should we call you?</string>
     <string name="complete_profile_athlete_add_interests">Which are your interests?</string>
 
-
-
+    <!-- Club Detail -->
+    <string name="club_detail_screen_title">Club Detail</string>
+    <string name="club_detail_from_your_location">from your location</string>
 
 </resources>

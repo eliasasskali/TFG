@@ -47,6 +47,7 @@ dependencies {
         implementation(constraintLayout)
         implementation(kotlinxCoroutines)
 
+        implementation(playServicesMaps)
         implementation(maps)
         implementation(mapsKtx)
         implementation(playServicesLocation)
@@ -74,6 +75,7 @@ dependencies {
         implementation(navigation)
         implementation(accompanistPager)
         implementation(coilCompose)
+        implementation(mapsCompose)
         implementation(pagingCompose)
     }
 

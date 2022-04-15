@@ -40,8 +40,8 @@ fun Loading() {
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    viewModel: ClubsViewModel
+    viewModel: ClubsViewModel,
+    onClubClicked: (Club) -> Unit
 ) {
     val clubs = viewModel.clubs.collectAsLazyPagingItems()
     var error: DomainError? = null

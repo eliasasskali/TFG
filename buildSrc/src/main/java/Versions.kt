@@ -22,6 +22,7 @@ object Versions {
     const val navCompose = "2.4.0-rc01"
     const val accompanistPager = "0.24.4-alpha"
     const val coilCompose = "2.0.0-rc02"
+    const val mapsCompose = "2.1.0"
     const val pagingCompose = "1.0.0-alpha14"
 
     // Firebase

@@ -9,12 +9,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ScrollableChipsRow(elements: List<String>) {
-    Row(modifier = Modifier.horizontalScroll(rememberScrollState()).fillMaxWidth()) {
+    Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 8.dp).fillMaxWidth()) {
         elements.forEach {
             Chip(it)
         }
@@ -23,7 +22,7 @@ fun ScrollableChipsRow(elements: List<String>) {
 
 @Composable
 fun Chip(label: String) {
-    Box(modifier = Modifier.padding(8.dp)) {
+    Box(modifier = Modifier.padding(4.dp)) {
         Surface(
             elevation = 1.dp,
             shape = MaterialTheme.shapes.small,
@@ -33,7 +32,8 @@ fun Chip(label: String) {
                 Text(
                     label,
                     modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.button.copy(color = MaterialTheme.colors.onPrimary)
+                    color = MaterialTheme.colors.onPrimary,
+                    style = MaterialTheme.typography.button
                 )
             }
         }
