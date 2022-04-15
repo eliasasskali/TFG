@@ -44,6 +44,10 @@ object Dependencies {
         const val foundationLayout = "androidx.compose.foundation:foundation-layout:${Versions.compose}"
         const val materialCompose = "androidx.compose.material:material:${Versions.compose}"
         const val navigation = "androidx.navigation:navigation-compose:${Versions.navCompose}"
+
+        const val accompanistPager = "com.google.accompanist:accompanist-pager:${Versions.accompanistPager}"
+
+        const val coilCompose = "io.coil-kt:coil-compose:${Versions.coilCompose}"
     }
 
     object Firebase {

@@ -23,29 +23,24 @@ class LoginSignupViewModel constructor(
 
     val state: MutableState<LoginState> = mutableStateOf(LoginState())
 
+    fun resetState() {
+        state.value = LoginState()
+    }
     // Setters
     fun setUserEmail(email: String) {
-        state.value = state.value.copy(userEmail = email)
+        state.value = state.value.copy(userEmail = email, error = "")
     }
 
     fun setPassword(password: String) {
-        state.value = state.value.copy(password = password)
+        state.value = state.value.copy(password = password, error = "")
     }
 
-    fun setHasCompletedProfile(hasCompletedProfile: Boolean) {
-        state.value = state.value.copy(hasCompletedProfile = hasCompletedProfile)
+    fun setConfirmPassword(confirmPassword: String) {
+        state.value = state.value.copy(confirmPassword = confirmPassword, error = "")
     }
 
-    fun setError(error: String) {
+    private fun setError(error: String) {
         state.value = state.value.copy(error = error)
-    }
-
-    fun setIsLoggedIn(isLoggedIn: Boolean) {
-        state.value = state.value.copy(isLoggedIn = isLoggedIn)
-    }
-
-    init {
-        setIsLoggedIn(isLoggedIn())
     }
 
     fun onTriggerEvent(event: LoginSignUpEvent) {
@@ -57,21 +52,26 @@ class LoginSignupViewModel constructor(
     }
 
     private fun createUserWithEmailAndPassword(onUserLogged: () -> Unit) = viewModelScope.launch {
-        execute {
-            authRepository.createUserWithEmailAndPassword(
-                state.value.userEmail,
-                state.value.password
-            )
-        }.fold(
-            error = {
-                setError(errorHandler.convert(it))
-            },
-            success = {
-                it.addOnCompleteListener { task ->
-                    signInCompleteTask(task, onUserLogged)
+        if (state.value.doPasswordsMatch) {
+            execute {
+                authRepository.createUserWithEmailAndPassword(
+                    state.value.userEmail,
+                    state.value.password
+                )
+            }.fold(
+                error = {
+                    setError(errorHandler.convert(it))
+                },
+                success = {
+                    it.addOnCompleteListener { task ->
+                        signInCompleteTask(task, onUserLogged)
+                    }
                 }
-            }
-        )
+            )
+        } else {
+            setError(errorHandler.convert(DomainError.SignUpPasswordsDoNotMatch))
+        }
+
     }
 
     private fun signInWithEmailAndPassword(onUserLogged: () -> Unit) = viewModelScope.launch {
@@ -116,7 +116,6 @@ class LoginSignupViewModel constructor(
                 Log.d(TAG, state.value.error)
             },
             success = {
-                setIsLoggedIn(false)
             }
         )
     }
@@ -131,7 +130,6 @@ class LoginSignupViewModel constructor(
         } else {
             // TODO : Change behavior on failure
             setError(errorHandler.convert(DomainError.SignInError))
-            setIsLoggedIn(isLoggedIn())
         }
     }
 }

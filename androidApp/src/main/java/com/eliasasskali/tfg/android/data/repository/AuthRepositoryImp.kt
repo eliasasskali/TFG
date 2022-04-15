@@ -37,7 +37,7 @@ class AuthRepositoryImp constructor(
         return try {
             Either.Right(Firebase.auth.createUserWithEmailAndPassword(userEmail, password))
         } catch (e: Exception) {
-            Either.Left(DomainError.SignUpError)
+            Either.Left(DomainError.SignUpUserExistsError)
         }
     }
 

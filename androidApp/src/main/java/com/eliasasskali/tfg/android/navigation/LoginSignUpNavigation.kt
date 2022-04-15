@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeActivity
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileActivity
-import com.eliasasskali.tfg.android.ui.features.loginSignup.EmailLoginScreen
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginScreen
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.SignUpScreen
@@ -39,14 +38,10 @@ fun LoginSignUpNavigation(
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = LoginSignUpRoutes.Login.routeName) {
             LoginScreen(
-                emailLoginClick = { navController.navigate(LoginSignUpRoutes.EmailLogin.routeName) },
-                signUpLoginClick = { navController.navigate(LoginSignUpRoutes.SignUp.routeName) },
-                viewModel = viewModel,
-                onUserLogged = { onUserLogged() }
-            )
-        }
-        composable(route = LoginSignUpRoutes.EmailLogin.routeName) {
-            EmailLoginScreen(
+                signUpLoginClick = {
+                    viewModel.resetState()
+                    navController.navigate(LoginSignUpRoutes.SignUp.routeName)
+                },
                 viewModel = viewModel,
                 onUserLogged = { onUserLogged() }
             )
@@ -54,7 +49,11 @@ fun LoginSignUpNavigation(
         composable(route = LoginSignUpRoutes.SignUp.routeName) {
             SignUpScreen(
                 viewModel = viewModel,
-                onUserLogged = { onUserLogged() }
+                onUserLogged = { onUserLogged() },
+                onBackClicked = {
+                    viewModel.resetState()
+                    navController.popBackStack()
+                }
             )
         }
     }

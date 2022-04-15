@@ -39,6 +39,8 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.24.4-alpha")
+
     with(Dependencies.Android) {
         implementation(material)
         implementation(appCompat)
@@ -47,6 +49,7 @@ dependencies {
 
         implementation(maps)
         implementation(mapsKtx)
+        implementation(playServicesLocation)
         constraints {
             // Volley is a transitive dependency of maps
             implementation(volley) {
@@ -69,6 +72,8 @@ dependencies {
         implementation(foundationLayout)
         implementation(materialCompose)
         implementation(navigation)
+        implementation(accompanistPager)
+        implementation(coilCompose)
     }
 
     with(Dependencies.Firebase) {
@@ -80,5 +85,6 @@ dependencies {
         implementation(auth)
         implementation(authUi)
         implementation(firestore)
+        implementation(storage)
     }
 }
