@@ -48,6 +48,9 @@ object Dependencies {
         const val accompanistPager = "com.google.accompanist:accompanist-pager:${Versions.accompanistPager}"
 
         const val coilCompose = "io.coil-kt:coil-compose:${Versions.coilCompose}"
+
+        const val pagingCompose = "androidx.paging:paging-compose:${Versions.pagingCompose}"
+
     }
 
     object Firebase {

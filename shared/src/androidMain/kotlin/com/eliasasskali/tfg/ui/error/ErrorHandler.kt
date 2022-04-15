@@ -17,6 +17,7 @@ actual class ErrorHandler constructor(private val context: Context) {
             is DomainError.SignUpError -> context.getString(R.string.signup_error)
             is DomainError.SignUpPasswordsDoNotMatch -> context.getString(R.string.passwordsDoNotMatch_error)
             is DomainError.SignUpUserExistsError -> context.getString(R.string.signup_user_exists_error)
+            is DomainError.LoadClubsError -> context.getString(R.string.clubs_load_error)
             is DomainError.ErrorNotHandled -> error.message
         }
 }
