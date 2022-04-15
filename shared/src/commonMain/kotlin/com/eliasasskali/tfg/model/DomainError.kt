@@ -13,6 +13,8 @@ sealed class DomainError {
     object SignOutError : DomainError()
     object SignUpPasswordsDoNotMatch : DomainError()
 
+    object LoadClubsError : DomainError()
+
     data class ErrorNotHandled(val message: String) : DomainError()
 }
 

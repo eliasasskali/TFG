@@ -1,9 +1,9 @@
 package com.eliasasskali.tfg.android.core.di
 
 import android.content.Context
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
-import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
-import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
+import androidx.paging.PagingConfig
+import com.eliasasskali.tfg.android.data.repository.*
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.MapViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
@@ -38,6 +38,17 @@ fun dataModule(context: Context) = module {
     single {
         ClubAthleteRepository(
             FirebaseFirestore.getInstance().collection("Clubs")
+        )
+    }
+
+    single<ClubsRepository> {
+        ClubsRepositoryImpl(
+            source = FirestorePagingSource(
+                queryClubs = FirebaseFirestore.getInstance().collection("Clubs")
+            ),
+            config = PagingConfig(
+                pageSize = PAGE_SIZE
+            )
         )
     }
 }
