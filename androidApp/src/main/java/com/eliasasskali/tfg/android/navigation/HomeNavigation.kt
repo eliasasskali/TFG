@@ -40,7 +40,6 @@ fun HomeNavigation(
         ) { entry ->
             val viewModel = getViewModel<ClubDetailViewModel>()
             val jsonClub = entry.arguments?.getString(HomeRoutesClub.JSON_CLUB)
-            println(jsonClub)
             if (jsonClub != null) {
                 val club = Gson().fromJson(jsonClub, Club::class.java)
                 LaunchedEffect(Unit) {

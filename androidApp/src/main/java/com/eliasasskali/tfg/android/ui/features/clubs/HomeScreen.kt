@@ -22,6 +22,7 @@ import com.eliasasskali.tfg.android.navigation.HomeRoutesClub
 import com.eliasasskali.tfg.android.ui.components.CircularProgressBar
 import com.eliasasskali.tfg.android.ui.components.ClubCard
 import com.eliasasskali.tfg.android.ui.components.SearchView
+import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
 import com.google.gson.Gson
 
@@ -70,10 +71,7 @@ fun HomeScreen(
                 club?.let { it ->
                     ClubCard(
                         club = it,
-                        onClubClicked = {
-                            val jsonClub = Gson().toJson(club)
-                            navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub"))
-                        }
+                        onClubClicked = onClubClicked
                     )
                 }
             }
