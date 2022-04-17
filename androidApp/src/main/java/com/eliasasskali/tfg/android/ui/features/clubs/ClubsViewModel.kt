@@ -26,6 +26,19 @@ class ClubsViewModel(
 
     fun setSearchString(searchString: String) {
         state.value = state.value.copy(searchString = searchString)
-        clubs = repository.getClubs(state.value.searchString).cachedIn(viewModelScope)
+        clubs = repository.getClubs(state.value.searchString, state.value.sportFilters).cachedIn(viewModelScope)
+    }
+
+    fun setSportFilters(sports: List<String>) {
+        state.value = state.value.copy(sportFilters = sports)
+        clubs = repository.getClubs(state.value.searchString, state.value.sportFilters).cachedIn(viewModelScope)
+    }
+
+    fun setStep(step: ClubListSteps) {
+        state.value = state.value.copy(step = step)
+    }
+
+    fun setIsLoading(isLoading: Boolean) {
+        state.value = state.value.copy(isLoading = isLoading)
     }
 }

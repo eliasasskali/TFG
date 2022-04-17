@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.navigation
 
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -26,13 +27,15 @@ fun HomeNavigation(
         startDestination = HomeRoutesClub.Home.routeName
     ) {
         composable(route = HomeRoutesClub.Home.routeName) {
-            HomeScreen(
-                viewModel,
-                onClubClicked = {
-                    val jsonClub = Gson().toJson(it)
-                    navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub"))
-                }
-            )
+            Surface {
+                HomeScreen(
+                    viewModel,
+                    onClubClicked = {
+                        val jsonClub = Gson().toJson(it)
+                        navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub"))
+                    }
+                )
+            }
         }
 
         composable(

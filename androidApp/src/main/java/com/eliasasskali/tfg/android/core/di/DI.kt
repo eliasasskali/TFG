@@ -46,9 +46,6 @@ fun dataModule(context: Context) = module {
 
     single<ClubsRepository> {
         ClubsRepositoryImpl(
-            source = FirestorePagingSource(
-                queryClubs = FirebaseFirestore.getInstance().collection("Clubs")
-            ),
             config = PagingConfig(
                 pageSize = 10
             )

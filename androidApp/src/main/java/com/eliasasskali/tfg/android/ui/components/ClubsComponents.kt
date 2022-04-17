@@ -46,7 +46,6 @@ fun ClubCard(club: Club, onClubClicked: (Club) -> Unit) {
     ) {
         Row {
             if (club.images.isNotEmpty()) {
-                println(club.images[0])
                 ImageLoader(imageUrl = URLDecoder.decode(club.images[0], StandardCharsets.UTF_8.toString()), modifier = Modifier.align(Alignment.CenterVertically))
             }
             Column(

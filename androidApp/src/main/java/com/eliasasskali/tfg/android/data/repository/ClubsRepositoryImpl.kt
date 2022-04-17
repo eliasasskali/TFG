@@ -5,16 +5,15 @@ import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ClubsRepositoryImpl(
-    private val source: FirestorePagingSource,
     private val config: PagingConfig
 ) : ClubsRepository {
-    override fun getClubs(searchString: String) = Pager(
+    override fun getClubs(searchString: String, sportsFilters: List<String>) = Pager(
         config = config
     ) {
-        if (searchString.isBlank()) source
-        else FirestorePagingSource(
+        FirestorePagingSource(
             queryClubs = FirebaseFirestore.getInstance().collection("Clubs"),
-            searchString = searchString
+            searchString = searchString,
+            sportsFilters = sportsFilters
         )
     }.flow
 }
