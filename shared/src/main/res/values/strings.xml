@@ -66,4 +66,11 @@
     <string name="club_detail_screen_title">Club Detail</string>
     <string name="club_detail_from_your_location">from your location</string>
 
+    <!-- Filters -->
+    <string name="filter_by">Filter by:</string>
+    <string name="sort">Sort</string>
+    <string name="location">Location</string>
+    <string name="sports">Sports</string>
+    <string name="apply_filters">Apply filters</string>
+
 </resources>
