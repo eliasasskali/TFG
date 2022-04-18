@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
+import android.location.Location
 import androidx.paging.PagingData
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
@@ -12,7 +13,9 @@ data class ClubsState(
     val searchString: String = "",
     val data: Flow<PagingData<Club>> = flowOf(),
     val step: ClubListSteps = ClubListSteps.ShowClubs,
-    val sportFilters: List<String> = listOf()
+    val sportFilters: List<String> = listOf(),
+    val filterLocation: Location = Location(""),
+    val filterLocationRadius: Int = 500
 )
 
 sealed class ClubListSteps {

@@ -18,10 +18,10 @@ import androidx.paging.LoadState.Error
 import androidx.paging.LoadState.Loading
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.eliasasskali.tfg.android.ui.components.CircularProgressBar
 import com.eliasasskali.tfg.android.ui.components.ClubCard
 import com.eliasasskali.tfg.android.ui.components.SearchView
 import com.eliasasskali.tfg.android.ui.features.clubs.filterClubs.ClubsFilterView
+import com.eliasasskali.tfg.android.ui.features.clubs.filterClubs.FilterByLocationScreen
 import com.eliasasskali.tfg.android.ui.features.clubs.filterClubs.FilterBySportsView
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
@@ -47,7 +47,11 @@ fun HomeScreen(
         is ClubListSteps.Error -> {}
         is ClubListSteps.IsLoading -> Loading()
         is ClubListSteps.ShowClubs -> ClubsView(viewModel, onClubClicked)
-        is ClubListSteps.ShowFilterByLocation -> {}
+        is ClubListSteps.ShowFilterByLocation -> FilterByLocationScreen(
+            viewModel = viewModel,
+            onSearchButtonClick = { viewModel.setStep(ClubListSteps.ShowClubs) },
+            onBackClicked = { viewModel.setStep(ClubListSteps.ShowClubs) }
+        )
         is ClubListSteps.ShowFilterBySports -> FilterBySportsView(viewModel)
     }
 }

@@ -56,12 +56,7 @@ fun ClubsFilterView(viewModel: ClubsViewModel) {
             SportsFilterChip(viewModel)
             Spacer(modifier = Modifier.width(8.dp))
 
-            ClubsFilterChip(
-                viewModel = viewModel,
-                label = stringResource(R.string.location),
-                onFilterClick = {},
-                drawableId = R.drawable.ic_location
-            )
+            LocationFilterChip(viewModel)
             Spacer(modifier = Modifier.width(8.dp))
 
             ClubsFilterChip(
@@ -128,6 +123,58 @@ fun SportsFilterChip(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun LocationFilterChip(
+    viewModel: ClubsViewModel,
+) {
+    OutlinedButton(
+        modifier = Modifier.height(36.dp),
+        onClick = {
+            viewModel.setStep(ClubListSteps.ShowFilterByLocation)
+        },
+        border = BorderStroke(1.dp, color = MaterialTheme.colors.primary),
+        shape = RoundedCornerShape(50)
+    ) {
+        Row {
+            Icon(
+                painter = painterResource(R.drawable.ic_location),
+                contentDescription = null
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            Text(
+                modifier = Modifier
+                    .align(CenterVertically),
+                text = stringResource(R.string.location),
+                style = MaterialTheme.typography.caption,
+            )
+            Spacer(Modifier.width(8.dp))
+
+            //if (viewModel.state.value.sportFilters.isEmpty()) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowDropDown,
+                    contentDescription = null
+                )
+            /*} else {
+                IconButton(
+                    modifier = Modifier
+                        .align(CenterVertically)
+                        .size(18.dp),
+                    onClick = {
+                        viewModel.setSportFilters(listOf())
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = null,
+                    )
+                }
+            }*/
         }
     }
 }
