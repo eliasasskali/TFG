@@ -4,19 +4,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
-import com.eliasasskali.tfg.R
 
 @Composable
 fun ChooseProfileTypeScreen(
@@ -45,13 +44,13 @@ fun ChooseProfileTypeScreen(
             )
             Button(onClick = athleteButtonClick) {
                 ButtonRow(
-                    imageVector = Icons.Outlined.Email ,// TODO: DirectionsRun,
+                    painter = painterResource(R.drawable.ic_run),
                     stringResourceId = R.string.athlete
                 )
             }
             Button(onClick = clubButtonClick) {
                 ButtonRow(
-                    imageVector = Icons.Outlined.Email ,// TODO: FitnessCenter,
+                    painter = painterResource(R.drawable.ic_group),
                     stringResourceId = R.string.club
                 )
             }
@@ -60,7 +59,7 @@ fun ChooseProfileTypeScreen(
 }
 
 @Composable
-fun ButtonRow(imageVector: ImageVector, stringResourceId: Int) {
+fun ButtonRow(painter: Painter, stringResourceId: Int) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -70,7 +69,7 @@ fun ButtonRow(imageVector: ImageVector, stringResourceId: Int) {
     ) {
         Icon(
             tint = MaterialTheme.colors.onPrimary,
-            imageVector = imageVector,
+            painter = painter,
             contentDescription = null
         )
         Text(
