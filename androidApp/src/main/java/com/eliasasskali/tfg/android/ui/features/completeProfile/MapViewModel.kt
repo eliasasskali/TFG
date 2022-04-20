@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
 
-class MapViewModel constructor() : ViewModel()  {
-    val location = MutableStateFlow<Location>(getInitialLocation())
+class MapViewModel : ViewModel()  {
+    val location = MutableStateFlow(getInitialLocation())
     val addressText = mutableStateOf("")
     var isMapEditable = mutableStateOf(true)
     var timer: CountDownTimer? = null

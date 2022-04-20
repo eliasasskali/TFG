@@ -5,5 +5,5 @@ import com.eliasasskali.tfg.model.Club
 import kotlinx.coroutines.flow.Flow
 
 interface ClubsRepository {
-    fun getClubs(searchString: String = ""): Flow<PagingData<Club>>
+    fun getClubs(searchString: String = "", sportsFilters: List<String> = listOf()): Flow<PagingData<Club>>
 }

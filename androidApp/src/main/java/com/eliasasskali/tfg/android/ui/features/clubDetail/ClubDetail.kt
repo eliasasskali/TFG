@@ -22,6 +22,7 @@ import com.eliasasskali.tfg.model.ClubLocation
 @Composable
 fun ClubDetailScreen(
     clubDetailState: ClubDetailState,
+    viewModel: ClubDetailViewModel,
     onBackClicked: () -> Unit
 ) {
     Scaffold(
@@ -58,7 +59,7 @@ fun ClubDetailScreen(
                     }
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    ClubDetailHeader(clubDetailState.club)
+                    ClubDetailHeader(clubDetailState.club, viewModel.clubState.value.distanceToClub)
                     Spacer(modifier = Modifier.height(12.dp))
 
                     ClubDetailTitle(clubDetailState.club)
@@ -113,6 +114,6 @@ fun ClubDetailScreenPreview() {
     )
     val clubDetailState = ClubDetailState(club = club.toModel(""))
     AppTheme {
-        ClubDetailScreen(clubDetailState, {})
+        //ClubDetailScreen(clubDetailState, , {})
     }
 }
