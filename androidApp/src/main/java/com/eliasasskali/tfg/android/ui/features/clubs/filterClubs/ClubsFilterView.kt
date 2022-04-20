@@ -1,37 +1,28 @@
 package com.eliasasskali.tfg.android.ui.features.clubs.filterClubs
 
-import androidx.compose.foundation.*
+import android.location.Location
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import com.eliasasskali.tfg.android.R
-import com.eliasasskali.tfg.android.ui.components.Mockup
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubListSteps
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 
@@ -58,13 +49,6 @@ fun ClubsFilterView(viewModel: ClubsViewModel) {
 
             LocationFilterChip(viewModel)
             Spacer(modifier = Modifier.width(8.dp))
-
-            ClubsFilterChip(
-                viewModel = viewModel,
-                label = stringResource(R.string.sort),
-                onFilterClick = {},
-                drawableId = R.drawable.ic_sort
-            )
         }
     }
 }
@@ -100,6 +84,9 @@ fun SportsFilterChip(
                     .align(CenterVertically),
                 text = stringResource(R.string.sports),
                 style = MaterialTheme.typography.caption,
+                fontWeight =
+                if (viewModel.state.value.sportFilters.isEmpty()) FontWeight.Light
+                else FontWeight.Bold
             )
             Spacer(Modifier.width(8.dp))
 
@@ -147,26 +134,37 @@ fun LocationFilterChip(
 
             Spacer(Modifier.width(8.dp))
 
-            Text(
-                modifier = Modifier
-                    .align(CenterVertically),
-                text = stringResource(R.string.location),
-                style = MaterialTheme.typography.caption,
-            )
+            if (viewModel.state.value.filterLocationCity.isEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .align(CenterVertically),
+                    text = stringResource(R.string.location),
+                    style = MaterialTheme.typography.caption,
+                )
+            } else {
+                Text(
+                    modifier = Modifier
+                        .align(CenterVertically),
+                    text = "${viewModel.state.value.filterLocationCity} - ${viewModel.state.value.filterLocationRadius} km",
+                    style = MaterialTheme.typography.caption.copy(fontWeight = FontWeight.Bold)
+                )
+            }
             Spacer(Modifier.width(8.dp))
 
-            //if (viewModel.state.value.sportFilters.isEmpty()) {
+            if (viewModel.state.value.filterLocationCity.isEmpty()) {
                 Icon(
                     imageVector = Icons.Outlined.ArrowDropDown,
                     contentDescription = null
                 )
-            /*} else {
+            } else {
                 IconButton(
                     modifier = Modifier
                         .align(CenterVertically)
                         .size(18.dp),
                     onClick = {
-                        viewModel.setSportFilters(listOf())
+                        viewModel.setFilterLocation(Location(""))
+                        viewModel.setFilterLocationCity("")
+                        viewModel.setFilterLocationRadius(0)
                     }
                 ) {
                     Icon(
@@ -174,44 +172,6 @@ fun LocationFilterChip(
                         contentDescription = null,
                     )
                 }
-            }*/
-        }
-    }
-}
-
-@Composable
-fun ClubsFilterChip(
-    viewModel: ClubsViewModel,
-    label: String,
-    onFilterClick: () -> Unit,
-    drawableId: Int?
-) {
-    val enabled = remember { mutableStateOf(false) }
-
-    OutlinedButton(
-        modifier = Modifier.height(36.dp),
-        onClick = onFilterClick,
-        border = BorderStroke(1.dp, color = MaterialTheme.colors.primary),
-        shape = RoundedCornerShape(50),
-    ) {
-        Row {
-            drawableId?.let {
-                Icon(
-                    painter = painterResource(id = it),
-                    contentDescription = null
-                )
-            }
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .align(CenterVertically),
-                text = label,
-                style = MaterialTheme.typography.caption,
-            )
-            if (!enabled.value) {
-                Icon(imageVector = Icons.Outlined.ArrowDropDown, contentDescription = null)
-            } else {
-                Icon(imageVector = Icons.Outlined.Close, contentDescription = null)
             }
         }
     }

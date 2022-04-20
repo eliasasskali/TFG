@@ -9,7 +9,6 @@ import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Either
 import com.eliasasskali.tfg.ui.executor.Executor
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

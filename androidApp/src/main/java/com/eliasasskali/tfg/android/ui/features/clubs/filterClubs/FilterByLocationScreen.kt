@@ -46,7 +46,7 @@ fun FilterByLocationScreen(
                 val currentLocation = viewModel.location.collectAsState()
                 var text by remember { viewModel.addressText }
                 val context = LocalContext.current
-                var sliderPosition by remember { mutableStateOf(0f) }
+                var sliderPosition by remember { mutableStateOf(viewModel.state.value.filterLocationRadius.toFloat()) }
 
                 Column(
                     Modifier.fillMaxWidth()
@@ -117,7 +117,12 @@ fun FilterByLocationScreen(
                             if (viewModel.isMapEditable.value) {
                                 text = viewModel.getAddressFromLocation(context)
                             }
-                            MapViewContainer(viewModel.isMapEditable.value, mapView, viewModel)
+                            MapViewContainer(
+                                viewModel.isMapEditable.value,
+                                mapView,
+                                viewModel,
+                                sliderPosition.absoluteValue.toDouble()
+                            )
                         }
 
                         MapPinOverlay()
@@ -148,6 +153,7 @@ fun FilterByLocationScreen(
                             onClick = {
                                 viewModel.setFilterLocationRadius(sliderPosition.absoluteValue.toInt())
                                 viewModel.setFilterLocation(currentLocation.value)
+                                viewModel.setFilterLocationCity(text.split(",")[0])
                                 onSearchButtonClick()
                             },
                         ) {
@@ -190,12 +196,12 @@ fun MapPinOverlay() {
 private fun MapViewContainer(
     isEnabled: Boolean,
     mapView: MapView,
-    viewModel: ClubsViewModel
+    viewModel: ClubsViewModel,
+    radius: Double = 0.0
 ) {
     AndroidView(
         factory = { mapView }
     ) {
-
         mapView.getMapAsync { map ->
 
             map.uiSettings.setAllGesturesEnabled(isEnabled)

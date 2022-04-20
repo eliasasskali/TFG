@@ -1,12 +1,12 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
+import android.app.Activity
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.CountDownTimer
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -14,8 +14,10 @@ import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubsRepository
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.util.*
 
 class ClubsViewModel(
@@ -57,8 +59,23 @@ class ClubsViewModel(
         state.value = state.value.copy(filterLocationRadius = filterLocationRadius)
     }
 
+    fun setFilterLocationCity(filterLocationCity: String) {
+        state.value = state.value.copy(filterLocationCity = filterLocationCity)
+    }
+
     fun setFilterLocation(filterLocation: Location) {
         state.value = state.value.copy(filterLocation = filterLocation)
+        /*val geoFirestore = GeoFirestore(FirebaseFirestore.getInstance().collection("Clubs"))
+        geoFirestore
+            .getAtLocation(GeoPoint(filterLocation.latitude, filterLocation.longitude), 1.0) { docs, ex ->
+                if (ex != null) {
+                    Log.e("PAGINGSOURCE", ex.toString())
+                } else {
+                    docs?.let {
+                        println()
+                    }
+                }
+            }*/
     }
 
     fun getInitialLocation() : Location {
@@ -66,6 +83,31 @@ class ClubsViewModel(
         initialLocation.latitude = 51.506874
         initialLocation.longitude = -0.139800
         return initialLocation
+    }
+
+    fun setUserLocation(context: Activity) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                location?.let {
+                    state.value = state.value.copy(userLocation = it)
+                }
+            }
+
+    }
+
+    fun distanceToUser(clubLocation: Location, userLocation: Location) : Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(
+            userLocation.latitude,
+            userLocation.longitude,
+            clubLocation.latitude,
+            clubLocation.longitude,
+            results
+        )
+        val df = DecimalFormat("#.#")
+        df.roundingMode = RoundingMode.UP
+        return df.format(results[0]/1000).toFloat()
     }
 
     fun updateLocation(latitude: Double, longitude: Double){

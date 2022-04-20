@@ -5,19 +5,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
@@ -35,7 +35,11 @@ fun CircularProgressBar(
 }
 
 @Composable
-fun ClubCard(club: Club, onClubClicked: (Club) -> Unit) {
+fun ClubCard(
+    club: Club,
+    onClubClicked: (Club) -> Unit,
+    distanceToClub: Float
+) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -46,14 +50,31 @@ fun ClubCard(club: Club, onClubClicked: (Club) -> Unit) {
     ) {
         Row {
             if (club.images.isNotEmpty()) {
-                ImageLoader(imageUrl = URLDecoder.decode(club.images[0], StandardCharsets.UTF_8.toString()), modifier = Modifier.align(Alignment.CenterVertically))
+                ImageLoader(imageUrl = URLDecoder.decode(club.images[0], StandardCharsets.UTF_8.toString()), modifier = Modifier.align(
+                    CenterVertically
+                ))
             }
             Column(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .align(Alignment.CenterVertically)
+                    .align(CenterVertically)
             ) {
+                Row(Modifier.fillMaxWidth()) {
+                    Icon(
+                        modifier = Modifier.size(12.dp),
+                        painter = painterResource(id = R.drawable.ic_location),
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "$distanceToClub km away" , // TODO: Change to stringRes
+                        style = MaterialTheme.typography.caption.copy(fontWeight = FontWeight.Light),
+                        modifier = Modifier.align(CenterVertically)
+                    )
+                }
+                Spacer(modifier = Modifier.size(4.dp))
+
                 Text(
                     text = club.name,
                     style = MaterialTheme.typography.h1
@@ -116,6 +137,6 @@ fun clubCardPreview() {
         )
     )
     AppTheme {
-        ClubCard(club = club.toModel("")) {}
+        ClubCard(club = club.toModel(""), {}, 100.0f)
     }
 }

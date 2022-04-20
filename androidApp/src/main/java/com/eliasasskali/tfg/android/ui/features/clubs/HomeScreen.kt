@@ -1,5 +1,7 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
+import android.app.Activity
+import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,15 +9,15 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState.NotLoading
-import androidx.paging.LoadState.Error
-import androidx.paging.LoadState.Loading
+import androidx.paging.LoadState.*
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.eliasasskali.tfg.android.ui.components.ClubCard
@@ -61,6 +63,11 @@ fun ClubsView(
     viewModel: ClubsViewModel,
     onClubClicked: (Club) -> Unit
 ) {
+    val activity = LocalContext.current as Activity
+    LaunchedEffect(Unit) {
+        viewModel.setUserLocation(activity)
+    }
+
     val clubs = viewModel.clubs.collectAsLazyPagingItems()
     var error: DomainError? = null
     val textState = remember { mutableStateOf(TextFieldValue(viewModel.state.value.searchString)) }
@@ -99,10 +106,25 @@ fun ClubsView(
                     items = clubs
                 ) { club ->
                     club?.let { it ->
-                        ClubCard(
-                            club = it,
-                            onClubClicked = onClubClicked
-                        )
+                        val distanceToClub =
+                            if (viewModel.state.value.filterLocation != Location("")) {
+                                viewModel.distanceToUser(
+                                    club.location,
+                                    viewModel.state.value.filterLocation
+                                )
+                            } else {
+                                viewModel.distanceToUser(
+                                    club.location,
+                                    viewModel.state.value.userLocation
+                                )
+                            }
+                        if (viewModel.state.value.filterLocationRadius == 0 || viewModel.state.value.filterLocationRadius >= distanceToClub) {
+                            ClubCard(
+                                club = it,
+                                onClubClicked = onClubClicked,
+                                distanceToClub = distanceToClub
+                            )
+                        }
                     }
                 }
             }

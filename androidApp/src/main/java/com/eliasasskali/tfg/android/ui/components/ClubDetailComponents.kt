@@ -72,7 +72,7 @@ fun ClubDetailTitle(
 }
 
 @Composable
-fun ClubDetailHeader(club: Club) {
+fun ClubDetailHeader(club: Club, distanceToClub: Float) {
     Row(
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -80,7 +80,7 @@ fun ClubDetailHeader(club: Club) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "950m ${stringResource(R.string.club_detail_from_your_location)}",
+            text = "$distanceToClub km ${stringResource(R.string.club_detail_from_your_location)}",
             style = MaterialTheme.typography.caption,
             modifier = Modifier.align(CenterVertically)
             // TODO: Compute distance

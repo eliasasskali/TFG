@@ -15,7 +15,9 @@ data class ClubsState(
     val step: ClubListSteps = ClubListSteps.ShowClubs,
     val sportFilters: List<String> = listOf(),
     val filterLocation: Location = Location(""),
-    val filterLocationRadius: Int = 500
+    val filterLocationRadius: Int = 0,
+    val filterLocationCity: String = "",
+    val userLocation: Location = Location("")
 )
 
 sealed class ClubListSteps {
