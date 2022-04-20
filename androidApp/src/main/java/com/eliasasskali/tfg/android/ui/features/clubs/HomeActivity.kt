@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
+import android.annotation.SuppressLint
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -9,26 +10,33 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.Scaffold
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.eliasasskali.tfg.android.navigation.HomeNavigation
+import com.eliasasskali.tfg.android.ui.features.bottomNavBar.BottomNavBar
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-class HomeActivity: AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     companion object {
         fun intent(context: Context): Intent = Intent(context, HomeActivity::class.java)
     }
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
                 val navController = rememberNavController()
-                HomeNavigation(navController)
+                Scaffold(
+                    bottomBar = { BottomNavBar(navController = navController) }
+                ) {
+                    HomeNavigation(navController)
+                }
             }
         }
         if (ContextCompat.checkSelfPermission(this@HomeActivity,
