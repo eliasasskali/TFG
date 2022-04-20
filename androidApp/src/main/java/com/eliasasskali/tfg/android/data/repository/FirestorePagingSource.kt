@@ -2,7 +2,6 @@ package com.eliasasskali.tfg.android.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.eliasasskali.tfg.android.ui.components.Mockup
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
 import com.google.firebase.firestore.DocumentSnapshot
@@ -26,9 +25,13 @@ class FirestorePagingSource(
 
             val nextPage = getNextPage(lastVisibleClub)
 
+            val data = currentPage.map { document ->
+                document.toObject(ClubDto::class.java).toModel(document.id)
+            }
+
             LoadResult.Page(
-                data = currentPage.map { document ->
-                    document.toObject(ClubDto::class.java).toModel(document.id)
+                data = if (sportsFilters.isEmpty()) data else data.filter { club ->
+                    club.services.intersect(sportsFilters).isNotEmpty()
                 },
                 prevKey = null,
                 nextKey = nextPage
@@ -61,7 +64,6 @@ class FirestorePagingSource(
             } else {
                 queryClubs
                     .whereArrayContains("keywords", searchString.lowercase().trim())
-                    .whereArrayContainsAny("services", sportsFilters)
                     .get()
                     .await()
             }
@@ -90,7 +92,6 @@ class FirestorePagingSource(
                     .await()
             } else {
                 queryClubs
-                    .whereArrayContainsAny("services", sportsFilters)
                     .whereArrayContains("keywords", searchString.lowercase().trim())
                     .startAfter(lastVisibleClub)
                     .get()
