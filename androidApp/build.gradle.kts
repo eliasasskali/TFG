@@ -76,6 +76,7 @@ dependencies {
         implementation(accompanistPager)
         implementation(coilCompose)
         implementation(mapsCompose)
+        implementation(pagingCompose)
     }
 
     with(Dependencies.Firebase) {

@@ -49,6 +49,7 @@ object Dependencies {
         const val coilCompose = "io.coil-kt:coil-compose:${Versions.coilCompose}"
         const val mapsCompose = "com.google.maps.android:maps-compose:${Versions.mapsCompose}"
 
+        const val pagingCompose = "androidx.paging:paging-compose:${Versions.pagingCompose}"
     }
 
     object Firebase {

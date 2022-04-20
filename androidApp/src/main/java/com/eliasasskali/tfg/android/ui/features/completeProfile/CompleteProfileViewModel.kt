@@ -14,6 +14,7 @@ import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.AthleteDto
+import com.eliasasskali.tfg.model.ClubLocation
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
@@ -96,7 +97,7 @@ class CompleteProfileViewModel(
 
     fun setLocation(loc: Location) {
         location.value = loc
-        state.value = state.value.copy(location = loc)
+        state.value = state.value.copy(location = ClubLocation(loc.latitude, loc.longitude))
     }
 
     fun getAddressFromLocation(context: Context): String {
@@ -124,9 +125,10 @@ class CompleteProfileViewModel(
         timer = object : CountDownTimer(1000, 1500) {
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
-                location.value = getLocationFromAddress(context, text)
+                val loc = getLocationFromAddress(context, text)
+                location.value = loc
                 state.value = state.value.copy(
-                    location = getLocationFromAddress(context, text),
+                    location = ClubLocation(loc.latitude, loc.longitude),
                     address = text
                 )
             }

@@ -1,6 +1,8 @@
 package com.eliasasskali.tfg.model
 
 import android.location.Location
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 data class ClubDto(
     val name: String = "",
@@ -10,12 +12,17 @@ data class ClubDto(
     val address: String = "",
     val location: ClubLocation = ClubLocation(0.0, 0.0),
     val services: List<String> = listOf(),
-    val images: List<String> = listOf()
+    val images: List<String> = listOf(),
+    val keywords: List<String> = listOf()
 ) {
-    fun toModel(id: String) : Club {
-        val location = Location("")
-        location.latitude = this.location.longitude
-        location.longitude = this.location.latitude
+    fun toModel(id: String): Club {
+        /*val location = Location("")
+        location.latitude = this.location.latitude
+        location.longitude = this.location.longitude*/
+
+        val encodedImages = this.images.map {
+            URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
+        }
 
         return Club(
             id = id,
@@ -24,9 +31,9 @@ data class ClubDto(
             contactPhone = this.contactPhone,
             description = this.description,
             address = this.address,
-            location = location,
+            location = this.location,
             services = this.services,
-            images = this.images
+            images = encodedImages
         )
     }
 }
@@ -38,11 +45,11 @@ data class Club(
     val contactPhone: String? = "",
     val description: String? = "",
     val address: String = "",
-    val location: Location = Location(""),
+    val location: ClubLocation = ClubLocation(0.0, 0.0),
     val services: List<String> = listOf(),
     val images: List<String> = listOf()
 ) {
-    fun toModel() : ClubDto {
+    fun toModel(): ClubDto {
         return ClubDto(
             name = this.name,
             contactEmail = this.contactEmail,
@@ -51,7 +58,8 @@ data class Club(
             address = this.address,
             location = ClubLocation(this.location.latitude, this.location.longitude),
             services = this.services,
-            images = this.images
+            images = this.images,
+            keywords = generateKeywords(this.name)
         )
     }
 }
@@ -60,3 +68,15 @@ data class ClubLocation(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0
 )
+
+// Generate all possible keyword from string: Used for searching
+fun generateKeywords(name: String): List<String> {
+    val keywords = mutableListOf<String>()
+    val nameLowercase = name.lowercase()
+    for (i in nameLowercase.indices) {
+        for (j in (i+1)..nameLowercase.length) {
+            keywords.add(nameLowercase.slice(i until j))
+        }
+    }
+    return keywords
+}
