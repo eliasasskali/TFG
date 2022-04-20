@@ -33,22 +33,32 @@ fun HomeNavigation(
                     viewModel,
                     onClubClicked = {
                         val jsonClub = Gson().toJson(it)
-                        navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub"))
+                        val distanceToClub = if (viewModel.state.value.filterLocation.latitude != 0.0) {
+                            viewModel.distanceToClub(it.location, viewModel.state.value.filterLocation)
+                        } else {
+                            viewModel.distanceToClub(it.location, viewModel.state.value.userLocation)
+                        }
+
+                        navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub/$distanceToClub"))
                     }
                 )
             }
         }
 
         composable(
-            route = HomeRoutesClub.ClubDetail.routeName.plus("/{${HomeRoutesClub.JSON_CLUB}}")
+            route = HomeRoutesClub.ClubDetail.routeName.plus("/{${HomeRoutesClub.JSON_CLUB}}/{${HomeRoutesClub.DISTANCE_TO_CLUB}}")
         ) { entry ->
             val viewModel = getViewModel<ClubDetailViewModel>()
             val jsonClub = entry.arguments?.getString(HomeRoutesClub.JSON_CLUB)
+            val distanceToClub = entry.arguments?.getString(HomeRoutesClub.DISTANCE_TO_CLUB)
             if (jsonClub != null) {
                 val club = Gson().fromJson(jsonClub, Club::class.java)
                 LaunchedEffect(Unit) {
                     viewModel.initClubDetailScreen(club)
                     viewModel.isClubOwner(club.id)
+                    if (distanceToClub != null) {
+                        viewModel.setDistanceToClub(distanceToClub)
+                    }
                 }
             }
             ClubDetailScreen(

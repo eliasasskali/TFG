@@ -59,7 +59,7 @@ fun ClubDetailScreen(
                     }
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    ClubDetailHeader(clubDetailState.club, 100.0f)
+                    ClubDetailHeader(clubDetailState.club, viewModel.clubState.value.distanceToClub)
                     Spacer(modifier = Modifier.height(12.dp))
 
                     ClubDetailTitle(clubDetailState.club)

@@ -72,7 +72,7 @@ fun ClubDetailTitle(
 }
 
 @Composable
-fun ClubDetailHeader(club: Club, distanceToClub: Float) {
+fun ClubDetailHeader(club: Club, distanceToClub: String) {
     Row(
         modifier = Modifier
             .padding(horizontal = 12.dp)

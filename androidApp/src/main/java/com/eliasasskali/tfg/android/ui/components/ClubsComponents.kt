@@ -38,7 +38,7 @@ fun CircularProgressBar(
 fun ClubCard(
     club: Club,
     onClubClicked: (Club) -> Unit,
-    distanceToClub: Float
+    distanceToClub: Int
 ) {
     Card(
         modifier = Modifier
@@ -137,6 +137,6 @@ fun clubCardPreview() {
         )
     )
     AppTheme {
-        ClubCard(club = club.toModel(""), {}, 100.0f)
+        ClubCard(club = club.toModel(""), {}, 100)
     }
 }

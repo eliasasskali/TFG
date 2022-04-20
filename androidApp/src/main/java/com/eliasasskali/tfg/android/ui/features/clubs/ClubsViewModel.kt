@@ -86,15 +86,15 @@ class ClubsViewModel(
 
     }
 
-    fun distanceToClub(clubLocation: ClubLocation, userLocation: Location) : Float {
+    fun distanceToClub(clubLocation: ClubLocation, userLocation: Location) : Int {
         val clubLoc = Location("")
         clubLoc.longitude = clubLocation.longitude
         clubLoc.latitude = clubLocation.latitude
 
         val distance = clubLoc.distanceTo(userLocation)
-        val df = DecimalFormat("#.#")
+        val df = DecimalFormat("#")
         df.roundingMode = RoundingMode.UP
-        return df.format(distance/1000).toFloat()
+        return df.format(distance/1000).toInt()
     }
 
     fun updateLocation(latitude: Double, longitude: Double){
