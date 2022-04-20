@@ -65,17 +65,6 @@ class ClubsViewModel(
 
     fun setFilterLocation(filterLocation: Location) {
         state.value = state.value.copy(filterLocation = filterLocation)
-        /*val geoFirestore = GeoFirestore(FirebaseFirestore.getInstance().collection("Clubs"))
-        geoFirestore
-            .getAtLocation(GeoPoint(filterLocation.latitude, filterLocation.longitude), 1.0) { docs, ex ->
-                if (ex != null) {
-                    Log.e("PAGINGSOURCE", ex.toString())
-                } else {
-                    docs?.let {
-                        println()
-                    }
-                }
-            }*/
     }
 
     fun getInitialLocation() : Location {
@@ -97,17 +86,10 @@ class ClubsViewModel(
     }
 
     fun distanceToUser(clubLocation: Location, userLocation: Location) : Float {
-        val results = FloatArray(1)
-        Location.distanceBetween(
-            userLocation.latitude,
-            userLocation.longitude,
-            clubLocation.latitude,
-            clubLocation.longitude,
-            results
-        )
+        val distance = clubLocation.distanceTo(userLocation)
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.UP
-        return df.format(results[0]/1000).toFloat()
+        return df.format(distance/1000).toFloat()
     }
 
     fun updateLocation(latitude: Double, longitude: Double){

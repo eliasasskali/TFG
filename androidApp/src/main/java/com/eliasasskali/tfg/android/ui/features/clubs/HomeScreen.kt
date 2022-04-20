@@ -107,7 +107,7 @@ fun ClubsView(
                 ) { club ->
                     club?.let { it ->
                         val distanceToClub =
-                            if (viewModel.state.value.filterLocation != Location("")) {
+                            if (viewModel.state.value.filterLocation.latitude != 0.0) {
                                 viewModel.distanceToUser(
                                     club.location,
                                     viewModel.state.value.filterLocation
@@ -118,6 +118,7 @@ fun ClubsView(
                                     viewModel.state.value.userLocation
                                 )
                             }
+
                         if (viewModel.state.value.filterLocationRadius == 0 || viewModel.state.value.filterLocationRadius >= distanceToClub) {
                             ClubCard(
                                 club = it,

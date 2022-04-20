@@ -17,8 +17,8 @@ data class ClubDto(
 ) {
     fun toModel(id: String): Club {
         val location = Location("")
-        location.latitude = this.location.longitude
-        location.longitude = this.location.latitude
+        location.latitude = this.location.latitude
+        location.longitude = this.location.longitude
 
         val encodedImages = this.images.map {
             URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
