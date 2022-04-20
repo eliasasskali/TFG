@@ -1,7 +1,6 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
 import android.app.Activity
-import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -108,12 +107,12 @@ fun ClubsView(
                     club?.let { it ->
                         val distanceToClub =
                             if (viewModel.state.value.filterLocation.latitude != 0.0) {
-                                viewModel.distanceToUser(
+                                viewModel.distanceToClub(
                                     club.location,
                                     viewModel.state.value.filterLocation
                                 )
                             } else {
-                                viewModel.distanceToUser(
+                                viewModel.distanceToClub(
                                     club.location,
                                     viewModel.state.value.userLocation
                                 )

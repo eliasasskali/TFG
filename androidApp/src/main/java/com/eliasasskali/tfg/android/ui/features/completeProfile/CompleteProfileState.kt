@@ -2,6 +2,7 @@ package com.eliasasskali.tfg.android.ui.features.completeProfile
 
 import android.location.Location
 import android.net.Uri
+import com.eliasasskali.tfg.model.ClubLocation
 
 data class CompleteProfileState(
     val error: String = "",
@@ -13,6 +14,6 @@ data class CompleteProfileState(
     val contactPhone: String = "",
     val description: String = "",
     val address: String = "",
-    val location: Location = Location(""), //TODO: own location class
+    val location: ClubLocation = ClubLocation(0.0, 0.0), //TODO: own location class
     val clubImages: List<Uri> = emptyList()
 )

@@ -80,9 +80,9 @@ fun ClubDetailScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                     ClubDetailContact(clubDetailState.club)
                     Spacer(modifier = Modifier.height(12.dp))
-                    //if (clubDetailState.club.location.latitude != 0.0 && clubDetailState.club.location.longitude != 0.0) {
+                    if (clubDetailState.club.location.latitude != 0.0 && clubDetailState.club.location.longitude != 0.0) {
                         ClubDetailMap(clubDetailState.club)
-                    //}
+                    }
                 }
             }
         }

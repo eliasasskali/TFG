@@ -16,9 +16,9 @@ data class ClubDto(
     val keywords: List<String> = listOf()
 ) {
     fun toModel(id: String): Club {
-        val location = Location("")
+        /*val location = Location("")
         location.latitude = this.location.latitude
-        location.longitude = this.location.longitude
+        location.longitude = this.location.longitude*/
 
         val encodedImages = this.images.map {
             URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
@@ -31,7 +31,7 @@ data class ClubDto(
             contactPhone = this.contactPhone,
             description = this.description,
             address = this.address,
-            location = location,
+            location = this.location,
             services = this.services,
             images = encodedImages
         )
@@ -45,7 +45,7 @@ data class Club(
     val contactPhone: String? = "",
     val description: String? = "",
     val address: String = "",
-    val location: Location = Location(""),
+    val location: ClubLocation = ClubLocation(0.0, 0.0),
     val services: List<String> = listOf(),
     val images: List<String> = listOf()
 ) {

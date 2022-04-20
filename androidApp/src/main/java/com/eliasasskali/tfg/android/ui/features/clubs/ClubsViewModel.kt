@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubsRepository
+import com.eliasasskali.tfg.model.ClubLocation
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.android.gms.location.LocationServices
@@ -85,8 +86,12 @@ class ClubsViewModel(
 
     }
 
-    fun distanceToUser(clubLocation: Location, userLocation: Location) : Float {
-        val distance = clubLocation.distanceTo(userLocation)
+    fun distanceToClub(clubLocation: ClubLocation, userLocation: Location) : Float {
+        val clubLoc = Location("")
+        clubLoc.longitude = clubLocation.longitude
+        clubLoc.latitude = clubLocation.latitude
+
+        val distance = clubLoc.distanceTo(userLocation)
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.UP
         return df.format(distance/1000).toFloat()
