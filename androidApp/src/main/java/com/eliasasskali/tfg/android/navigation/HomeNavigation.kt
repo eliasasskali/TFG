@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.navigation
 
+import android.content.Context
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,16 +15,20 @@ import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeScreen
+import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileScreen
+import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
 import com.eliasasskali.tfg.model.Club
 import com.google.gson.Gson
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun HomeNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    context: Context
 ) {
-    val viewModel: ClubsViewModel = get()
     NavHost(
         navController = navController,
         startDestination = HomeRoutesClub.Home.routeName
@@ -46,6 +51,7 @@ fun HomeNavigation(
         }
 
         composable(route = HomeRoutesClub.Home.routeName) {
+            val viewModel: ClubsViewModel = get()
             Surface {
                 HomeScreen(
                     viewModel,
@@ -69,20 +75,45 @@ fun HomeNavigation(
             val viewModel = getViewModel<ClubDetailViewModel>()
             val jsonClub = entry.arguments?.getString(HomeRoutesClub.JSON_CLUB)
             val distanceToClub = entry.arguments?.getString(HomeRoutesClub.DISTANCE_TO_CLUB)
+            var encodedJsonClub = jsonClub
             if (jsonClub != null) {
-                val club = Gson().fromJson(jsonClub, Club::class.java)
+                var club = Gson().fromJson(jsonClub, Club::class.java)
+                club = club.copy(images = club.images.map {
+                    URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
+                })
+                encodedJsonClub = Gson().toJson(club)
                 LaunchedEffect(Unit) {
                     viewModel.initClubDetailScreen(club)
                     viewModel.isClubOwner(club.id)
-                    if (distanceToClub != null) {
-                        viewModel.setDistanceToClub(distanceToClub)
-                    }
                 }
             }
+
             ClubDetailScreen(
-                clubDetailState = viewModel.clubState.value,
+                club = viewModel.clubState.value.club,
+                distanceToClub = distanceToClub ?: "Unknown", // TODO: Check distanceToClub
+                isClubOwner = viewModel.clubState.value.isClubOwner,
                 onBackClicked = { navController.popBackStack() },
-                viewModel = viewModel
+                onEditButtonClick = { // TODO: Go to edit profile screen
+                    navController.navigate(HomeRoutesClub.EditClubProfile.routeName.plus("/$encodedJsonClub"))
+                }
+            )
+        }
+
+        composable(
+            route = HomeRoutesClub.EditClubProfile.routeName.plus("/{${HomeRoutesClub.JSON_CLUB}}")
+        ) { entry ->
+            val viewModel = getViewModel<EditClubProfileViewModel>()
+            val jsonClub = entry.arguments?.getString(HomeRoutesClub.JSON_CLUB)
+            if (jsonClub != null) {
+                val club = Gson().fromJson(jsonClub, Club::class.java)
+                LaunchedEffect(Unit) {
+                    viewModel.initEditClubDetailScreen(club, context)
+                }
+            }
+
+            EditClubProfileScreen(
+                viewModel = viewModel,
+                onBackClicked = { navController.popBackStack() }
             )
         }
     }

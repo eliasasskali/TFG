@@ -26,6 +26,7 @@ sealed class HomeRoutesClub(val routeName: String) {
     object Profile : HomeRoutesClub("profile")
     object Post : HomeRoutesClub("post")
     object ClubDetail: HomeRoutesClub("clubDetail")
+    object EditClubProfile: HomeRoutesClub("editClubProfile")
 
     companion object {
         const val JSON_CLUB = "jsonClub"

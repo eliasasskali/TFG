@@ -33,9 +33,9 @@ class HomeActivity : AppCompatActivity() {
             AppTheme {
                 val navController = rememberNavController()
                 Scaffold(
-                    bottomBar = { BottomNavBar(navController = navController) }
+                    //bottomBar = { BottomNavBar(navController = navController) }
                 ) {
-                    HomeNavigation(navController)
+                    HomeNavigation(navController, this)
                 }
             }
         }

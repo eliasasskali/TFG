@@ -7,7 +7,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,33 +19,55 @@ import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.ui.components.*
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
+import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
 import com.eliasasskali.tfg.model.ClubLocation
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ClubDetailScreen(
-    clubDetailState: ClubDetailState,
-    viewModel: ClubDetailViewModel,
-    onBackClicked: () -> Unit
+    club: Club,
+    distanceToClub: String,
+    isClubOwner: Boolean,
+    onBackClicked: () -> Unit = {},
+    onEditButtonClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(id = R.string.club_detail_screen_title),
-                        style = MaterialTheme.typography.h6
-                    )
+                    if (!isClubOwner) {
+                        Text(
+                            text = stringResource(id = R.string.club_detail_screen_title),
+                            style = MaterialTheme.typography.h6
+                        )
+                    } else {
+                        Text(
+                            text = "My profile", //stringResource(id = R.string.club_detail_screen_title),
+                            style = MaterialTheme.typography.h6
+                        )
+                    }
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { onBackClicked() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = stringResource(id = R.string.back)
-                        )
+                    if (!isClubOwner) {
+                        IconButton(
+                            onClick = { onBackClicked() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.ArrowBack,
+                                contentDescription = stringResource(id = R.string.back)
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    if (isClubOwner) {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Settings,
+                                contentDescription = stringResource(id = R.string.settings)
+                            )
+                        }
                     }
                 },
                 backgroundColor = MaterialTheme.colors.primary,
@@ -54,23 +80,30 @@ fun ClubDetailScreen(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    if (clubDetailState.club.images.isNotEmpty()) {
-                        ImagePager(imageList = clubDetailState.club.images)
+                    if (club.images.isNotEmpty()) {
+                        ImagePager(imageList = club.images)
                     }
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    ClubDetailHeader(clubDetailState.club, viewModel.clubState.value.distanceToClub)
+                    if (isClubOwner) {
+                        ClubDetailEditButton(
+                            modifier = Modifier.align(Alignment.End),
+                            onEditButtonClick = onEditButtonClick
+                        )
+                    }
+                    
+                    ClubDetailHeader(club, distanceToClub)
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    ClubDetailTitle(clubDetailState.club)
+                    ClubDetailTitle(club)
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    if (clubDetailState.club.services.isNotEmpty()) {
-                        ScrollableChipsRow(elements = clubDetailState.club.services)
+                    if (club.services.isNotEmpty()) {
+                        ScrollableChipsRow(elements = club.services)
                     }
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    clubDetailState.club.description?.let {
+                    club.description?.let {
                         Text(
                             modifier = Modifier.padding(horizontal = 12.dp),
                             text = it,
@@ -78,10 +111,10 @@ fun ClubDetailScreen(
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    ClubDetailContact(clubDetailState.club)
+                    ClubDetailContact(club)
                     Spacer(modifier = Modifier.height(12.dp))
-                    if (clubDetailState.club.location.latitude != 0.0 && clubDetailState.club.location.longitude != 0.0) {
-                        ClubDetailMap(clubDetailState.club)
+                    if (club.location.latitude != 0.0 && club.location.longitude != 0.0) {
+                        ClubDetailMap(club)
                     }
                 }
             }

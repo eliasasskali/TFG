@@ -150,7 +150,7 @@ fun MapPinOverlay() {
 }
 
 @Composable
-private fun MapViewContainer(
+fun MapViewContainer(
     isEnabled: Boolean,
     mapView: MapView,
     viewModel: CompleteProfileViewModel
