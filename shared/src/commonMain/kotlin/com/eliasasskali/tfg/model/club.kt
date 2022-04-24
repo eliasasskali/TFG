@@ -1,6 +1,5 @@
 package com.eliasasskali.tfg.model
 
-import android.location.Location
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -16,10 +15,6 @@ data class ClubDto(
     val keywords: List<String> = listOf()
 ) {
     fun toModel(id: String): Club {
-        /*val location = Location("")
-        location.latitude = this.location.latitude
-        location.longitude = this.location.longitude*/
-
         val encodedImages = this.images.map {
             URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
         }

@@ -17,6 +17,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -24,7 +26,7 @@ fun ImagePager(imageList: List<String>) {
     Box(Modifier.fillMaxWidth()) {
         val pagerState = rememberPagerState()
         HorizontalPager(count = imageList.size, state = pagerState) { page ->
-            val imageUrl = imageList[page]
+            val imageUrl = URLDecoder.decode(imageList[page], StandardCharsets.UTF_8.toString())
             Box {
                 Image(
                     painter = rememberAsyncImagePainter(imageUrl),
