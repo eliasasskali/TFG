@@ -1,20 +1,17 @@
 package com.eliasasskali.tfg.android.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -79,16 +76,33 @@ fun ClubDetailHeader(club: Club, distanceToClub: String) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = "$distanceToClub km ${stringResource(R.string.club_detail_from_your_location)}",
-            style = MaterialTheme.typography.caption,
-            modifier = Modifier.align(CenterVertically)
-            // TODO: Compute distance
-        )
+        Row {
+            Icon(
+                modifier = Modifier.align(CenterVertically),
+                imageVector = Icons.Outlined.LocationOn,
+                contentDescription = stringResource(R.string.edit_profile)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "$distanceToClub km ${stringResource(R.string.club_detail_from_your_location)}",
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.align(CenterVertically)
+            )
+        }
         // TODO: Rating View
-        Text(
-            text = "⭐⭐⭐⭐⭐"
-        )
+        Row() {
+            Icon(
+                modifier = Modifier.align(CenterVertically),
+                imageVector = Icons.Outlined.Star,
+                contentDescription = stringResource(R.string.rating),
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "4.2", // TODO: Use club rating
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.align(CenterVertically)
+            )
+        }
     }
 }
 
@@ -128,6 +142,33 @@ fun ClubDetailContactItem(icon: ImageVector, value: String) {
             overflow = TextOverflow.Visible
         )
     }
+}
+
+@Composable
+fun ClubDetailEditButton(
+    modifier: Modifier = Modifier,
+    onEditButtonClick: () -> Unit
+) {
+    OutlinedButton(
+        modifier = modifier
+            .padding(horizontal = 12.dp),
+        onClick = { onEditButtonClick() }
+    ) {
+        Row() {
+            Icon(
+                modifier = Modifier.align(CenterVertically),
+                imageVector = Icons.Outlined.Edit,
+                contentDescription = stringResource(R.string.edit_profile)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                modifier = Modifier.align(CenterVertically),
+                text = stringResource(id = R.string.edit_profile),
+                style = MaterialTheme.typography.caption
+            )
+        }
+    }
+    Spacer(modifier = Modifier.height(12.dp))
 }
 
 @Preview(showBackground = true)
