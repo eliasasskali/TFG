@@ -86,4 +86,14 @@ class ClubAthleteRepository(
             }
         }
     }
+
+    fun deleteClubImages(clubId: String, numberOfImages: Int) {
+        for (index in 0..numberOfImages) {
+            val storage = FirebaseStorage.getInstance()
+            storage.reference.child("clubImages/$clubId/$index").delete()
+        }
+        FirebaseFirestore.getInstance().collection("Clubs")
+            .document(clubId)
+            .update("images", FieldValue.delete())
+    }
 }

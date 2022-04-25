@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import android.os.CountDownTimer
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +15,7 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
+import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
 import com.eliasasskali.tfg.android.data.repository.ClubsRepository
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubLocation
@@ -23,9 +25,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
+import android.provider.MediaStore
+import java.io.ByteArrayOutputStream
+
 
 class EditClubProfileViewModel(
-    private val repository: ClubsRepository,
+    private val repository: ClubAthleteRepository,
     executor: Executor,
     errorHandler: ErrorHandler
 ) : RootViewModel(executor, errorHandler) {
@@ -188,5 +193,18 @@ class EditClubProfileViewModel(
 
     fun imagesChanged() : Boolean {
         return state.value.previousBitmapImages != state.value.bitmapImages
+    }
+
+    fun uploadNewImages(clubId: String, uriImages: List<Uri>) {
+        repository.deleteClubImages(clubId, state.value.club.images.size)
+        repository.uploadImages(uriImages)
+    }
+
+    fun getImageUri(context: Context, inImage: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path =
+            MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
     }
 }

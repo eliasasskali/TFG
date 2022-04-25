@@ -384,6 +384,7 @@ fun ApplyCancelChangesButtons(
     viewModel: EditClubProfileViewModel,
     onCancelButtonClicked: () -> Unit,
 ) {
+    val context = LocalContext.current
     Row(
         Modifier
             .padding(12.dp)
@@ -407,7 +408,13 @@ fun ApplyCancelChangesButtons(
                 .fillMaxWidth()
                 .weight(1f),
             onClick = {
-                viewModel.setStep(EditClubProfileSteps.ShowEditLocation)
+                if (viewModel.imagesChanged()) {
+                    val uriImages = viewModel.state.value.bitmapImages.map {
+                        viewModel.getImageUri(context, it)
+                    }
+                    viewModel.uploadNewImages(viewModel.state.value.club.id, uriImages)
+                }
+                // TODO: Update other fields
             }
         ) {
             Text(
