@@ -414,7 +414,8 @@ fun ApplyCancelChangesButtons(
                     }
                     viewModel.uploadNewImages(viewModel.state.value.club.id, uriImages)
                 }
-                // TODO: Update other fields
+                viewModel.updateClub()
+                onCancelButtonClicked()
             }
         ) {
             Text(

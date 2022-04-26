@@ -8,6 +8,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.CountDownTimer
+import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -16,17 +17,17 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
-import com.eliasasskali.tfg.android.data.repository.ClubsRepository
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubLocation
+import com.eliasasskali.tfg.model.generateKeywords
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.collections.ArrayList
-import android.provider.MediaStore
-import java.io.ByteArrayOutputStream
 
 
 class EditClubProfileViewModel(
@@ -89,7 +90,7 @@ class EditClubProfileViewModel(
     }
 
     fun appendImages(images: List<Bitmap>) {
-        state.value.bitmapImages += images
+        state.value = state.value.copy(bitmapImages = (state.value.bitmapImages + images) as ArrayList<Bitmap>)
     }
 
     fun setStep(step: EditClubProfileSteps) {
@@ -206,5 +207,40 @@ class EditClubProfileViewModel(
         val path =
             MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", null)
         return Uri.parse(path)
+    }
+
+    fun updateClub() {
+        val club = state.value.club
+        val clubReference = FirebaseFirestore
+            .getInstance()
+            .collection("Clubs")
+            .document(club.id)
+
+        if (club.name != state.value.name) {
+            val keywords = generateKeywords(state.value.name)
+            clubReference
+                .update(
+                    "name", state.value.name,
+                    "keywords", keywords
+                )
+        }
+        if (club.contactEmail != state.value.contactEmail) {
+            clubReference.update("contactEmail", state.value.contactEmail)
+        }
+        if (club.contactPhone != state.value.contactPhone) {
+            clubReference.update("contactPhone", state.value.contactPhone)
+        }
+        if (club.description != state.value.description) {
+            clubReference.update("description", state.value.description)
+        }
+        if (club.services != state.value.services) {
+            clubReference.update("services", state.value.services.toList())
+        }
+        if (club.location != state.value.location) {
+            clubReference.update(
+                "address", state.value.address,
+                "location", state.value.location
+            )
+        }
     }
 }
