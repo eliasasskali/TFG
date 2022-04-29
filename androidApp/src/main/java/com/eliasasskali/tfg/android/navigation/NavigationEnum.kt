@@ -30,6 +30,7 @@ sealed class HomeRoutesClub(val routeName: String) {
 
     companion object {
         const val JSON_CLUB = "jsonClub"
+        const val EDIT_JSON_CLUB = "editJsonClub"
         const val DISTANCE_TO_CLUB = "distanceToClub"
     }
 }

@@ -76,11 +76,11 @@ fun ClubDetailHeader(club: Club, distanceToClub: String) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row {
+        Row(Modifier.align(CenterVertically)) {
             Icon(
                 modifier = Modifier.align(CenterVertically),
                 imageVector = Icons.Outlined.LocationOn,
-                contentDescription = stringResource(R.string.edit_profile)
+                contentDescription = null
             )
             Spacer(Modifier.width(8.dp))
             Text(
@@ -89,20 +89,31 @@ fun ClubDetailHeader(club: Club, distanceToClub: String) {
                 modifier = Modifier.align(CenterVertically)
             )
         }
-        // TODO: Rating View
-        Row() {
-            Icon(
-                modifier = Modifier.align(CenterVertically),
-                imageVector = Icons.Outlined.Star,
-                contentDescription = stringResource(R.string.rating),
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = "4.2", // TODO: Use club rating
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.align(CenterVertically)
-            )
-        }
+        // TODO: Rating
+        RatingView(
+            rating = "4.2",
+            modifier = Modifier.align(CenterVertically)
+        )
+    }
+}
+
+@Composable
+fun RatingView(
+    rating: String,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        Icon(
+            modifier = Modifier.align(CenterVertically),
+            imageVector = Icons.Outlined.Star,
+            contentDescription = stringResource(R.string.rating),
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = rating,
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.align(CenterVertically)
+        )
     }
 }
 
@@ -149,25 +160,36 @@ fun ClubDetailEditButton(
     modifier: Modifier = Modifier,
     onEditButtonClick: () -> Unit
 ) {
-    OutlinedButton(
-        modifier = modifier
-            .padding(horizontal = 12.dp),
-        onClick = { onEditButtonClick() }
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row() {
-            Icon(
-                modifier = Modifier.align(CenterVertically),
-                imageVector = Icons.Outlined.Edit,
-                contentDescription = stringResource(R.string.edit_profile)
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                modifier = Modifier.align(CenterVertically),
-                text = stringResource(id = R.string.edit_profile),
-                style = MaterialTheme.typography.caption
-            )
+        RatingView(
+            rating = "4.3",
+            modifier = Modifier.align(CenterVertically)
+        ) // TODO: Actual rating
+
+        OutlinedButton(
+            onClick = { onEditButtonClick() }
+        ) {
+            Row {
+                Icon(
+                    modifier = Modifier.align(CenterVertically),
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = stringResource(R.string.edit_profile)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    modifier = Modifier.align(CenterVertically),
+                    text = stringResource(id = R.string.edit_profile),
+                    style = MaterialTheme.typography.caption
+                )
+            }
         }
     }
+
     Spacer(modifier = Modifier.height(12.dp))
 }
 

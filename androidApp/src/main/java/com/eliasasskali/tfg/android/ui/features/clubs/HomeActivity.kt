@@ -32,11 +32,7 @@ class HomeActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 val navController = rememberNavController()
-                Scaffold(
-                    //bottomBar = { BottomNavBar(navController = navController) }
-                ) {
-                    HomeNavigation(navController, this)
-                }
+                HomeNavigation(navController, this)
             }
         }
         if (ContextCompat.checkSelfPermission(this@HomeActivity,
