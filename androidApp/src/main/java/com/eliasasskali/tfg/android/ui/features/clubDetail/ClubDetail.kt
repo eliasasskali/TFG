@@ -27,10 +27,11 @@ import com.eliasasskali.tfg.model.ClubLocation
 @Composable
 fun ClubDetailScreen(
     club: Club,
-    distanceToClub: String,
+    distanceToClub: String = "",
     isClubOwner: Boolean,
     onBackClicked: () -> Unit = {},
-    onEditButtonClick: () -> Unit = {}
+    onEditButtonClick: () -> Unit = {},
+    paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     Scaffold(
         topBar = {
@@ -43,7 +44,7 @@ fun ClubDetailScreen(
                         )
                     } else {
                         Text(
-                            text = "My profile", //stringResource(id = R.string.club_detail_screen_title),
+                            text = stringResource(id = R.string.my_club),
                             style = MaterialTheme.typography.h6
                         )
                     }
@@ -74,7 +75,7 @@ fun ClubDetailScreen(
             )
         },
         content = {
-            Surface(modifier = Modifier.fillMaxSize()) {
+            Surface(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -90,9 +91,9 @@ fun ClubDetailScreen(
                             modifier = Modifier.align(Alignment.End),
                             onEditButtonClick = onEditButtonClick
                         )
+                    } else {
+                        ClubDetailHeader(club, distanceToClub)
                     }
-                    
-                    ClubDetailHeader(club, distanceToClub)
                     Spacer(modifier = Modifier.height(12.dp))
 
                     ClubDetailTitle(club)

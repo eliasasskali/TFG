@@ -1,6 +1,5 @@
 package com.eliasasskali.tfg.android.ui.features.clubDetail
 
-import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
