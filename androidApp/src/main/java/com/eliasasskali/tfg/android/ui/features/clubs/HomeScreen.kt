@@ -42,12 +42,13 @@ fun Loading() {
 @Composable
 fun HomeScreen(
     viewModel: ClubsViewModel,
-    onClubClicked: (Club) -> Unit
+    onClubClicked: (Club) -> Unit,
+    paddingValues: PaddingValues
 ) {
     when (viewModel.state.value.step) {
         is ClubListSteps.Error -> {}
         is ClubListSteps.IsLoading -> Loading()
-        is ClubListSteps.ShowClubs -> ClubsView(viewModel, onClubClicked)
+        is ClubListSteps.ShowClubs -> ClubsView(viewModel, onClubClicked, paddingValues)
         is ClubListSteps.ShowFilterByLocation -> FilterByLocationScreen(
             viewModel = viewModel,
             onSearchButtonClick = { viewModel.setStep(ClubListSteps.ShowClubs) },
@@ -60,7 +61,8 @@ fun HomeScreen(
 @Composable
 fun ClubsView(
     viewModel: ClubsViewModel,
-    onClubClicked: (Club) -> Unit
+    onClubClicked: (Club) -> Unit,
+    paddingValues: PaddingValues
 ) {
     val activity = LocalContext.current as Activity
     LaunchedEffect(Unit) {
@@ -89,7 +91,7 @@ fun ClubsView(
         }
     }
 
-    Column {
+    Column(Modifier.padding(paddingValues)) {
         SearchView(state = textState, viewModel)
         ClubsFilterView(viewModel)
         if (viewModel.state.value.isLoading) {

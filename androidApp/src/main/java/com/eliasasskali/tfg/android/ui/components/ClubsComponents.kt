@@ -50,9 +50,10 @@ fun ClubCard(
     ) {
         Row {
             if (club.images.isNotEmpty()) {
-                ImageLoader(imageUrl = URLDecoder.decode(club.images[0], StandardCharsets.UTF_8.toString()), modifier = Modifier.align(
-                    CenterVertically
-                ))
+                ImageLoader(
+                    imageUrl = URLDecoder.decode(club.images[0], StandardCharsets.UTF_8.toString()),
+                    modifier = Modifier.align(CenterVertically)
+                )
             }
             Column(
                 modifier = Modifier

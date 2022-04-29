@@ -7,11 +7,13 @@ import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
+import com.eliasasskali.tfg.android.ui.features.clubProfile.ClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.MapViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
 import com.eliasasskali.tfg.android.ui.features.splash.SplashViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
+import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
@@ -27,8 +29,10 @@ val appModule = module {
     viewModel { CompleteProfileViewModel(get(), get(), get()) }
     viewModel { ClubsViewModel(get(), get(), get()) }
     viewModel { ClubDetailViewModel(get(), get()) }
+    viewModel { EditClubProfileViewModel(get(), get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get()) }
+    viewModel { ClubProfileViewModel(get(), get(), get(), get())}
 }
 
 fun dataModule(context: Context) = module {
