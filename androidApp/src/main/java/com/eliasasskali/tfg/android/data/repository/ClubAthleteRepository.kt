@@ -3,26 +3,19 @@ package com.eliasasskali.tfg.android.data.repository
 import android.net.Uri
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
 class ClubAthleteRepository(
     private val queryClubsByName: Query
 ) {
-    suspend fun getClubsFromFirestore(): Either<DomainError, List<Club>> {
-        return try {
-            Either.Right(queryClubsByName.get().await().map { document ->
-                document.toObject(ClubDto::class.java).toModel(document.id)
-            })
-        } catch (e: FirebaseFirestoreException) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
-        }
-    }
-
     fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
         try {
             FirebaseAuth.getInstance().currentUser?.let { user ->
@@ -95,5 +88,32 @@ class ClubAthleteRepository(
         FirebaseFirestore.getInstance().collection("Clubs")
             .document(clubId)
             .update("images", FieldValue.delete())
+    }
+
+    suspend fun uploadPost(title: String, content: String) : Either<DomainError, Success> {
+        val uid = Firebase.auth.currentUser?.uid
+        val db = Firebase.firestore
+        uid?.let {
+            val clubName = db.collection("Clubs")
+                .document(uid)
+                .get()
+                .await()
+                .getString("name")
+
+            val post = Post(
+                title = title,
+                content = content,
+                date = System.currentTimeMillis(),
+                clubName = clubName ?: ""
+            )
+
+            return try {
+                db.collection("Posts").add(post.toModel(uid)).await()
+                Either.Right(Success)
+            } catch (e: Exception) {
+                Either.Left(DomainError.CreatePostError)
+            }
+        }
+        return Either.Left(DomainError.CreatePostError)
     }
 }

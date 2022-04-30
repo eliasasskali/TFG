@@ -20,6 +20,8 @@ import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeScreen
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileScreen
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
+import com.eliasasskali.tfg.android.ui.features.post.PostScreen
+import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
 import com.eliasasskali.tfg.model.Club
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -84,7 +86,12 @@ fun HomeNavigation(
             val scaffoldState = rememberScaffoldState()
 
             NavDrawerScaffold(scaffoldState = scaffoldState, scope = rememberCoroutineScope(), navController = navController) { paddingValues ->
-                route?.let { it1 -> Text(text = it1) }
+                val viewModel: PostViewModel = get()
+                PostScreen(
+                    viewModel = viewModel,
+                    onPostCreated = {},
+                    paddingValues = paddingValues
+                )
             }
         }
 
