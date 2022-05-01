@@ -15,6 +15,7 @@ import com.eliasasskali.tfg.android.ui.features.splash.SplashViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
+import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
@@ -35,6 +36,7 @@ val appModule = module {
     viewModel { SplashViewModel(get(), get(), get(), get()) }
     viewModel { ClubProfileViewModel(get(), get(), get(), get())}
     viewModel { PostViewModel(get(), get(), get(), get()) }
+    viewModel { PostsViewModel(get(), get(), get()) }
 }
 
 fun dataModule(context: Context) = module {
@@ -54,6 +56,14 @@ fun dataModule(context: Context) = module {
         ClubsRepositoryImpl(
             config = PagingConfig(
                 pageSize = 10
+            )
+        )
+    }
+
+    single<PostsRepository> {
+        PostsRepositoryImpl(
+            config = PagingConfig(
+                pageSize = 5
             )
         )
     }
