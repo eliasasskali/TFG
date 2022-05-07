@@ -6,14 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
+import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
     private val authRepository: AuthRepository,
     private val repository: ClubAthleteRepository,
+    private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler,
 ) : RootViewModel(executor, errorHandler) {
@@ -37,9 +40,11 @@ class SplashViewModel(
                 } else {
                     // User logged, check if profile is completed
                     // Check if Club or Athlete related to user id exists.
+                    val uid = authRepository.getCurrentUser()?.uid!!
+                    preferences.saveLoggedUid(uid)
                     viewModelScope.launch {
                         execute {
-                            repository.getClubById(authRepository.getCurrentUser()?.uid!!)
+                            repository.getClubById(uid)
                         }.fold(
                             error = {
                                 // TODO : Handle error
@@ -50,12 +55,14 @@ class SplashViewModel(
                                 if (club != null) {
                                     // CLub Exists -> Navigate to home
                                     state.value = state.value.copy(screen = Screen.HOME)
+                                    preferences.saveProfileJson(Gson().toJson(club))
+                                    preferences.saveIsClub(true)
                                     onSplashComplete(state.value)
                                 } else {
                                     // Club Does not Exist -> Check if athlete exists
                                     viewModelScope.launch {
                                         execute {
-                                            repository.getUserById(authRepository.getCurrentUser()?.uid!!)
+                                            repository.getUserById(uid)
                                         }.fold(
                                             error = {
                                                 // TODO : Handle Error
@@ -68,6 +75,8 @@ class SplashViewModel(
                                                     // Athlete exists -> Navigate to home
                                                     state.value =
                                                         state.value.copy(screen = Screen.HOME)
+                                                    preferences.saveProfileJson(Gson().toJson(athlete))
+                                                    preferences.saveIsClub(false)
                                                     onSplashComplete(state.value)
                                                 } else {
                                                     // Athlete nor Club exists -> Navigate to Complete Profile

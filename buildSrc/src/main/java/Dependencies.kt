@@ -19,6 +19,7 @@ object Dependencies {
 
     object Main {
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
+        const val multiplatformSettings = "com.russhwolf:multiplatform-settings:${Versions.multiplatformSettings}"
     }
     object Android {
         const val material = "com.google.android.material:material:${Versions.material}"

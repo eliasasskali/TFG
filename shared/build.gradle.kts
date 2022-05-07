@@ -20,6 +20,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(Dependencies.Main.coroutines)
+                implementation(Dependencies.Main.multiplatformSettings)
             }
         }
         val commonTest by getting {
