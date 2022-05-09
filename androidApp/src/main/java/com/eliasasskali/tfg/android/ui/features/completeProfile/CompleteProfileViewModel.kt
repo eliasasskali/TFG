@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.AthleteDto
 import com.eliasasskali.tfg.model.ClubLocation
@@ -20,6 +21,7 @@ import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
@@ -28,8 +30,9 @@ private const val TAG = "RegisterViewModel"
 
 class CompleteProfileViewModel(
     private val repository: ClubAthleteRepository,
+    private val preferences: Preferences,
     executor: Executor,
-    errorHandler: ErrorHandler
+    errorHandler: ErrorHandler,
 ) : RootViewModel(executor, errorHandler) {
 
     val state: MutableState<CompleteProfileState> = mutableStateOf(CompleteProfileState())
@@ -173,6 +176,8 @@ class CompleteProfileViewModel(
 
                     db.collection("Clubs").document(uid).set(club.toModel()).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            preferences.saveProfileJson(Gson().toJson(club))
+                            preferences.saveIsClub(true)
                             onCompleteProfileSuccess()
                             Log.d(TAG, "Club Profile Completed")
                         } else {
@@ -182,13 +187,15 @@ class CompleteProfileViewModel(
                     uploadImages(state.value.clubImages)
                 }
             } else {
-                val user = AthleteDto(
+                val athlete = AthleteDto(
                     state.value.name,
                     state.value.services.toList()
                 )
                 uid?.let {
-                    db.collection("Users").document(uid).set(user).addOnCompleteListener {
+                    db.collection("Users").document(uid).set(athlete).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            preferences.saveProfileJson(Gson().toJson(athlete))
+                            preferences.saveIsClub(true)
                             onCompleteProfileSuccess()
                             Log.d(TAG, "User Profile Completed")
                         } else {
