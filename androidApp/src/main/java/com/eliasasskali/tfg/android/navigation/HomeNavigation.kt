@@ -54,10 +54,8 @@ fun HomeNavigation(
             ) { paddingValues ->
                 val viewModel: PostsViewModel = get()
 
-                LaunchedEffect(Unit) {
-                    val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-                    viewModel.initPostsScreen(listOf(uid))
-                }
+                viewModel.initPostsScreen(listOf())
+
                 PostsScreen(
                     viewModel = viewModel,
                     paddingValues = paddingValues,

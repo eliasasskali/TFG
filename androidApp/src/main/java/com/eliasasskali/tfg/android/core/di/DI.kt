@@ -40,7 +40,7 @@ val appModule = module {
     viewModel { SplashViewModel(get(), get(), get(), get(), get()) }
     viewModel { ClubProfileViewModel(get(), get(), get())}
     viewModel { PostViewModel(get(), get(), get(), get()) }
-    viewModel { PostsViewModel(get(), get(), get()) }
+    viewModel { PostsViewModel(get(), get(), get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get()) }
 }
 
