@@ -10,14 +10,23 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
-fun BottomNavBar(navController: NavController) {
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Chats,
+fun BottomNavBar(
+    isClub: Boolean,
+    navController: NavController
+) {
+    val items = if (isClub) listOf(
+        BottomNavItem.HomeClub,
+        BottomNavItem.ChatsClub,
         BottomNavItem.AddPost,
         BottomNavItem.Notifications,
-        BottomNavItem.Profile
+        BottomNavItem.ProfileClub
+    ) else listOf(
+        BottomNavItem.HomeAthlete,
+        BottomNavItem.Clubs,
+        BottomNavItem.ChatsAthlete,
+        BottomNavItem.ProfileAthlete
     )
+
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary

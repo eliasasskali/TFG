@@ -22,7 +22,6 @@ import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

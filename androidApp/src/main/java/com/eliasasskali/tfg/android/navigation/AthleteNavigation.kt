@@ -3,8 +3,10 @@ package com.eliasasskali.tfg.android.navigation
 import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,39 +14,32 @@ import androidx.navigation.compose.composable
 import com.eliasasskali.tfg.android.ui.features.bottomNavBar.BottomNavBar
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
-import com.eliasasskali.tfg.android.ui.features.clubProfile.ClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeScreen
-import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileScreen
-import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
-import com.eliasasskali.tfg.android.ui.features.post.PostScreen
-import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.Post
-import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
-import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun HomeNavigation(
+fun AthleteNavigation(
     navController: NavHostController,
     context: Context,
 ) {
     NavHost(
         navController = navController,
-        startDestination = HomeRoutesClub.Home.routeName
+        startDestination = HomeRoutesAthlete.Home.routeName
     ) {
 
-        composable(route = HomeRoutesClub.Notifications.routeName) {
+        composable(route = HomeRoutesAthlete.Home.routeName) {
             val scaffoldState = rememberScaffoldState()
 
             NavDrawerScaffold(
@@ -61,13 +56,13 @@ fun HomeNavigation(
                     paddingValues = paddingValues,
                     onPostClicked = { post ->
                         val jsonPost = Gson().toJson(post)
-                        navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/$jsonPost"))
+                        navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
                     }
                 )
             }
         }
 
-        composable(route = HomeRoutesClub.PostDetail.routeName.plus("/{${HomeRoutesClub.JSON_POST}}")) { entry ->
+        composable(route = HomeRoutesAthlete.PostDetail.routeName.plus("/{${HomeRoutesAthlete.JSON_POST}}")) { entry ->
             val scaffoldState = rememberScaffoldState()
 
             NavDrawerScaffold(
@@ -76,7 +71,7 @@ fun HomeNavigation(
                 navController = navController
             ) { paddingValues ->
                 val viewModel: PostDetailViewModel = get()
-                val jsonPost = entry.arguments?.getString(HomeRoutesClub.JSON_POST)
+                val jsonPost = entry.arguments?.getString(HomeRoutesAthlete.JSON_POST)
                 val post = Gson().fromJson(jsonPost, Post::class.java)
                 LaunchedEffect(Unit) {
                     viewModel.initPostDetailScreen(post)
@@ -86,65 +81,13 @@ fun HomeNavigation(
                     viewModel = viewModel,
                     paddingValues = paddingValues,
                     onPostDeleted = {
-                        navController.navigate(HomeRoutesClub.Home.routeName)
+                        navController.navigate(HomeRoutesAthlete.Home.routeName)
                     }
                 )
             }
         }
 
-        composable(route = HomeRoutesClub.Chats.routeName) {
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                route?.let { it1 -> Text(text = it1) }
-            }
-        }
-
-        composable(route = HomeRoutesClub.Profile.routeName) {
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: ClubProfileViewModel = get()
-                viewModel.initClubProfile()
-
-                ClubDetailScreen(
-                    club = viewModel.state.value.club,
-                    isClubOwner = true,
-                    onBackClicked = { navController.popBackStack() },
-                    onEditButtonClick = {
-                        navController.navigate(HomeRoutesClub.EditClubProfile.routeName)
-                    },
-                    paddingValues = paddingValues
-                )
-            }
-        }
-
-        composable(route = HomeRoutesClub.Post.routeName) {
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: PostViewModel = get()
-                PostScreen(
-                    viewModel = viewModel,
-                    onPostCreated = {},
-                    paddingValues = paddingValues
-                )
-            }
-        }
-
-        composable(route = HomeRoutesClub.Home.routeName) {
+        composable(route = HomeRoutesAthlete.Clubs.routeName) {
             val scaffoldState = rememberScaffoldState()
 
             NavDrawerScaffold(
@@ -171,7 +114,7 @@ fun HomeNavigation(
                                     )
                                 }
 
-                            navController.navigate(HomeRoutesClub.ClubDetail.routeName.plus("/$jsonClub/$distanceToClub"))
+                            navController.navigate(HomeRoutesAthlete.ClubDetail.routeName.plus("/$jsonClub/$distanceToClub"))
                         },
                         paddingValues = paddingValues
                     )
@@ -180,11 +123,11 @@ fun HomeNavigation(
         }
 
         composable(
-            route = HomeRoutesClub.ClubDetail.routeName.plus("/{${HomeRoutesClub.JSON_CLUB}}/{${HomeRoutesClub.DISTANCE_TO_CLUB}}")
+            route = HomeRoutesAthlete.ClubDetail.routeName.plus("/{${HomeRoutesAthlete.JSON_CLUB}}/{${HomeRoutesAthlete.DISTANCE_TO_CLUB}}")
         ) { entry ->
             val viewModel = getViewModel<ClubDetailViewModel>()
-            val jsonClub = entry.arguments?.getString(HomeRoutesClub.JSON_CLUB)
-            val distanceToClub = entry.arguments?.getString(HomeRoutesClub.DISTANCE_TO_CLUB)
+            val jsonClub = entry.arguments?.getString(HomeRoutesAthlete.JSON_CLUB)
+            val distanceToClub = entry.arguments?.getString(HomeRoutesAthlete.DISTANCE_TO_CLUB)
             var encodedJsonClub = ""
             var club = Club()
             jsonClub?.let { json ->
@@ -214,11 +157,9 @@ fun HomeNavigation(
                         detailState = viewModel.clubState.value,
                         club = viewModel.clubState.value.club,
                         distanceToClub = distanceToClub ?: "Unknown", // TODO: Check distanceToClub
-                        isClubOwner = viewModel.clubState.value.isClubOwner,
+                        isClubOwner = false,
                         onBackClicked = { navController.popBackStack() },
-                        onEditButtonClick = {
-                            navController.navigate(HomeRoutesClub.EditClubProfile.routeName)
-                        },
+                        onEditButtonClick = {},
                         onFollowButtonClick = { viewModel.followClub(viewModel.clubState.value.club.id) },
                         onUnfollowButtonClick = { viewModel.unFollowClub(viewModel.clubState.value.club.id) }
                     )
@@ -233,34 +174,39 @@ fun HomeNavigation(
                             paddingValues = PaddingValues(0.dp),
                             onPostClicked = { post ->
                                 val jsonPost = Gson().toJson(post)
-                                navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/$jsonPost"))
+                                navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
                             }
                         )
                     }
-                    2 -> Text("Club Reviews content")
+                    2 -> Text("Club Reviews content: NOT IMPLEMENTED")
                 }
             }
 
 
         }
 
-        composable(
-            route = HomeRoutesClub.EditClubProfile.routeName
-        ) {
-            val viewModel = getViewModel<EditClubProfileViewModel>()
-            LaunchedEffect(Unit) {
-                viewModel.initEditClubDetailScreen(context)
-            }
+        composable(route = HomeRoutesAthlete.Chats.routeName) {
+            val scaffoldState = rememberScaffoldState()
 
-            EditClubProfileScreen(
-                viewModel = viewModel,
-                onBackClicked = {
-                    navController.popBackStack()
-                },
-                onProfileUpdated = {
-                    viewModel.updatePreferencesClub(viewModel.state.value.club.id)
-                }
-            )
+            NavDrawerScaffold(
+                scaffoldState = scaffoldState,
+                scope = rememberCoroutineScope(),
+                navController = navController
+            ) { paddingValues ->
+                route?.let { it1 -> Text(modifier = Modifier.padding(paddingValues), text = it1) }
+            }
+        }
+
+        composable(route = HomeRoutesAthlete.Profile.routeName) {
+            val scaffoldState = rememberScaffoldState()
+
+            NavDrawerScaffold(
+                scaffoldState = scaffoldState,
+                scope = rememberCoroutineScope(),
+                navController = navController
+            ) { paddingValues ->
+                route?.let { it1 -> Text(modifier = Modifier.padding(paddingValues), text = it1) }
+            }
         }
     }
 }
@@ -274,7 +220,7 @@ private fun NavDrawerScaffold(
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
-        bottomBar = { BottomNavBar(navController = navController, isClub = true) },
+        bottomBar = { BottomNavBar(navController = navController, isClub = false) },
         drawerBackgroundColor = MaterialTheme.colors.background
     ) { innerPadding ->
         content(innerPadding)
