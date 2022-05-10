@@ -24,11 +24,15 @@ import com.eliasasskali.tfg.model.ClubLocation
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ClubDetailScreen(
+    detailState: ClubDetailState = ClubDetailState(),
     club: Club,
     distanceToClub: String = "",
     isClubOwner: Boolean,
     onBackClicked: () -> Unit = {},
     onEditButtonClick: () -> Unit = {},
+    onFollowButtonClick: () -> Unit = {},
+    onUnfollowButtonClick: () -> Unit = {},
+    onChatButtonClick: () -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     Scaffold(
@@ -73,7 +77,11 @@ fun ClubDetailScreen(
             )
         },
         content = {
-            Surface(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -90,6 +98,12 @@ fun ClubDetailScreen(
                             onEditButtonClick = onEditButtonClick
                         )
                     } else {
+                        FollowChatButtons(
+                            isFollowing = detailState.athleteFollowsClub,
+                            onFollowButtonClick = onFollowButtonClick,
+                            onUnfollowButtonClick = onUnfollowButtonClick,
+                            onChatButtonClick = onChatButtonClick
+                        )
                         ClubDetailHeader(club, distanceToClub)
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -120,6 +134,56 @@ fun ClubDetailScreen(
         }
     )
 }
+
+@Composable
+fun FollowChatButtons(
+    isFollowing: Boolean,
+    onFollowButtonClick: () -> Unit,
+    onUnfollowButtonClick: () -> Unit,
+    onChatButtonClick: () -> Unit
+) {
+    Row(
+        Modifier
+            .padding(vertical = 12.dp)
+            .fillMaxWidth()
+    ) {
+        if (isFollowing) {
+            OutlinedButton(
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .weight(1f),
+                onClick = { onUnfollowButtonClick() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.unfollow),
+                )
+            }
+        } else {
+            OutlinedButton(
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .weight(1f),
+                onClick = { onFollowButtonClick() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.follow),
+                )
+            }
+        }
+
+        OutlinedButton(
+            modifier = Modifier
+                .padding(end = 12.dp)
+                .weight(1f),
+            onClick = { onChatButtonClick() }
+        ) {
+            Text(
+                text = stringResource(id = R.string.chat),
+            )
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable

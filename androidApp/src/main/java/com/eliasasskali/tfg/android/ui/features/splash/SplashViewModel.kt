@@ -62,7 +62,7 @@ class SplashViewModel(
                                     // Club Does not Exist -> Check if athlete exists
                                     viewModelScope.launch {
                                         execute {
-                                            repository.getUserById(uid)
+                                            repository.getAthleteById(uid)
                                         }.fold(
                                             error = {
                                                 // TODO : Handle Error

@@ -1,6 +1,7 @@
 package com.eliasasskali.tfg.android.data.repository
 
 import android.net.Uri
+import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -11,11 +12,13 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 
 class ClubAthleteRepository(
-    private val queryClubsByName: Query
+    private val preferences: Preferences,
+
 ) {
     fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
         try {
@@ -44,10 +47,10 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun getUserById(userId: String): Either<DomainError, Athlete?> {
+    suspend fun getAthleteById(userId: String): Either<DomainError, Athlete?> {
         return try {
             Either.Right(
-                FirebaseFirestore.getInstance().collection("Users")
+                FirebaseFirestore.getInstance().collection("Athletes")
                     .document(userId)
                     .get()
                     .await()
@@ -121,5 +124,57 @@ class ClubAthleteRepository(
             }
         }
         return Either.Left(DomainError.CreatePostError)
+    }
+
+    suspend fun followClub(clubId: String) : Either<DomainError, Success> {
+        val uid = Firebase.auth.currentUser?.uid
+        val db =  Firebase.firestore
+        return try {
+            uid?.let {
+                db.collection("Athletes")
+                    .document(uid)
+                    .update("following", FieldValue.arrayUnion(clubId))
+                    .await()
+            }
+            Either.Right(Success)
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Follow error"))
+        }
+    }
+
+    suspend fun unFollowClub(clubId: String) : Either<DomainError, Success> {
+        val uid = Firebase.auth.currentUser?.uid
+        val db =  Firebase.firestore
+        return try {
+            uid?.let {
+                db.collection("Athletes")
+                    .document(uid)
+                    .update("following", FieldValue.arrayRemove(clubId))
+                    .await()
+            }
+            Either.Right(Success)
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Unfollow error"))
+        }
+    }
+
+    suspend fun saveAthletePreferences() : Either<DomainError, Success> {
+        val uid = Firebase.auth.currentUser?.uid
+        return try {
+            uid?.let {
+                getAthleteById(uid).fold(
+                    error = {},
+                    success = { athlete ->
+                        athlete?.let {
+                            preferences.saveProfileJson(Gson().toJson(it))
+                        }
+                    }
+                )
+            }
+            Either.Right(Success)
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Save athlete preferences error."))
+        }
+
     }
 }

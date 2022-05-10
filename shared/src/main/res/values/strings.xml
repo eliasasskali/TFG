@@ -67,6 +67,9 @@
     <string name="replace_image">Replace Image</string>
     <string name="my_club">My Club</string>
     <string name="no_club_posts">This club has no posts yet.</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="chat">Chat</string>
 
     <!-- Filters -->
     <string name="filter_by">Filter by:</string>

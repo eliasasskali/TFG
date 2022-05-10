@@ -198,7 +198,7 @@ class CompleteProfileViewModel(
                     state.value.services.toList()
                 )
                 uid?.let {
-                    db.collection("Users").document(uid).set(athlete).addOnCompleteListener {
+                    db.collection("Athletes").document(uid).set(athlete).addOnCompleteListener {
                         if (it.isSuccessful) {
                             preferences.saveProfileJson(Gson().toJson(athlete))
                             preferences.saveIsClub(true)

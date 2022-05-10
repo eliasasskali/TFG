@@ -34,7 +34,7 @@ val appModule = module {
     viewModel { LoginSignupViewModel(get(), get(), get()) }
     viewModel { CompleteProfileViewModel(get(), get(), get(), get()) }
     viewModel { ClubsViewModel(get(), get(), get()) }
-    viewModel { ClubDetailViewModel(get(), get()) }
+    viewModel { ClubDetailViewModel(get(), get(), get()) }
     viewModel { EditClubProfileViewModel(get(), get(), get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get(), get()) }
@@ -53,7 +53,7 @@ fun dataModule(context: Context) = module {
 
     single {
         ClubAthleteRepository(
-            FirebaseFirestore.getInstance().collection("Clubs")
+            get()
         )
     }
 

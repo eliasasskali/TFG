@@ -213,13 +213,16 @@ fun HomeNavigation(
                 }
                 when (tabIndex) {
                     0 -> ClubDetailScreen(
+                        detailState = viewModel.clubState.value,
                         club = viewModel.clubState.value.club,
                         distanceToClub = distanceToClub ?: "Unknown", // TODO: Check distanceToClub
                         isClubOwner = viewModel.clubState.value.isClubOwner,
                         onBackClicked = { navController.popBackStack() },
                         onEditButtonClick = {
                             navController.navigate(HomeRoutesClub.EditClubProfile.routeName)
-                        }
+                        },
+                        onFollowButtonClick = { viewModel.followClub(viewModel.clubState.value.club.id) },
+                        onUnfollowButtonClick = { viewModel.unFollowClub(viewModel.clubState.value.club.id) }
                     )
                     1 -> {
                         val postsViewModel: PostsViewModel = get()

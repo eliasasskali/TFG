@@ -105,7 +105,7 @@ class AuthRepositoryImp constructor(
                     clubExists = true
                     onTrue()
                 } else {
-                    db.collection("Users").document(uid).get().addOnSuccessListener { user ->
+                    db.collection("Athletes").document(uid).get().addOnSuccessListener { user ->
                         if (user.exists()) {
                             userExists = true
                             onTrue()
