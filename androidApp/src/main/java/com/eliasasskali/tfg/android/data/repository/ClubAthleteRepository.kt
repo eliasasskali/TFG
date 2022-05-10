@@ -11,6 +11,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 
 class ClubAthleteRepository(
@@ -58,25 +59,30 @@ class ClubAthleteRepository(
         }
     }
 
-    fun uploadImages(clubImages: List<Uri>) {
-        if (clubImages.isNotEmpty()) {
-            val storage = FirebaseStorage.getInstance()
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
+    suspend fun uploadImages(clubImages: List<Uri>) : Either<DomainError, Success> {
+        return try {
+            if (clubImages.isNotEmpty()) {
+                val storage = FirebaseStorage.getInstance()
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-            userId?.let { uid ->
-                clubImages.mapIndexed { index, uri ->
-                    val storageReference = storage.reference.child("clubImages/$uid/$index")
-                    storageReference.putFile(uri)
-                        .addOnSuccessListener {
-                            it.storage.downloadUrl
-                                .addOnSuccessListener { url ->
-                                    FirebaseFirestore.getInstance().collection("Clubs")
-                                        .document(uid)
-                                        .update("images", FieldValue.arrayUnion(url.toString()))
-                                }
-                        }
+                userId?.let { uid ->
+                    clubImages.mapIndexed { index, uri ->
+                        val storageReference = storage.reference.child("clubImages/$uid/$index")
+                        val url = storageReference.putFile(uri)
+                            .await()
+                            .storage
+                            .downloadUrl
+                            .await()
+
+                        FirebaseFirestore.getInstance().collection("Clubs")
+                            .document(uid)
+                            .update("images", FieldValue.arrayUnion(url.toString()))
+                    }
                 }
             }
+            Either.Right(Success)
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Images upload failed."))
         }
     }
 

@@ -46,12 +46,13 @@ import com.google.android.libraries.maps.model.LatLng
 @Composable
 fun EditClubProfileScreen(
     viewModel: EditClubProfileViewModel,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onProfileUpdated: () -> Unit
 ) {
     when (viewModel.state.value.step) {
         is EditClubProfileSteps.Error -> {}
         is EditClubProfileSteps.IsLoading -> Loading()
-        is EditClubProfileSteps.ShowEditClub -> EditClubProfileView(viewModel, onBackClicked)
+        is EditClubProfileSteps.ShowEditClub -> EditClubProfileView(viewModel, onBackClicked, onProfileUpdated)
         is EditClubProfileSteps.ShowEditLocation -> EditClubLocationView(
             viewModel = viewModel,
             onBackClicked = { viewModel.setStep(EditClubProfileSteps.ShowEditClub) }
@@ -63,7 +64,8 @@ fun EditClubProfileScreen(
 @Composable
 fun EditClubProfileView(
     viewModel: EditClubProfileViewModel,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onProfileUpdated: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -145,7 +147,7 @@ fun EditClubProfileView(
                         }
                     }
 
-                    ApplyCancelChangesButtons(viewModel, onBackClicked)
+                    ApplyCancelChangesButtons(viewModel, onBackClicked, onProfileUpdated)
                 }
             }
         }
@@ -383,6 +385,7 @@ fun AddressField(viewModel: EditClubProfileViewModel) {
 fun ApplyCancelChangesButtons(
     viewModel: EditClubProfileViewModel,
     onCancelButtonClicked: () -> Unit,
+    onProfileUpdated: () -> Unit
 ) {
     val context = LocalContext.current
     Row(
@@ -408,14 +411,7 @@ fun ApplyCancelChangesButtons(
                 .fillMaxWidth()
                 .weight(1f),
             onClick = {
-                if (viewModel.imagesChanged()) {
-                    val uriImages = viewModel.state.value.bitmapImages.map {
-                        viewModel.getImageUri(context, it)
-                    }
-                    viewModel.uploadNewImages(viewModel.state.value.club.id, uriImages)
-                }
-                viewModel.updateClub()
-                onCancelButtonClicked()
+                viewModel.updateClub(context, onCancelButtonClicked)
             }
         ) {
             Text(

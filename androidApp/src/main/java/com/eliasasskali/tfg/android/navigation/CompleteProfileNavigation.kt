@@ -9,6 +9,7 @@ import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.ui.features.completeProfile.*
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.CompleteClubProfileScreenFirst
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.CompleteClubProfileScreenSecond
+import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.CompleteProfileMapScreen
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.MapAddressPickerView
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.getViewModel
@@ -87,7 +88,7 @@ fun CompleteProfileNavigation(
         }
 
         composable(route = CompleteProfileRoutes.ClubCompleteProfileMap.routeName) {
-            MapAddressPickerView(
+            CompleteProfileMapScreen(
                 onContinueButtonClick = {
                     viewModel.completeProfile(onCompleteProfileSuccess = { onProfileCompleted() })
                 },

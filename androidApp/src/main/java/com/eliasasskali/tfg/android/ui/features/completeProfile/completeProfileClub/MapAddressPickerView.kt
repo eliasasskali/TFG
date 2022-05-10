@@ -21,11 +21,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.features.clubs.Loading
+import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileSteps
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.rememberMapViewWithLifecycle
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.MapView
 import com.google.android.libraries.maps.model.LatLng
+
+@Composable
+fun CompleteProfileMapScreen(
+    onContinueButtonClick: () -> Unit = {},
+    viewModel: CompleteProfileViewModel,
+    onBackClicked: () -> Unit
+) {
+    when (viewModel.state.value.step) {
+        is CompleteProfileSteps.Error -> TODO()
+        is CompleteProfileSteps.IsLoading -> Loading()
+        is CompleteProfileSteps.ShowCompleteProfile -> MapAddressPickerView(
+            onContinueButtonClick = onContinueButtonClick,
+            viewModel = viewModel,
+            onBackClicked = onBackClicked
+        )
+    }
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

@@ -70,6 +70,10 @@ class CompleteProfileViewModel(
         state.value = state.value.copy(error = error)
     }
 
+    fun setStep(step: CompleteProfileSteps) {
+        state.value = state.value.copy(step = step)
+    }
+
     fun setServices(services: Set<String>) {
         state.value = state.value.copy(services = services)
     }
@@ -157,6 +161,7 @@ class CompleteProfileViewModel(
     }
 
     fun completeProfile(onCompleteProfileSuccess: () -> Unit) = viewModelScope.launch {
+        setStep(CompleteProfileSteps.IsLoading)
         try {
             state.value = state.value.copy(error = "")
             val uid = Firebase.auth.currentUser?.uid
@@ -176,15 +181,16 @@ class CompleteProfileViewModel(
 
                     db.collection("Clubs").document(uid).set(club.toModel()).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            preferences.saveProfileJson(Gson().toJson(club))
-                            preferences.saveIsClub(true)
-                            onCompleteProfileSuccess()
                             Log.d(TAG, "Club Profile Completed")
                         } else {
                             Log.d(TAG, "Could not complete club profile")
                         }
                     }
-                    uploadImages(state.value.clubImages)
+                    uploadImages(state.value.clubImages) {
+                        updatePreferencesClub(club.id)
+                        preferences.saveIsClub(true)
+                        onCompleteProfileSuccess()
+                    }
                 }
             } else {
                 val athlete = AthleteDto(
@@ -210,7 +216,35 @@ class CompleteProfileViewModel(
         }
     }
 
-    private fun uploadImages(clubImages: List<Uri>) {
-        repository.uploadImages(clubImages)
+    private fun uploadImages(clubImages: List<Uri>, onCompleteProfileSuccess: () -> Unit) {
+        viewModelScope.launch {
+            execute {
+                repository.uploadImages(clubImages)
+            }.fold(
+                error = {
+
+                },
+                success = {
+                    onCompleteProfileSuccess()
+                }
+            )
+        }
+    }
+
+    fun updatePreferencesClub(clubId: String, onUpdateFinished: () -> Unit = {}) {
+        viewModelScope.launch {
+            execute {
+                repository.getClubById(clubId)
+            }.fold(
+                error = {},
+                success = { club ->
+                    club?.let {
+                        val jsonClub = Gson().toJson(it)
+                        preferences.saveProfileJson(jsonClub)
+                        onUpdateFinished()
+                    }
+                }
+            )
+        }
     }
 }

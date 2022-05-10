@@ -11,27 +11,35 @@ import android.os.CountDownTimer
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubLocation
 import com.eliasasskali.tfg.model.generateKeywords
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.io.ByteArrayOutputStream
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class EditClubProfileViewModel(
     private val repository: ClubAthleteRepository,
+    private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler
 ) : RootViewModel(executor, errorHandler) {
@@ -41,7 +49,8 @@ class EditClubProfileViewModel(
     var isMapEditable = mutableStateOf(true)
     private var timer: CountDownTimer? = null
 
-    fun initEditClubDetailScreen(club: Club, context: Context) {
+    fun initEditClubDetailScreen(context: Context) {
+        val club = Gson().fromJson(preferences.getProfileJson(), Club::class.java)
         state.value = state.value.copy(club = club)
         state.value = state.value.copy(
             name = club.name,
@@ -65,7 +74,7 @@ class EditClubProfileViewModel(
             val bitmapImages = ArrayList(club.images.map { url ->
                 val loader = ImageLoader(context)
                 val request = ImageRequest.Builder(context)
-                    .data(url)
+                    .data(URLDecoder.decode(url, StandardCharsets.UTF_8.toString()))
                     .allowHardware(false)
                     .build()
 
@@ -86,7 +95,7 @@ class EditClubProfileViewModel(
     }
 
     fun replaceImageAt(index: Int, image: Bitmap) {
-        state.value.bitmapImages[index] = image
+        state.value.bitmapImages[index] = image // TODO: Not working if only images are replaced
     }
 
     fun appendImages(images: List<Bitmap>) {
@@ -196,20 +205,32 @@ class EditClubProfileViewModel(
         return state.value.previousBitmapImages != state.value.bitmapImages
     }
 
-    fun uploadNewImages(clubId: String, uriImages: List<Uri>) {
-        repository.deleteClubImages(clubId, state.value.club.images.size)
-        repository.uploadImages(uriImages)
+    fun uploadNewImages(clubId: String, uriImages: List<Uri>, onUpdateFinished: () -> Unit) {
+        viewModelScope.launch {
+            execute {
+                repository.deleteClubImages(clubId, state.value.club.images.size)
+                repository.uploadImages(uriImages)
+            }.fold(
+                error = {
+
+                },
+                success = {
+                    updatePreferencesClub(clubId, onUpdateFinished)
+                }
+            )
+        }
     }
 
     fun getImageUri(context: Context, inImage: Bitmap): Uri {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path =
-            MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", null)
+            MediaStore.Images.Media.insertImage(context.contentResolver, inImage,  "IMG_" + Calendar.getInstance().time, null)
         return Uri.parse(path)
     }
 
-    fun updateClub() {
+    fun updateClub(context: Context, onUpdateFinished: () -> Unit) {
+        setStep(EditClubProfileSteps.IsLoading)
         val club = state.value.club
         val clubReference = FirebaseFirestore
             .getInstance()
@@ -240,6 +261,30 @@ class EditClubProfileViewModel(
             clubReference.update(
                 "address", state.value.address,
                 "location", state.value.location
+            )
+        }
+
+        if (imagesChanged()) {
+            val uriImages = state.value.bitmapImages.map {
+                getImageUri(context, it)
+            }
+            uploadNewImages(state.value.club.id, uriImages, onUpdateFinished)
+        }
+    }
+
+    fun updatePreferencesClub(clubId: String, onUpdateFinished: () -> Unit = {}) {
+        viewModelScope.launch {
+            execute {
+                repository.getClubById(clubId)
+            }.fold(
+                error = {},
+                success = { club ->
+                    club?.let {
+                        val jsonClub = Gson().toJson(it)
+                        preferences.saveProfileJson(jsonClub)
+                        onUpdateFinished()
+                    }
+                }
             )
         }
     }
