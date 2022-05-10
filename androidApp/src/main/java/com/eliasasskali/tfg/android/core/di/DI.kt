@@ -15,6 +15,7 @@ import com.eliasasskali.tfg.android.ui.features.splash.SplashViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
+import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
 import com.eliasasskali.tfg.data.preferences.CommonPreferences
 import com.eliasasskali.tfg.data.preferences.Preferences
@@ -31,15 +32,16 @@ val appModule = module {
     single { Executor() }
     single { ErrorHandler(get()) }
     viewModel { LoginSignupViewModel(get(), get(), get()) }
-    viewModel { CompleteProfileViewModel(get(), get(), get()) }
+    viewModel { CompleteProfileViewModel(get(), get(), get(), get()) }
     viewModel { ClubsViewModel(get(), get(), get()) }
     viewModel { ClubDetailViewModel(get(), get()) }
-    viewModel { EditClubProfileViewModel(get(), get(), get()) }
+    viewModel { EditClubProfileViewModel(get(), get(), get(), get()) }
     viewModel { MapViewModel() }
-    viewModel { SplashViewModel(get(), get(), get(), get()) }
-    viewModel { ClubProfileViewModel(get(), get(), get(), get())}
+    viewModel { SplashViewModel(get(), get(), get(), get(), get()) }
+    viewModel { ClubProfileViewModel(get(), get(), get())}
     viewModel { PostViewModel(get(), get(), get(), get()) }
     viewModel { PostsViewModel(get(), get(), get()) }
+    viewModel { PostDetailViewModel(get(), get(), get(), get()) }
 }
 
 fun dataModule(context: Context) = module {

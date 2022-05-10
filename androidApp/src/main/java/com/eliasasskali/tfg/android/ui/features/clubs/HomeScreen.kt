@@ -52,9 +52,13 @@ fun HomeScreen(
         is ClubListSteps.ShowFilterByLocation -> FilterByLocationScreen(
             viewModel = viewModel,
             onSearchButtonClick = { viewModel.setStep(ClubListSteps.ShowClubs) },
-            onBackClicked = { viewModel.setStep(ClubListSteps.ShowClubs) }
+            onBackClicked = { viewModel.setStep(ClubListSteps.ShowClubs) },
+            paddingValues = paddingValues
         )
-        is ClubListSteps.ShowFilterBySports -> FilterBySportsView(viewModel)
+        is ClubListSteps.ShowFilterBySports -> FilterBySportsView(
+            viewModel = viewModel,
+            paddingValues = paddingValues
+        )
     }
 }
 

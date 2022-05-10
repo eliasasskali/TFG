@@ -31,7 +31,7 @@ class PostsPagingSource(
                 .await()
 
             val data = currentPage.map { document ->
-                document.toObject(PostDto::class.java).toModel()
+                document.toObject(PostDto::class.java).toModel(document.id)
             }
 
             LoadResult.Page(

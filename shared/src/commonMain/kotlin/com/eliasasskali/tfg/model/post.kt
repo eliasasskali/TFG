@@ -11,8 +11,9 @@ data class PostDto(
     val clubName: String = ""
 ) {
 
-    fun toModel(): Post {
+    fun toModel(postId: String): Post {
         return Post(
+            postId = postId,
             title = this.title,
             content = this.content,
             date = this.date,
@@ -24,6 +25,7 @@ data class PostDto(
 }
 
 data class Post(
+    val postId: String = "",
     val title: String = "",
     val content: String = "",
     val date: Long = 0,

@@ -11,8 +11,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.eliasasskali.tfg.R
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Post
@@ -55,22 +59,37 @@ fun PostsView(
         }
     }
 
-    Surface(
-        Modifier
-            .padding(paddingValues)
-            .fillMaxSize()
-    ) {
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+    if (posts.itemCount == 0) {
+        Box(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+            .fillMaxSize()
+        ) {
+            Text(
+                text = stringResource(R.string.no_club_posts),
+                style = MaterialTheme.typography.h1,
+                modifier = Modifier
+                    .align(Center),
+                textAlign = TextAlign.Center
+            )
+        }
+    } else {
+        Surface(
+            Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            items(
-                items = posts
-            ) { post ->
-                post?.let { it ->
-                    PostCard(it)
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                modifier = Modifier
+                    .background(color = MaterialTheme.colors.background)
+                    .fillMaxSize()
+            ) {
+                items(
+                    items = posts
+                ) { post ->
+                    post?.let { it ->
+                        PostCard(it, onPostClicked)
+                    }
                 }
             }
         }
