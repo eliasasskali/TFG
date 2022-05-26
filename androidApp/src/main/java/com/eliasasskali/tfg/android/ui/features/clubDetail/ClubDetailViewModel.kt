@@ -25,9 +25,23 @@ class ClubDetailViewModel(
     private suspend fun <T> execute(f: suspend () -> Either<DomainError, T>): Either<DomainError, T> =
         withContext(executor.bg) { f() }
 
-    fun initClubDetailScreen(club: Club) {
+    fun initClubDetailScreen(clubId: String) {
         val athlete = Gson().fromJson(preferences.getProfileJson(), Athlete::class.java)
-        clubState.value = clubState.value.copy(club = club, athlete = athlete)
+        //clubState.value = clubState.value.copy(club = club, athlete = athlete)
+        viewModelScope.launch {
+            execute {
+                repository.getClubById(clubId)
+            }.fold(
+                error = {
+
+                },
+                success = {
+                    it?.let { club ->
+                        clubState.value = clubState.value.copy(club = club, athlete = athlete)
+                    }
+                }
+            )
+        }
     }
 
     fun isClubOwner(clubId: String) {
@@ -76,7 +90,7 @@ class ClubDetailViewModel(
             }.fold(
                 error = {},
                 success = {
-                    initClubDetailScreen(clubState.value.club)
+                    initClubDetailScreen(clubState.value.club.id)
                 }
             )
         }

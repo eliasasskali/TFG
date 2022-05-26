@@ -16,7 +16,9 @@ fun PostScreen(
     paddingValues: PaddingValues
 ) {
     when (viewModel.state.value.step) {
-        is PostSteps.Error -> {}
+        is PostSteps.Error -> {
+            // TODO: Implement error screen
+        }
         is PostSteps.IsLoading -> Loading()
         is PostSteps.ShowCreatePost -> PostView(
             viewModel = viewModel,

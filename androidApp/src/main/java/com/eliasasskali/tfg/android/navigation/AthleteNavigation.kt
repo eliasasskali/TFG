@@ -15,19 +15,16 @@ import com.eliasasskali.tfg.android.ui.features.bottomNavBar.BottomNavBar
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
-import com.eliasasskali.tfg.android.ui.features.clubs.HomeScreen
+import com.eliasasskali.tfg.android.ui.features.clubs.ClubsScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
-import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.Post
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun AthleteNavigation(
@@ -97,10 +94,10 @@ fun AthleteNavigation(
             ) { paddingValues ->
                 val viewModel: ClubsViewModel = get()
                 Surface {
-                    HomeScreen(
+                    ClubsScreen(
                         viewModel,
                         onClubClicked = {
-                            val jsonClub = Gson().toJson(it)
+                            //val jsonClub = Gson().toJson(it)
                             val distanceToClub =
                                 if (viewModel.state.value.filterLocation.latitude != 0.0) {
                                     viewModel.distanceToClub(
@@ -113,8 +110,8 @@ fun AthleteNavigation(
                                         viewModel.state.value.userLocation
                                     )
                                 }
-
-                            navController.navigate(HomeRoutesAthlete.ClubDetail.routeName.plus("/$jsonClub/$distanceToClub"))
+                            val clubId = it.id
+                            navController.navigate(HomeRoutesAthlete.ClubDetail.routeName.plus("/$clubId/$distanceToClub"))
                         },
                         paddingValues = paddingValues
                     )
@@ -123,23 +120,15 @@ fun AthleteNavigation(
         }
 
         composable(
-            route = HomeRoutesAthlete.ClubDetail.routeName.plus("/{${HomeRoutesAthlete.JSON_CLUB}}/{${HomeRoutesAthlete.DISTANCE_TO_CLUB}}")
+            route = HomeRoutesAthlete.ClubDetail.routeName.plus("/{${HomeRoutesAthlete.CLUB_ID}}/{${HomeRoutesAthlete.DISTANCE_TO_CLUB}}")
         ) { entry ->
             val viewModel = getViewModel<ClubDetailViewModel>()
-            val jsonClub = entry.arguments?.getString(HomeRoutesAthlete.JSON_CLUB)
+            val clubId = entry.arguments?.getString(HomeRoutesAthlete.CLUB_ID) as String
             val distanceToClub = entry.arguments?.getString(HomeRoutesAthlete.DISTANCE_TO_CLUB)
-            var encodedJsonClub = ""
-            var club = Club()
-            jsonClub?.let { json ->
-                club = Gson().fromJson(json, Club::class.java)
-                club = club.copy(images = club.images.map {
-                    URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
-                })
-                encodedJsonClub = Gson().toJson(club)
-                LaunchedEffect(Unit) {
-                    viewModel.initClubDetailScreen(club)
-                    viewModel.isClubOwner(club.id)
-                }
+
+            LaunchedEffect(Unit) {
+                viewModel.initClubDetailScreen(clubId)
+                viewModel.isClubOwner(clubId)
             }
 
             var tabIndex by remember { mutableStateOf(0) }
@@ -167,7 +156,7 @@ fun AthleteNavigation(
                         val postsViewModel: PostsViewModel = get()
 
                         LaunchedEffect(Unit) {
-                            postsViewModel.initPostsScreen(listOf(club.id))
+                            postsViewModel.initPostsScreen(listOf(clubId))
                         }
                         PostsScreen(
                             viewModel = postsViewModel,
@@ -181,6 +170,7 @@ fun AthleteNavigation(
                     2 -> Text("Club Reviews content: NOT IMPLEMENTED")
                 }
             }
+        }
 
 
         }

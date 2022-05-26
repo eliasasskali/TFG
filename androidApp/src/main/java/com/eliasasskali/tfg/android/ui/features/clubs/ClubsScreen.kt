@@ -40,7 +40,7 @@ fun Loading() {
 }
 
 @Composable
-fun HomeScreen(
+fun ClubsScreen(
     viewModel: ClubsViewModel,
     onClubClicked: (Club) -> Unit,
     paddingValues: PaddingValues

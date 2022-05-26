@@ -12,3 +12,4 @@ sealed class PostSteps {
     object PostCreated : PostSteps()
     class Error(val error: String) : PostSteps()
 }
+

@@ -48,6 +48,6 @@ private fun getDateTime(timeStamp: Long): String {
     return java.time.Instant.ofEpochMilli(timeStamp)
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime()
-        .format(DateTimeFormatter.ofPattern("dd-MMM-yyyy, HH:MM"))
+        .format(DateTimeFormatter.ofPattern("dd-MMM-yyyy, HH:mm"))
         .toString()
 }

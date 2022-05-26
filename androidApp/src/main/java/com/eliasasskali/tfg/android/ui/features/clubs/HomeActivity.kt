@@ -14,7 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.eliasasskali.tfg.android.navigation.AthleteNavigation
-import com.eliasasskali.tfg.android.navigation.HomeNavigation
+import com.eliasasskali.tfg.android.navigation.ClubNavigation
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,7 +35,7 @@ class HomeActivity : AppCompatActivity() {
                 val preferences: Preferences = get()
                 val navController = rememberNavController()
                 if (preferences.isClub()) {
-                    HomeNavigation(navController, this)
+                    ClubNavigation(navController, this)
                 } else {
                     AthleteNavigation(navController, this)
                 }
