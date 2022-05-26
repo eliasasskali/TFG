@@ -12,6 +12,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.eliasasskali.tfg.android.ui.features.bottomNavBar.BottomNavBar
+import com.eliasasskali.tfg.android.ui.features.chat.ChatScreen
+import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
+import com.eliasasskali.tfg.android.ui.features.chats.ChatsScreen
+import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
@@ -172,9 +176,6 @@ fun AthleteNavigation(
             }
         }
 
-
-        }
-
         composable(route = HomeRoutesAthlete.Chats.routeName) {
             val scaffoldState = rememberScaffoldState()
 
@@ -183,7 +184,34 @@ fun AthleteNavigation(
                 scope = rememberCoroutineScope(),
                 navController = navController
             ) { paddingValues ->
-                route?.let { it1 -> Text(modifier = Modifier.padding(paddingValues), text = it1) }
+                val viewModel: ChatsViewModel = get()
+                ChatsScreen(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues,
+                    onChatClicked = { chat ->
+                        navController.navigate(HomeRoutesAthlete.ChatDetail.routeName.plus("/${chat.chatId}"))
+                    }
+                )
+            }
+        }
+
+        composable(route = HomeRoutesAthlete.ChatDetail.routeName.plus("/{${HomeRoutesAthlete.CHAT_ID}}")) { entry ->
+            val scaffoldState = rememberScaffoldState()
+            val chatId = entry.arguments?.getString(HomeRoutesAthlete.CHAT_ID) as String
+
+            NavDrawerScaffold(
+                scaffoldState = scaffoldState,
+                scope = rememberCoroutineScope(),
+                navController = navController
+            ) { paddingValues ->
+                val viewModel: ChatViewModel = get()
+                LaunchedEffect(Unit) {
+                    viewModel.initChatScreen(chatId)
+                }
+                ChatScreen(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues,
+                )
             }
         }
 
