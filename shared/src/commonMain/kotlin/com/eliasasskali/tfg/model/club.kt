@@ -12,7 +12,8 @@ data class ClubDto(
     val location: ClubLocation = ClubLocation(0.0, 0.0),
     val services: List<String> = listOf(),
     val images: List<String> = listOf(),
-    val keywords: List<String> = listOf()
+    val keywords: List<String> = listOf(),
+    val chats: List<String> = listOf()
 ) {
     fun toModel(id: String): Club {
         val encodedImages = this.images.map {
@@ -28,7 +29,8 @@ data class ClubDto(
             address = this.address,
             location = this.location,
             services = this.services,
-            images = encodedImages
+            images = encodedImages,
+            chats = this.chats
         )
     }
 }
@@ -42,7 +44,8 @@ data class Club(
     val address: String = "",
     val location: ClubLocation = ClubLocation(0.0, 0.0),
     val services: List<String> = listOf(),
-    val images: List<String> = listOf()
+    val images: List<String> = listOf(),
+    val chats: List<String> = listOf()
 ) {
     fun toModel(): ClubDto {
         return ClubDto(
@@ -54,7 +57,8 @@ data class Club(
             location = ClubLocation(this.location.latitude, this.location.longitude),
             services = this.services,
             images = this.images,
-            keywords = generateKeywords(this.name)
+            keywords = generateKeywords(this.name),
+            chats = this.chats
         )
     }
 }
