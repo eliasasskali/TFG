@@ -40,6 +40,7 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation("com.google.accompanist:accompanist-pager-indicators:0.24.4-alpha")
+    implementation(Dependencies.Main.multiplatformSettings)
 
     with(Dependencies.Android) {
         implementation(material)

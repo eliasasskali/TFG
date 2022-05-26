@@ -14,6 +14,7 @@
     <string name="error">Error</string>
     <string name="passwordsDoNotMatch_error">Passwords do not match.</string>
     <string name="clubs_load_error">Error loading Clubs.</string>
+    <string name="create_post_error">Error Creating Post.</string>
 
     <!-- Login -->
     <string name="login_welcome_message">Welcome back!</string>
@@ -65,8 +66,10 @@
     <string name="delete_image">Delete image</string>
     <string name="replace_image">Replace Image</string>
     <string name="my_club">My Club</string>
-
-
+    <string name="no_club_posts">This club has no posts yet.</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="chat">Chat</string>
 
     <!-- Filters -->
     <string name="filter_by">Filter by:</string>
@@ -78,6 +81,14 @@
     <!-- Settings -->
     <string name="settings">Settings</string>
 
+    <!-- Post -->
+    <string name="post_title">Post title</string>
+    <string name="post_content">Post Content</string>
+    <string name="create_post">Create Post</string>
+    <string name="edit_post">Edit Post</string>
+    <string name="delete_post">Delete Post</string>
+    <string name="confirm_delete_post">Are you sure you want to delete this post</string>
+
     <!-- Others -->
     <string name="unknown">Unknown</string>
     <string name="next">Next</string>
@@ -87,5 +98,6 @@
     <string name="name">Name</string>
     <string name="cancel">Cancel</string>
     <string name="apply_changes">Apply changes</string>
+    <string name="will_be_deleted">will be deleted</string>
 
 </resources>

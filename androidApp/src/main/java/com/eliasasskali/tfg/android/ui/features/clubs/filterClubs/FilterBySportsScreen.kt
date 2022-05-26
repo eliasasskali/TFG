@@ -1,6 +1,5 @@
 package com.eliasasskali.tfg.android.ui.features.clubs.filterClubs
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -29,9 +28,11 @@ import com.eliasasskali.tfg.android.ui.features.clubs.ClubListSteps
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import java.util.*
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FilterBySportsView(viewModel: ClubsViewModel) {
+fun FilterBySportsView(
+    viewModel: ClubsViewModel,
+    paddingValues: PaddingValues
+) {
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     val selectedSports = rememberSaveable {
         mutableStateOf(viewModel.state.value.sportFilters.toSet())
@@ -40,11 +41,14 @@ fun FilterBySportsView(viewModel: ClubsViewModel) {
     val sports = ArrayList(Mockup().services)
 
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
     ) {
         SearchView(state = textState)
         LazyVerticalGrid(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f),
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(12.dp),
         ) {
@@ -96,9 +100,10 @@ fun FilterBySportsView(viewModel: ClubsViewModel) {
                 }
             }
         }
-        ApplyFilters(viewModel) {
+
+        ApplyCancelFilters(viewModel = viewModel, onApplyClicked =  {
             viewModel.setSportFilters(selectedSports.value.toList())
-        }
+        })
     }
 }
 
@@ -155,12 +160,33 @@ fun SearchView(state: MutableState<TextFieldValue>) {
 }
 
 @Composable
-fun ApplyFilters(viewModel: ClubsViewModel, onApplyClicked: () -> Unit) {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        OutlinedButton(
+fun ApplyCancelFilters(
+    viewModel: ClubsViewModel,
+    onApplyClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+        .fillMaxWidth()
+    ) {
+        Button(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
-                .fillMaxWidth(),
+                .weight(1f),
+            onClick = {
+                viewModel.setStep(ClubListSteps.ShowClubs)
+            }
+        ) {
+            Text(
+                text = stringResource(R.string.cancel),
+                style = MaterialTheme.typography.caption
+            )
+        }
+
+        OutlinedButton(
+            modifier = Modifier
+                .padding(end = 12.dp, top = 8.dp, bottom = 8.dp)
+                .weight(1f),
             onClick = {
                 onApplyClicked()
                 viewModel.setStep(ClubListSteps.ShowClubs)

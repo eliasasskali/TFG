@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.AthleteDto
 import com.eliasasskali.tfg.model.ClubLocation
@@ -20,6 +21,7 @@ import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
@@ -28,8 +30,9 @@ private const val TAG = "RegisterViewModel"
 
 class CompleteProfileViewModel(
     private val repository: ClubAthleteRepository,
+    private val preferences: Preferences,
     executor: Executor,
-    errorHandler: ErrorHandler
+    errorHandler: ErrorHandler,
 ) : RootViewModel(executor, errorHandler) {
 
     val state: MutableState<CompleteProfileState> = mutableStateOf(CompleteProfileState())
@@ -65,6 +68,10 @@ class CompleteProfileViewModel(
 
     fun setError(error: String) {
         state.value = state.value.copy(error = error)
+    }
+
+    fun setStep(step: CompleteProfileSteps) {
+        state.value = state.value.copy(step = step)
     }
 
     fun setServices(services: Set<String>) {
@@ -154,6 +161,7 @@ class CompleteProfileViewModel(
     }
 
     fun completeProfile(onCompleteProfileSuccess: () -> Unit) = viewModelScope.launch {
+        setStep(CompleteProfileSteps.IsLoading)
         try {
             state.value = state.value.copy(error = "")
             val uid = Firebase.auth.currentUser?.uid
@@ -173,22 +181,27 @@ class CompleteProfileViewModel(
 
                     db.collection("Clubs").document(uid).set(club.toModel()).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            onCompleteProfileSuccess()
                             Log.d(TAG, "Club Profile Completed")
                         } else {
                             Log.d(TAG, "Could not complete club profile")
                         }
                     }
-                    uploadImages(state.value.clubImages)
+                    uploadImages(state.value.clubImages) {
+                        updatePreferencesClub(club.id)
+                        preferences.saveIsClub(true)
+                        onCompleteProfileSuccess()
+                    }
                 }
             } else {
-                val user = AthleteDto(
+                val athlete = AthleteDto(
                     state.value.name,
                     state.value.services.toList()
                 )
                 uid?.let {
-                    db.collection("Users").document(uid).set(user).addOnCompleteListener {
+                    db.collection("Athletes").document(uid).set(athlete).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            preferences.saveProfileJson(Gson().toJson(athlete))
+                            preferences.saveIsClub(true)
                             onCompleteProfileSuccess()
                             Log.d(TAG, "User Profile Completed")
                         } else {
@@ -203,7 +216,35 @@ class CompleteProfileViewModel(
         }
     }
 
-    private fun uploadImages(clubImages: List<Uri>) {
-        repository.uploadImages(clubImages)
+    private fun uploadImages(clubImages: List<Uri>, onCompleteProfileSuccess: () -> Unit) {
+        viewModelScope.launch {
+            execute {
+                repository.uploadImages(clubImages)
+            }.fold(
+                error = {
+
+                },
+                success = {
+                    onCompleteProfileSuccess()
+                }
+            )
+        }
+    }
+
+    fun updatePreferencesClub(clubId: String, onUpdateFinished: () -> Unit = {}) {
+        viewModelScope.launch {
+            execute {
+                repository.getClubById(clubId)
+            }.fold(
+                error = {},
+                success = { club ->
+                    club?.let {
+                        val jsonClub = Gson().toJson(it)
+                        preferences.saveProfileJson(jsonClub)
+                        onUpdateFinished()
+                    }
+                }
+            )
+        }
     }
 }

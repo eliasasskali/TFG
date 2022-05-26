@@ -1,7 +1,7 @@
 package com.eliasasskali.tfg.android.ui.features.clubs
 
-import android.annotation.SuppressLint
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,15 +10,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.Scaffold
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
-import com.eliasasskali.tfg.android.navigation.HomeNavigation
-import com.eliasasskali.tfg.android.ui.features.bottomNavBar.BottomNavBar
+import com.eliasasskali.tfg.android.navigation.AthleteNavigation
+import com.eliasasskali.tfg.android.navigation.ClubNavigation
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
+import com.eliasasskali.tfg.data.preferences.Preferences
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import org.koin.android.ext.android.get
 
 class HomeActivity : AppCompatActivity() {
     companion object {
@@ -31,8 +32,13 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
+                val preferences: Preferences = get()
                 val navController = rememberNavController()
-                HomeNavigation(navController, this)
+                if (preferences.isClub()) {
+                    ClubNavigation(navController, this)
+                } else {
+                    AthleteNavigation(navController, this)
+                }
             }
         }
         if (ContextCompat.checkSelfPermission(this@HomeActivity,

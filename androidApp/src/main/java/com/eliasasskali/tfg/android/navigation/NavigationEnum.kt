@@ -14,30 +14,39 @@ sealed class CompleteProfileRoutes(val routeName: String) {
 
 sealed class LoginSignUpRoutes(val routeName: String) {
     object Login : LoginSignUpRoutes("login")
-    object EmailLogin : LoginSignUpRoutes("emailLogin")
     object SignUp : LoginSignUpRoutes("signUp")
-    object Welcome : LoginSignUpRoutes("welcome")
 }
 
 sealed class HomeRoutesClub(val routeName: String) {
-    object Home : HomeRoutesClub("home")
+    object Home : HomeRoutesClub("homeClub")
     object Notifications : HomeRoutesClub("notifications")
-    object Chats : HomeRoutesClub("chats")
-    object Profile : HomeRoutesClub("profile")
+    object Chats : HomeRoutesClub("chatsClub")
+    object ChatDetail : HomeRoutesAthlete("chatDetail")
+    object Profile : HomeRoutesClub("profileClub")
     object Post : HomeRoutesClub("post")
-    object ClubDetail: HomeRoutesClub("clubDetail")
+    object PostDetail: HomeRoutesClub("postDetailClub")
     object EditClubProfile: HomeRoutesClub("editClubProfile")
 
     companion object {
-        const val JSON_CLUB = "jsonClub"
-        const val EDIT_JSON_CLUB = "editJsonClub"
-        const val DISTANCE_TO_CLUB = "distanceToClub"
+        const val JSON_POST = "jsonPost"
+        const val CHAT_ID = "chatId"
     }
 }
 
 sealed class HomeRoutesAthlete(val routeName: String) {
-    object Home : HomeRoutesAthlete("home")
+    object Home : HomeRoutesAthlete("homeAthlete")
     object Clubs : HomeRoutesAthlete("clubs")
-    object Chats : HomeRoutesAthlete("chats")
-    object Profile : HomeRoutesAthlete("profile")
+    object Chats : HomeRoutesAthlete("chatsAthlete")
+    object ChatDetail : HomeRoutesAthlete("chatDetail")
+    object Profile : HomeRoutesAthlete("profileAthlete")
+    object ClubDetail: HomeRoutesAthlete("clubDetail")
+    object PostDetail: HomeRoutesAthlete("postDetailAthlete")
+
+
+    companion object {
+        const val CHAT_ID = "chatId"
+        const val JSON_POST = "jsonPost"
+        const val CLUB_ID = "clubId"
+        const val DISTANCE_TO_CLUB = "distanceToClub"
+    }
 }

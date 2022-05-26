@@ -35,12 +35,15 @@ import kotlin.math.absoluteValue
 fun FilterByLocationScreen(
     viewModel: ClubsViewModel,
     onSearchButtonClick: () -> Unit = {},
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    paddingValues: PaddingValues
 ) {
     Scaffold(
         content = {
             Surface(
-                Modifier.fillMaxSize()
+                Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
             ) {
                 val mapView = rememberMapViewWithLifecycle()
                 val currentLocation = viewModel.location.collectAsState()
@@ -49,7 +52,8 @@ fun FilterByLocationScreen(
                 var sliderPosition by remember { mutableStateOf(viewModel.state.value.filterLocationRadius.toFloat()) }
 
                 Column(
-                    Modifier.fillMaxWidth()
+                    Modifier
+                        .fillMaxWidth()
                 ) {
                     Row(
                         Modifier

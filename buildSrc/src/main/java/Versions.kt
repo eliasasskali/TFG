@@ -1,10 +1,11 @@
 object Versions {
 
     // Root
-    const val kotlin = "1.6.10"
+    const val kotlin = "1.6.20"
     const val gradlePlugin = "7.1.0-rc01" //"7.0.4"
     const val googleServices = "4.3.10"
     const val crashlyticsPlugin = "2.8.1"
+    const val multiplatformSettings = "0.9"
 
     // Android
     const val material = "1.5.0"
@@ -18,8 +19,8 @@ object Versions {
     const val koin = "3.1.2"
 
     // Compose
-    const val compose = "1.2.0-alpha07"
-    const val navCompose = "2.4.0-rc01"
+    const val compose = "1.2.0-alpha08"
+    const val navCompose = "2.4.2"
     const val accompanistPager = "0.24.4-alpha"
     const val coilCompose = "2.0.0-rc02"
     const val mapsCompose = "2.1.0"

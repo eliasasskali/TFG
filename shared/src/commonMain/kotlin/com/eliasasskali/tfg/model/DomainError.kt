@@ -15,6 +15,8 @@ sealed class DomainError {
 
     object LoadClubsError : DomainError()
 
+    object CreatePostError : DomainError()
+
     data class ErrorNotHandled(val message: String) : DomainError()
 }
 
