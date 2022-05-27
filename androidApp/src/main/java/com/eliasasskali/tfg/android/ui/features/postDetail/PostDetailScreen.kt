@@ -4,117 +4,159 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
-import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
-import com.eliasasskali.tfg.android.ui.features.post.CreatePostButton
-import com.eliasasskali.tfg.android.ui.features.post.PostContentField
-import com.eliasasskali.tfg.android.ui.features.post.PostTitleField
-import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
 
 @Composable
 fun PostDetailScreen(
     viewModel: PostDetailViewModel,
-    paddingValues: PaddingValues,
-    onPostDeleted: () -> Unit
+    onPostDeleted: () -> Unit,
+    onBackClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
         is PostDetailSteps.Error -> {}
         is PostDetailSteps.IsLoading -> Loading()
-        is PostDetailSteps.ShowPostDetail -> PostDetailView(viewModel, paddingValues, onPostDeleted)
-        is PostDetailSteps.ShowEditPost -> EditPostView(viewModel, paddingValues)
+        is PostDetailSteps.ShowPostDetail ->
+            PostDetailView(
+                viewModel = viewModel,
+                onPostDeleted = onPostDeleted,
+                onBackClicked = onBackClicked
+            )
+        is PostDetailSteps.ShowEditPost ->
+            EditPostView(
+                viewModel = viewModel,
+                onBackClicked = onBackClicked
+            )
     }
 }
 
 @Composable
 fun PostDetailView(
     viewModel: PostDetailViewModel,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
-    onPostDeleted: () -> Unit
+    onPostDeleted: () -> Unit,
+    onBackClicked: () -> Unit
 ) {
     val post = viewModel.state.value.post
     val openDeleteDialog = remember { mutableStateOf(false) }
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-    ) {
-        if (openDeleteDialog.value && viewModel.state.value.isPostOwner) {
-            AlertDialog(
-                onDismissRequest = { openDeleteDialog.value = false },
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.confirm_delete_post)
+                        text = stringResource(id = R.string.post_detail),
+                        style = MaterialTheme.typography.h6
                     )
                 },
-                text = {
-                    Text(
-                        text = "${post.title} ${stringResource(id = R.string.will_be_deleted)}"
-                    )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            viewModel.deletePost {
-                                onPostDeleted()
-                            }
-                            openDeleteDialog.value = false
-                        }) {
-                        Text(
-                            stringResource(id = R.string.delete_post)
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onBackClicked() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back)
                         )
                     }
                 },
-                dismissButton = {
-                    Button(
-                        onClick = {
-                            openDeleteDialog.value = false
+                actions = {
+                    if (viewModel.state.value.isPostOwner) {
+                        IconButton(onClick = {
+                            openDeleteDialog.value = true
                         }) {
-                        Text(
-                            stringResource(id = R.string.cancel)
-                        )
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = stringResource(id = R.string.delete_post)
+                            )
+                        }
                     }
-                }
-
+                },
+                backgroundColor = MaterialTheme.colors.primary,
             )
-        }
-        Column(
+        },
+    ) { paddingValues ->
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
         ) {
-            PostDetailHeader(post.clubName, post.dateString)
-            Spacer(modifier = Modifier.height(12.dp))
-
-            PostDetailTitle(post.title)
-            Spacer(modifier = Modifier.height(12.dp))
-
-            if (viewModel.state.value.isPostOwner) {
-                EditDeleteButtons(
-                    onEditButtonClick = {
-                        viewModel.setStep(PostDetailSteps.ShowEditPost)
+            if (openDeleteDialog.value && viewModel.state.value.isPostOwner) {
+                AlertDialog(
+                    onDismissRequest = { openDeleteDialog.value = false },
+                    title = {
+                        Text(
+                            text = stringResource(id = R.string.confirm_delete_post)
+                        )
                     },
-                    onDeleteButtonClick = {
-                        openDeleteDialog.value = true
+                    text = {
+                        Text(
+                            text = "${post.title} ${stringResource(id = R.string.will_be_deleted)}"
+                        )
                     },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                viewModel.deletePost {
+                                    onPostDeleted()
+                                }
+                                openDeleteDialog.value = false
+                            }) {
+                            Text(
+                                stringResource(id = R.string.delete_post)
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                openDeleteDialog.value = false
+                            }) {
+                            Text(
+                                stringResource(id = R.string.cancel)
+                            )
+                        }
+                    }
+
                 )
-                Spacer(modifier = Modifier.height(12.dp))
             }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                PostDetailHeader(post.clubName, post.dateString)
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                modifier = Modifier.padding(horizontal = 12.dp),
-                text = post.content,
-                style = MaterialTheme.typography.body1
-            )
+                PostDetailTitle(post.title)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                if (viewModel.state.value.isPostOwner) {
+                    EditDeleteButtons(
+                        onEditButtonClick = {
+                            viewModel.setStep(PostDetailSteps.ShowEditPost)
+                        },
+                        onDeleteButtonClick = {
+                            openDeleteDialog.value = true
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
+                Text(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    text = post.content,
+                    style = MaterialTheme.typography.body1
+                )
+            }
         }
     }
 }
@@ -138,28 +180,52 @@ fun PostDetailTitle(
 @Composable
 fun EditPostView(
     viewModel: PostDetailViewModel,
-    paddingValues: PaddingValues
+    onBackClicked: () -> Unit
 ) {
-    Surface(
-        Modifier
-            .padding(paddingValues)
-            .fillMaxSize()
-    ) {
-        Column(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.edit_post),
+                        style = MaterialTheme.typography.h6
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onBackClicked() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back)
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.primary,
+            )
+        },
+    ) { paddingValues ->
+        Surface(
             Modifier
-                .padding(12.dp)
+                .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            PostTitleField(
-                viewModel = viewModel,
-                modifier = Modifier
-                    .padding(bottom = 4.dp)
-            )
-            PostContentField(viewModel, Modifier.weight(1f))
-            ApplyCancelChangesButtons(
-                viewModel = viewModel,
-                onCancelButtonClicked = { viewModel.setStep(PostDetailSteps.ShowPostDetail) }
-            )
+            Column(
+                Modifier
+                    .padding(12.dp)
+                    .fillMaxSize()
+            ) {
+                PostTitleField(
+                    viewModel = viewModel,
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                )
+                PostContentField(viewModel, Modifier.weight(1f))
+                ApplyCancelChangesButtons(
+                    viewModel = viewModel,
+                    onCancelButtonClicked = { viewModel.setStep(PostDetailSteps.ShowPostDetail) }
+                )
+            }
         }
     }
 }

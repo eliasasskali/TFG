@@ -6,15 +6,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,12 +32,21 @@ import com.eliasasskali.tfg.model.Post
 fun PostsScreen(
     viewModel: PostsViewModel,
     onPostClicked: (Post) -> Unit = {},
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onCreatePostClicked: () -> Unit,
+    onFindClubsClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
         is PostsSteps.Error -> {}
         is PostsSteps.IsLoading -> Loading()
-        is PostsSteps.ShowPosts -> PostsView(viewModel, onPostClicked, paddingValues)
+        is PostsSteps.ShowPosts ->
+            PostsView(
+                viewModel,
+                onPostClicked,
+                paddingValues,
+                onCreatePostClicked,
+                onFindClubsClicked
+            )
     }
 }
 
@@ -45,50 +54,99 @@ fun PostsScreen(
 fun PostsView(
     viewModel: PostsViewModel,
     onPostClicked: (Post) -> Unit = {},
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onCreatePostClicked: () -> Unit,
+    onFindClubsClicked: () -> Unit
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
 
     posts.apply {
         when {
-            loadState.refresh is LoadState.Loading -> {}
+            loadState.refresh is LoadState.Loading -> {
+                Loading()
+            }
             loadState.refresh is LoadState.NotLoading -> {}
             loadState.refresh is LoadState.Error -> {}
             loadState.append is LoadState.Loading -> {}
             loadState.append is LoadState.Error -> {}
         }
     }
-
-    if (posts.itemCount == 0) {
-        Box(
-            modifier = Modifier
+    Surface(
+        Modifier
+            .padding(paddingValues)
             .fillMaxSize()
-        ) {
-            Text(
-                text = stringResource(R.string.no_club_posts),
-                style = MaterialTheme.typography.h1,
-                modifier = Modifier
-                    .align(Center),
-                textAlign = TextAlign.Center
-            )
-        }
-    } else {
-        Surface(
+    ) {
+        Column(
             Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-                modifier = Modifier
-                    .background(color = MaterialTheme.colors.background)
-                    .fillMaxSize()
-            ) {
-                items(
-                    items = posts
-                ) { post ->
-                    post?.let { it ->
-                        PostCard(it, onPostClicked)
+            Text(
+                text = stringResource(
+                    if (viewModel.isClub()) R.string.your_posts
+                    else R.string.following_club_posts
+                ),
+                style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(
+                    horizontal = 12.dp,
+                    vertical = 8.dp
+                )
+            )
+            Divider()
+            Spacer(Modifier.height(8.dp))
+
+            if (posts.itemCount == 0) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 12.dp,
+                            vertical = 16.dp
+                        )
+                        .fillMaxSize()
+                ) {
+                    Text(
+                        text = stringResource(
+                            if (viewModel.isClub()) R.string.your_club_has_no_posts
+                            else R.string.no_following_club_posts
+                        ),
+                        style = MaterialTheme.typography.h1,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    Button(
+                        modifier = Modifier
+                            .align(CenterHorizontally),
+                        onClick = {
+                            if (viewModel.isClub()) {
+                                onCreatePostClicked()
+                            } else {
+                                onFindClubsClicked()
+                            }
+                        }) {
+                        Text(
+                            text = stringResource(
+                                if (viewModel.isClub()) R.string.create_post
+                                else R.string.find_clubs
+                            ),
+                            style = MaterialTheme.typography.h1,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    items(
+                        items = posts
+                    ) { post ->
+                        post?.let { it ->
+                            PostCard(it, onPostClicked)
+                        }
                     }
                 }
             }

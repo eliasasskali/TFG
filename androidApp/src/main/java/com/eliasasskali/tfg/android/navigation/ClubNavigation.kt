@@ -56,34 +56,41 @@ fun ClubNavigation(
                     onPostClicked = { post ->
                         val jsonPost = Gson().toJson(post)
                         navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/$jsonPost"))
-                    }
+                    },
+                    onCreatePostClicked = {
+                        //navController.navigate(HomeRoutesClub.Post.routeName)
+                        navController.navigate(HomeRoutesClub.Post.routeName) {
+                            navController.graph.startDestinationRoute?.let { screen_route ->
+                                popUpTo(screen_route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    onFindClubsClicked = {}
                 )
             }
         }
 
         composable(route = HomeRoutesClub.PostDetail.routeName.plus("/{${HomeRoutesClub.JSON_POST}}")) { entry ->
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: PostDetailViewModel = get()
-                val jsonPost = entry.arguments?.getString(HomeRoutesClub.JSON_POST)
-                val post = Gson().fromJson(jsonPost, Post::class.java)
-                LaunchedEffect(Unit) {
-                    viewModel.initPostDetailScreen(post)
-                }
-
-                PostDetailScreen(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues,
-                    onPostDeleted = {
-                        navController.navigate(HomeRoutesClub.Home.routeName)
-                    }
-                )
+            val viewModel: PostDetailViewModel = get()
+            val jsonPost = entry.arguments?.getString(HomeRoutesClub.JSON_POST)
+            val post = Gson().fromJson(jsonPost, Post::class.java)
+            LaunchedEffect(Unit) {
+                viewModel.initPostDetailScreen(post)
             }
+
+            PostDetailScreen(
+                viewModel = viewModel,
+                onPostDeleted = {
+                    navController.navigate(HomeRoutesClub.Home.routeName)
+                },
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(route = HomeRoutesClub.Chats.routeName) {
@@ -106,23 +113,19 @@ fun ClubNavigation(
         }
 
         composable(route = HomeRoutesClub.ChatDetail.routeName.plus("/{${HomeRoutesClub.CHAT_ID}}")) { entry ->
-            val scaffoldState = rememberScaffoldState()
             val chatId = entry.arguments?.getString(HomeRoutesClub.CHAT_ID) as String
+            val viewModel: ChatViewModel = get()
 
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: ChatViewModel = get()
-                LaunchedEffect(Unit) {
-                    viewModel.initChatScreen(chatId)
-                }
-                ChatScreen(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues,
-                )
+            LaunchedEffect(Unit) {
+                viewModel.initChatScreen(chatId)
             }
+
+            ChatScreen(
+                viewModel = viewModel,
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(route = HomeRoutesClub.Post.routeName) {

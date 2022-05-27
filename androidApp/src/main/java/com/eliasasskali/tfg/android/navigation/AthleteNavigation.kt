@@ -58,34 +58,40 @@ fun AthleteNavigation(
                     onPostClicked = { post ->
                         val jsonPost = Gson().toJson(post)
                         navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
+                    },
+                    onCreatePostClicked = {},
+                    onFindClubsClicked = {
+                        navController.navigate(HomeRoutesAthlete.Clubs.routeName) {
+                            navController.graph.startDestinationRoute?.let { screen_route ->
+                                popUpTo(screen_route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 )
             }
         }
 
         composable(route = HomeRoutesAthlete.PostDetail.routeName.plus("/{${HomeRoutesAthlete.JSON_POST}}")) { entry ->
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: PostDetailViewModel = get()
-                val jsonPost = entry.arguments?.getString(HomeRoutesAthlete.JSON_POST)
-                val post = Gson().fromJson(jsonPost, Post::class.java)
-                LaunchedEffect(Unit) {
-                    viewModel.initPostDetailScreen(post)
-                }
-
-                PostDetailScreen(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues,
-                    onPostDeleted = {
-                        navController.navigate(HomeRoutesAthlete.Home.routeName)
-                    }
-                )
+            val viewModel: PostDetailViewModel = get()
+            val jsonPost = entry.arguments?.getString(HomeRoutesAthlete.JSON_POST)
+            val post = Gson().fromJson(jsonPost, Post::class.java)
+            LaunchedEffect(Unit) {
+                viewModel.initPostDetailScreen(post)
             }
+
+            PostDetailScreen(
+                viewModel = viewModel,
+                onPostDeleted = {
+                    navController.navigate(HomeRoutesAthlete.Home.routeName)
+                },
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(route = HomeRoutesAthlete.Clubs.routeName) {
@@ -172,6 +178,18 @@ fun AthleteNavigation(
                             onPostClicked = { post ->
                                 val jsonPost = Gson().toJson(post)
                                 navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
+                            },
+                            onCreatePostClicked = {},
+                            onFindClubsClicked = {
+                                navController.navigate(HomeRoutesAthlete.Clubs.routeName) {
+                                    navController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(screen_route) {
+                                            saveState = true
+                                        }
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         )
                     }
@@ -195,29 +213,35 @@ fun AthleteNavigation(
                     paddingValues = paddingValues,
                     onChatClicked = { chat ->
                         navController.navigate(HomeRoutesAthlete.ChatDetail.routeName.plus("/${chat.chatId}"))
+                    },
+                    onFindClubsClicked = {
+                        navController.navigate(HomeRoutesAthlete.Clubs.routeName) {
+                            navController.graph.startDestinationRoute?.let { screen_route ->
+                                popUpTo(screen_route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 )
             }
         }
 
         composable(route = HomeRoutesAthlete.ChatDetail.routeName.plus("/{${HomeRoutesAthlete.CHAT_ID}}")) { entry ->
-            val scaffoldState = rememberScaffoldState()
             val chatId = entry.arguments?.getString(HomeRoutesAthlete.CHAT_ID) as String
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: ChatViewModel = get()
-                LaunchedEffect(Unit) {
-                    viewModel.initChatScreen(chatId)
-                }
-                ChatScreen(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues,
-                )
+            val viewModel: ChatViewModel = get()
+            LaunchedEffect(Unit) {
+                viewModel.initChatScreen(chatId)
             }
+
+            ChatScreen(
+                viewModel = viewModel,
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(route = HomeRoutesAthlete.Profile.routeName) {
