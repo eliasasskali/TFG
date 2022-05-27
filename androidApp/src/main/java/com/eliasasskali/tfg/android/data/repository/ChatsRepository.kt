@@ -6,6 +6,12 @@ import com.eliasasskali.tfg.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface ChatsRepository {
+    suspend fun getOrCreateChatWithClub(
+        athleteId: String,
+        clubId: String,
+        athleteName: String,
+        clubName: String
+    ): Either<DomainError, String>
     fun getChat(chatId: String): Flow<ChatResponse>
     fun getUserChats(chatIds: List<String>): Flow<ChatsResponse>
     suspend fun sendMessage(message: Message, chatId: String): Either<DomainError, Success>

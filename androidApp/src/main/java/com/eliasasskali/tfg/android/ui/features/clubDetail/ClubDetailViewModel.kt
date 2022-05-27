@@ -4,10 +4,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eliasasskali.tfg.android.data.repository.ChatsRepository
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
-import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Either
 import com.eliasasskali.tfg.ui.executor.Executor
@@ -17,17 +17,17 @@ import kotlinx.coroutines.withContext
 
 class ClubDetailViewModel(
     private val repository: ClubAthleteRepository,
+    private val chatsRepository: ChatsRepository,
     private val executor: Executor,
     private val preferences: Preferences
 ) : ViewModel() {
 
-    val clubState: MutableState<ClubDetailState> = mutableStateOf(ClubDetailState())
+    val state: MutableState<ClubDetailState> = mutableStateOf(ClubDetailState())
     private suspend fun <T> execute(f: suspend () -> Either<DomainError, T>): Either<DomainError, T> =
         withContext(executor.bg) { f() }
 
     fun initClubDetailScreen(clubId: String) {
         val athlete = Gson().fromJson(preferences.getProfileJson(), Athlete::class.java)
-        //clubState.value = clubState.value.copy(club = club, athlete = athlete)
         viewModelScope.launch {
             execute {
                 repository.getClubById(clubId)
@@ -37,7 +37,7 @@ class ClubDetailViewModel(
                 },
                 success = {
                     it?.let { club ->
-                        clubState.value = clubState.value.copy(club = club, athlete = athlete)
+                        state.value = state.value.copy(club = club, athlete = athlete)
                     }
                 }
             )
@@ -51,7 +51,7 @@ class ClubDetailViewModel(
             }.fold(
                 error = {},
                 success = {
-                    clubState.value = clubState.value.copy(isClubOwner = it)
+                    state.value = state.value.copy(isClubOwner = it)
                 }
             )
         }
@@ -90,7 +90,27 @@ class ClubDetailViewModel(
             }.fold(
                 error = {},
                 success = {
-                    initClubDetailScreen(clubState.value.club.id)
+                    initClubDetailScreen(state.value.club.id)
+                }
+            )
+        }
+    }
+
+    fun getOrCreateChatWithClub(onChatFoundOrCreated: (chatId: String) -> Unit) {
+        viewModelScope.launch {
+            execute {
+                chatsRepository.getOrCreateChatWithClub(
+                    athleteId = preferences.getLoggedUid(),
+                    clubId = state.value.club.id,
+                    athleteName = state.value.athlete.name,
+                    clubName = state.value.club.name
+                )
+            }.fold(
+                error = {
+
+                },
+                success = {
+                    onChatFoundOrCreated(it)
                 }
             )
         }

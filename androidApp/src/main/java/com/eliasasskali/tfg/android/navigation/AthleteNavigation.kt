@@ -101,7 +101,6 @@ fun AthleteNavigation(
                     ClubsScreen(
                         viewModel,
                         onClubClicked = {
-                            //val jsonClub = Gson().toJson(it)
                             val distanceToClub =
                                 if (viewModel.state.value.filterLocation.latitude != 0.0) {
                                     viewModel.distanceToClub(
@@ -147,14 +146,19 @@ fun AthleteNavigation(
                 }
                 when (tabIndex) {
                     0 -> ClubDetailScreen(
-                        detailState = viewModel.clubState.value,
-                        club = viewModel.clubState.value.club,
+                        detailState = viewModel.state.value,
+                        club = viewModel.state.value.club,
                         distanceToClub = distanceToClub ?: "Unknown", // TODO: Check distanceToClub
                         isClubOwner = false,
                         onBackClicked = { navController.popBackStack() },
                         onEditButtonClick = {},
-                        onFollowButtonClick = { viewModel.followClub(viewModel.clubState.value.club.id) },
-                        onUnfollowButtonClick = { viewModel.unFollowClub(viewModel.clubState.value.club.id) }
+                        onFollowButtonClick = { viewModel.followClub(viewModel.state.value.club.id) },
+                        onUnfollowButtonClick = { viewModel.unFollowClub(viewModel.state.value.club.id) },
+                        onChatButtonClick = {
+                            viewModel.getOrCreateChatWithClub { chatId ->
+                                navController.navigate(HomeRoutesAthlete.ChatDetail.routeName.plus("/${chatId}"))
+                            }
+                        }
                     )
                     1 -> {
                         val postsViewModel: PostsViewModel = get()
@@ -185,6 +189,7 @@ fun AthleteNavigation(
                 navController = navController
             ) { paddingValues ->
                 val viewModel: ChatsViewModel = get()
+                println("chats")
                 ChatsScreen(
                     viewModel = viewModel,
                     paddingValues = paddingValues,

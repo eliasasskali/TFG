@@ -13,6 +13,7 @@ import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -27,13 +28,19 @@ class ChatsViewModel(
 
     val state: MutableState<ChatsState> = mutableStateOf(ChatsState())
 
-    fun getChatsMutable() : Flow<ChatsResponse> {
-        val chatIds = if (preferences.isClub()) {
+    val chatIds
+        get() = if (preferences.isClub()) {
             Gson().fromJson(preferences.getProfileJson(), Club::class.java).chats
         } else {
             Gson().fromJson(preferences.getProfileJson(), Athlete::class.java).chats
         }
-        return repository.getUserChats(chatIds = chatIds)
+
+    fun getChatsMutable(): Flow<ChatsResponse> {
+        return if (chatIds.isNotEmpty()) {
+            repository.getUserChats(chatIds = chatIds)
+        } else {
+            emptyFlow()
+        }
     }
 
     fun setStep(step: ChatsSteps) {
@@ -41,10 +48,10 @@ class ChatsViewModel(
     }
 
     fun getOtherUserName(chat: Chat): String {
-        return if (chat.user1 == preferences.getLoggedUid()) {
-            chat.user2Name
+        return if (chat.athleteId == preferences.getLoggedUid()) {
+            chat.clubName
         } else {
-            chat.user1Name
+            chat.athleteName
         }
     }
 
