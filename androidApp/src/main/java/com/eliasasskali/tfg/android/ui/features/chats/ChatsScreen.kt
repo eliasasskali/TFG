@@ -7,13 +7,16 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eliasasskali.tfg.R
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Chat
@@ -25,7 +28,8 @@ import org.koin.androidx.compose.get
 fun ChatsScreen(
     viewModel: ChatsViewModel,
     paddingValues: PaddingValues,
-    onChatClicked: (Chat) -> Unit
+    onChatClicked: (Chat) -> Unit,
+    onFindClubsClicked: () -> Unit = {}
 ) {
     when (viewModel.state.value.step) {
         is ChatsSteps.Error -> {}
@@ -33,7 +37,8 @@ fun ChatsScreen(
         is ChatsSteps.ShowChats -> ChatsView(
             viewModel,
             paddingValues,
-            onChatClicked
+            onChatClicked,
+            onFindClubsClicked
         )
     }
 }
@@ -42,45 +47,102 @@ fun ChatsScreen(
 fun ChatsView(
     viewModel: ChatsViewModel,
     paddingValues: PaddingValues,
-    onChatClicked: (Chat) -> Unit
+    onChatClicked: (Chat) -> Unit,
+    onFindClubsClicked: () -> Unit
 ) {
-    when (val chatsMutable = viewModel.getChatsMutable()
-        .collectAsState(
-            initial = null
-        ).value
+    Surface(
+        Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
     ) {
-        is OnErrorChats -> {
-            // TODO
-            println("ERROR OBTAINING CHATS")
-        }
-        is OnSuccessChats -> {
-            val chatSnapshot = chatsMutable.querySnapshot
-            val chats = chatSnapshot?.map { document ->
-                document.toObject(ChatDto::class.java).toModel(document.id)
-            }
-            chats?.let { chats ->
-                Surface(
-                    Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                ) {
-                    LazyColumn(
-                        Modifier
+        Column(
+            Modifier
+                .fillMaxSize()
+        ) {
+            Text(
+                text = stringResource(R.string.chats),
+                style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(
+                    horizontal = 12.dp,
+                    vertical = 8.dp
+                )
+            )
+            Divider()
+            Spacer(Modifier.height(8.dp))
+
+            when (val chatsMutable = viewModel.getChatsMutable()
+                .collectAsState(
+                    initial = null
+                ).value
+            ) {
+                is OnErrorChats -> {
+                    // TODO
+                    println("ERROR OBTAINING CHATS")
+                }
+                is OnSuccessChats -> {
+                    val chatSnapshot = chatsMutable.querySnapshot
+                    val chats = chatSnapshot?.map { document ->
+                        document.toObject(ChatDto::class.java).toModel(document.id)
+                    }
+                    chats?.let { chats ->
+                        LazyColumn(
+                            Modifier
+                                .fillMaxSize()
+                        ) {
+                            items(chats.size) { index ->
+                                ChatCard(
+                                    chat = chats[index],
+                                    onChatClicked = onChatClicked,
+                                    viewModel = viewModel
+                                )
+                            }
+                        }
+                    }
+                }
+                null -> {
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 12.dp,
+                                vertical = 16.dp
+                            )
                             .fillMaxSize()
                     ) {
-                        items(chats.size) { index ->
-                            ChatCard(
-                                chat = chats[index],
-                                onChatClicked = onChatClicked,
-                                viewModel = viewModel
+                        Text(
+                            text = stringResource(R.string.you_have_no_active_chats),
+                            style = MaterialTheme.typography.h1,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(CenterHorizontally)
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+
+                        if (!viewModel.isClub()) {
+                            Text(
+                                text = stringResource(R.string.find_clubs_to_start_a_chat),
+                                style = MaterialTheme.typography.h1,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.align(CenterHorizontally)
                             )
+                            Spacer(Modifier.height(8.dp))
+
+                            Button(
+                                modifier = Modifier
+                                    .align(CenterHorizontally),
+                                onClick = {
+                                    onFindClubsClicked()
+                                }) {
+                                Text(
+                                    text = stringResource(R.string.find_clubs),
+                                    style = MaterialTheme.typography.h1,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-        null -> {
-            // TODO
         }
     }
 }

@@ -28,12 +28,15 @@ class ChatsViewModel(
 
     val state: MutableState<ChatsState> = mutableStateOf(ChatsState())
 
+    // TODO: Remove chatIds
     val chatIds
         get() = if (preferences.isClub()) {
             Gson().fromJson(preferences.getProfileJson(), Club::class.java).chats
         } else {
             Gson().fromJson(preferences.getProfileJson(), Athlete::class.java).chats
         }
+
+    fun isClub() = preferences.isClub()
 
     fun getChatsMutable(): Flow<ChatsResponse> {
         return if (chatIds.isNotEmpty()) {

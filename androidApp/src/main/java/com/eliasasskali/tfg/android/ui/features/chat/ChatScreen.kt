@@ -1,5 +1,6 @@
 package com.eliasasskali.tfg.android.ui.features.chat
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -34,19 +37,24 @@ import com.eliasasskali.tfg.model.ChatDto
 @Composable
 fun ChatScreen(
     viewModel: ChatViewModel,
-    paddingValues: PaddingValues
+    onBackClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
         is ChatSteps.Error -> {}
         is ChatSteps.IsLoading -> Loading()
-        is ChatSteps.ShowChat -> ChatView(viewModel, paddingValues)
+        is ChatSteps.ShowChat ->
+            ChatView(
+                viewModel,
+                onBackClicked
+            )
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ChatView(
     viewModel: ChatViewModel,
-    paddingValues: PaddingValues
+    onBackClicked: () -> Unit
 ) {
     val newMessage = viewModel.state.value.newMessage
     val focusManager = LocalFocusManager.current
@@ -63,69 +71,101 @@ fun ChatView(
             val chatSnapshot = chatMutable.querySnapshot
             val chat = chatSnapshot?.toObject(ChatDto::class.java)?.toModel(chatSnapshot.id)
             chat?.messages?.let { messages ->
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(weight = 1f, fill = true),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        reverseLayout = true
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    text =
+                                    if (viewModel.isClub()) chat.athleteName
+                                    else chat.clubName,
+                                    style = MaterialTheme.typography.h6
+                                )
+                            },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = { onBackClicked() }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ArrowBack,
+                                        contentDescription = stringResource(id = R.string.back)
+                                    )
+                                }
+                            },
+                            backgroundColor = MaterialTheme.colors.primary,
+                        )
+                    },
+                ) { paddingValues ->
+                    Surface(
+                        Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
                     ) {
-                        items(messages.reversed()) { message ->
-                            val isCurrentUser = viewModel.isSender(message)
+                        Column(
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(weight = 1f, fill = true),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                reverseLayout = true
+                            ) {
+                                items(messages.reversed()) { message ->
+                                    val isCurrentUser = viewModel.isSender(message)
 
-                            SingleMessage(
-                                message = message.message,
-                                sentOnString = viewModel.getDateTime(message.sentOn),
-                                isCurrentUser = isCurrentUser,
-                                modifier =
-                                if (isCurrentUser) Modifier
-                                    .align(Alignment.Start)
-                                else Modifier
-                                    .align(Alignment.End)
+                                    SingleMessage(
+                                        message = message.message,
+                                        sentOnString = viewModel.getDateTime(message.sentOn),
+                                        isCurrentUser = isCurrentUser,
+                                        modifier =
+                                        if (isCurrentUser) Modifier
+                                            .align(Alignment.Start)
+                                        else Modifier
+                                            .align(Alignment.End)
+                                    )
+                                }
+                            }
+                            OutlinedTextField(
+                                value = newMessage,
+                                onValueChange = {
+                                    viewModel.setNewMessage(it)
+                                },
+                                label = {
+                                    Text(
+                                        stringResource(id = R.string.type_message)
+                                    )
+                                },
+                                maxLines = 3,
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text,
+                                ),
+                                singleLine = true,
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            focusManager.clearFocus()
+                                            viewModel.sendMessage(newMessage.trimEnd())
+                                        },
+                                        enabled = viewModel.state.value.newMessage.isNotBlank()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Send,
+                                            contentDescription = stringResource(id = R.string.send_button)
+                                        )
+                                    }
+                                }
                             )
                         }
                     }
-                    OutlinedTextField(
-                        value = newMessage,
-                        onValueChange = {
-                            viewModel.setNewMessage(it)
-                        },
-                        label = {
-                            Text(
-                                stringResource(id = R.string.type_message)
-                            )
-                        },
-                        maxLines = 3,
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp, vertical = 12.dp)
-                            .fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                        ),
-                        singleLine = true,
-                        trailingIcon = {
-                            IconButton(
-                                onClick = {
-                                    focusManager.clearFocus()
-                                    viewModel.sendMessage(newMessage.trimEnd())
-                                },
-                                enabled = viewModel.state.value.newMessage.isNotBlank()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Send,
-                                    contentDescription = stringResource(id = R.string.send_button)
-                                )
-                            }
-                        }
-                    )
                 }
             }
         }

@@ -41,7 +41,9 @@ class ChatViewModel(
         state.value = state.value.copy(newMessage = newMessage)
     }
 
-    fun isSender(message: Message) : Boolean = preferences.getLoggedUid() == message.senderId
+    fun isSender(message: Message): Boolean = preferences.getLoggedUid() == message.senderId
+
+    fun isClub(): Boolean = preferences.isClub()
 
     fun sendMessage(newMessage: String) {
         val message = Message(
