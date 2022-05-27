@@ -18,7 +18,6 @@ fun BottomNavBar(
         BottomNavItem.HomeClub,
         BottomNavItem.ChatsClub,
         BottomNavItem.AddPost,
-        BottomNavItem.Notifications,
         BottomNavItem.ProfileClub
     ) else listOf(
         BottomNavItem.HomeAthlete,

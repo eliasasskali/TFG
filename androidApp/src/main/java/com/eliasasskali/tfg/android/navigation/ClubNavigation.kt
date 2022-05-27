@@ -142,18 +142,6 @@ fun ClubNavigation(
             }
         }
 
-        composable(route = HomeRoutesClub.Notifications.routeName) {
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                Text(HomeRoutesClub.Notifications.routeName)
-            }
-        }
-
         composable(route = HomeRoutesClub.Profile.routeName) {
             val scaffoldState = rememberScaffoldState()
 
