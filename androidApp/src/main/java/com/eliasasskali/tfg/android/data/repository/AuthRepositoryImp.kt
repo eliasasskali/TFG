@@ -21,7 +21,7 @@ class AuthRepositoryImp constructor(
         }
     }
 
-    override suspend fun signOut(): Either<DomainError, Success> {
+    override suspend fun logOut(): Either<DomainError, Success> {
         return try {
             Firebase.auth.signOut()
             Either.Right(Success)
