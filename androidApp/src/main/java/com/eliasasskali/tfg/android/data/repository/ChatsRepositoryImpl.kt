@@ -113,7 +113,7 @@ class ChatsRepositoryImpl(
         }
     }
 
-    override fun getUserChats(chatIds: List<String>) = callbackFlow {
+    override fun getUserChats() = callbackFlow {
         val chats = if (preferences.isClub()) {
             chatsRef
                 .whereEqualTo("clubId", preferences.getLoggedUid())

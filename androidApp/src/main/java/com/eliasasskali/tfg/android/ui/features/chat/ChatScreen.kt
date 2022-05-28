@@ -195,11 +195,7 @@ fun SingleMessage(
         Column {
             Text(
                 text = message,
-                textAlign =
-                if (isCurrentUser)
-                    TextAlign.End
-                else
-                    TextAlign.Start,
+                textAlign = TextAlign.Start,
                 modifier = Modifier
                     .padding(8.dp),
                 color =

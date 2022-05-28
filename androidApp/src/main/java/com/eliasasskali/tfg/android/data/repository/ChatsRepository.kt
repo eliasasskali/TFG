@@ -13,6 +13,6 @@ interface ChatsRepository {
         clubName: String
     ): Either<DomainError, String>
     fun getChat(chatId: String): Flow<ChatResponse>
-    fun getUserChats(chatIds: List<String>): Flow<ChatsResponse>
+    fun getUserChats(): Flow<ChatsResponse>
     suspend fun sendMessage(message: Message, chatId: String): Either<DomainError, Success>
 }

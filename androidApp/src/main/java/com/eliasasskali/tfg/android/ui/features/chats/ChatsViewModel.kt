@@ -38,12 +38,10 @@ class ChatsViewModel(
 
     fun isClub() = preferences.isClub()
 
+    fun getUserId() = preferences.getLoggedUid()
+
     fun getChatsMutable(): Flow<ChatsResponse> {
-        return if (chatIds.isNotEmpty()) {
-            repository.getUserChats(chatIds = chatIds)
-        } else {
-            emptyFlow()
-        }
+        return repository.getUserChats()
     }
 
     fun setStep(step: ChatsSteps) {

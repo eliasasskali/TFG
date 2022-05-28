@@ -108,6 +108,7 @@
     <string name="chats">Chats</string>
     <string name="find_clubs_to_start_a_chat">Find clubs to start a chat.</string>
     <string name="you_have_no_active_chats">You have no active chats.</string>
+    <string name="no_messages_yet">No messages from this chat yet.</string>
 
     <!-- Others -->
     <string name="unknown">Unknown</string>
@@ -119,5 +120,6 @@
     <string name="cancel">Cancel</string>
     <string name="apply_changes">Apply changes</string>
     <string name="will_be_deleted">will be deleted</string>
+    <string name="you">You</string>
 
 </resources>
