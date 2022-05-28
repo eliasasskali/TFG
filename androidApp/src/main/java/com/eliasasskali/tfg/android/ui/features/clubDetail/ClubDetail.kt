@@ -1,6 +1,5 @@
 package com.eliasasskali.tfg.android.ui.features.clubDetail
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +21,6 @@ import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubDto
 import com.eliasasskali.tfg.model.ClubLocation
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ClubDetailScreen(
     detailState: ClubDetailState = ClubDetailState(),
@@ -82,10 +80,11 @@ fun ClubDetailScreen(
                 backgroundColor = MaterialTheme.colors.primary,
             )
         },
-        content = {
+        content = { paddingValuesScaffold ->
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValuesScaffold)
                     .padding(paddingValues)
             ) {
                 Column(
