@@ -1,16 +1,17 @@
 package com.eliasasskali.tfg.android.navigation
 
+import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.eliasasskali.tfg.android.ui.features.athleteProfile.AthleteProfileScreen
+import com.eliasasskali.tfg.android.ui.features.athleteProfile.AthleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.bottomNavBar.BottomNavBar
 import com.eliasasskali.tfg.android.ui.features.chat.ChatScreen
 import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
@@ -18,8 +19,8 @@ import com.eliasasskali.tfg.android.ui.features.chats.ChatsScreen
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
-import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsScreen
+import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
@@ -33,7 +34,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun AthleteNavigation(
     navController: NavHostController,
-    context: Context,
+    context: Activity,
 ) {
     NavHost(
         navController = navController,
@@ -252,7 +253,21 @@ fun AthleteNavigation(
                 scope = rememberCoroutineScope(),
                 navController = navController
             ) { paddingValues ->
-                route?.let { it1 -> Text(modifier = Modifier.padding(paddingValues), text = it1) }
+                val viewModel: AthleteProfileViewModel = get()
+                viewModel.initAthleteProfileScreen()
+
+                AthleteProfileScreen(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues,
+                    onLoggedOut = {
+                        goToLogin(context)
+                    },
+                    onFollowingClubClicked = { clubId ->
+                        // TODO: Distance to club
+                        val distanceToClub = "TODO"
+                        navController.navigate(HomeRoutesAthlete.ClubDetail.routeName.plus("/$clubId/$distanceToClub"))
+                    }
+                )
             }
         }
     }
