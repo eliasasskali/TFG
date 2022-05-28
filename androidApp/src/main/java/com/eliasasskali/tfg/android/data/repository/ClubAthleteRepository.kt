@@ -18,7 +18,6 @@ import kotlinx.coroutines.tasks.await
 
 class ClubAthleteRepository(
     private val preferences: Preferences,
-
 ) {
     fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
         try {
@@ -175,6 +174,26 @@ class ClubAthleteRepository(
         } catch (e: Exception) {
             Either.Left(DomainError.ErrorNotHandled("Save athlete preferences error."))
         }
+    }
 
+    suspend fun getFollowingClubNames(following: List<String>): Either<DomainError, List<Pair<String, String>>> {
+        val clubsRef = FirebaseFirestore.getInstance().collection("Clubs")
+        return try {
+            Either.Right(
+                following.map { clubId ->
+                    Pair(
+                        clubId,
+                        clubsRef
+                            .document(clubId)
+                            .get()
+                            .await()
+                            .get("name")
+                            .toString()
+                    )
+                }
+            )
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Error getting followed clubs."))
+        }
     }
 }

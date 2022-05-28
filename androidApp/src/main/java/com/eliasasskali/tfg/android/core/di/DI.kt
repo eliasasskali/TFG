@@ -6,6 +6,7 @@ import com.eliasasskali.tfg.android.data.repository.*
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.ui.features.athleteProfile.AthleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
@@ -45,6 +46,7 @@ val appModule = module {
     viewModel { PostDetailViewModel(get(), get(), get(), get()) }
     viewModel { ChatViewModel(get(), get(), get(), get()) }
     viewModel { ChatsViewModel(get(), get(), get(), get()) }
+    viewModel { AthleteProfileViewModel(get(), get(), get(), get(), get()) }
 }
 
 fun dataModule(context: Context) = module {
