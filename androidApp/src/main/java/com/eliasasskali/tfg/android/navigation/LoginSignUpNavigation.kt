@@ -11,6 +11,7 @@ import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileA
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginScreen
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.SignUpScreen
+import com.eliasasskali.tfg.android.ui.features.splash.SplashActivity
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
@@ -27,10 +28,12 @@ fun LoginSignUpNavigation(
     fun onUserLogged() = runBlocking {
         authRepository.isProfileCompleted(
             onTrue = {
-                goToHome(context = activity)
+                //goToHome(context = activity)
+                goToSplashScreen(context = activity)
             },
             onFalse = {
-                goToCompleteProfile(context = activity)
+                //goToCompleteProfile(context = activity)
+                goToSplashScreen(context = activity)
             }
         )
     }
@@ -66,5 +69,10 @@ fun goToCompleteProfile(context: Activity) {
 
 fun goToHome(context: Activity) {
     context.startActivity(HomeActivity.intent(context))
+    context.finish()
+}
+
+fun goToSplashScreen(context: Activity) {
+    context.startActivity(SplashActivity.intent(context))
     context.finish()
 }

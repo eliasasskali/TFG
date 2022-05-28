@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TFG</string>
-    <string name="back_icon">back icon</string>
-
-    <!-- FB app id  -->
-    <string name="facebook_app_id">{YOUR_APP_ID}</string><!-- TODO Replace with your app id -->
-    <!-- TODO Replace with your login protocol schema (usually "fb{YOUR_APP_ID}") -->
-    <string name="fb_login_protocol_scheme">{YOUR_LOGIN_PROTOCOL_SCHEMA}</string>
 </resources>

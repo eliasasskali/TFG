@@ -6,6 +6,8 @@ import com.eliasasskali.tfg.android.data.repository.*
 import com.eliasasskali.tfg.android.data.repository.AuthRepository
 import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
+import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubProfile.ClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileViewModel
@@ -33,7 +35,7 @@ val appModule = module {
     viewModel { LoginSignupViewModel(get(), get(), get()) }
     viewModel { CompleteProfileViewModel(get(), get(), get(), get()) }
     viewModel { ClubsViewModel(get(), get(), get()) }
-    viewModel { ClubDetailViewModel(get(), get(), get()) }
+    viewModel { ClubDetailViewModel(get(), get(), get(), get()) }
     viewModel { EditClubProfileViewModel(get(), get(), get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get(), get()) }
@@ -41,6 +43,8 @@ val appModule = module {
     viewModel { PostViewModel(get(), get(), get(), get()) }
     viewModel { PostsViewModel(get(), get(), get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get()) }
+    viewModel { ChatsViewModel(get(), get(), get(), get()) }
 }
 
 fun dataModule(context: Context) = module {
@@ -70,6 +74,10 @@ fun dataModule(context: Context) = module {
                 pageSize = 5
             )
         )
+    }
+
+    single<ChatsRepository> {
+        ChatsRepositoryImpl(get())
     }
 
     single<Preferences> {

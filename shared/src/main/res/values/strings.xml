@@ -66,7 +66,6 @@
     <string name="delete_image">Delete image</string>
     <string name="replace_image">Replace Image</string>
     <string name="my_club">My Club</string>
-    <string name="no_club_posts">This club has no posts yet.</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="chat">Chat</string>
@@ -82,12 +81,34 @@
     <string name="settings">Settings</string>
 
     <!-- Post -->
+    <string name="posts">Posts</string>
+    <string name="your_posts">Your Posts</string>
+    <string name="following_club_posts">Following Clubs Posts</string>
+    <string name="no_club_posts">This club has no posts yet.</string>
+    <string name="no_following_club_posts">You are not following any club or the clubs you follow have no posts.</string>
+    <string name="your_club_has_no_posts">You have no posts.</string>
+    <string name="post_detail">Post Detail</string>
     <string name="post_title">Post title</string>
     <string name="post_content">Post Content</string>
     <string name="create_post">Create Post</string>
     <string name="edit_post">Edit Post</string>
     <string name="delete_post">Delete Post</string>
     <string name="confirm_delete_post">Are you sure you want to delete this post</string>
+
+    <string name="find_clubs">Find Clubs</string>
+
+    <!-- Chat -->
+    <string name="type_message">Type your message</string>
+    <string name="send_button">Send button</string>
+    <string name="delete_chat">Delete this chat</string>
+    <string name="delete_chat_confirmation_title">Delete this chat</string>
+    <string name="delete_chat_confirmation_message">
+        This chat will be deleted only for you, the other user will still be able to see the messages.
+    </string>
+    <string name="chats">Chats</string>
+    <string name="find_clubs_to_start_a_chat">Find clubs to start a chat.</string>
+    <string name="you_have_no_active_chats">You have no active chats.</string>
+    <string name="no_messages_yet">No messages from this chat yet.</string>
 
     <!-- Others -->
     <string name="unknown">Unknown</string>
@@ -99,5 +120,6 @@
     <string name="cancel">Cancel</string>
     <string name="apply_changes">Apply changes</string>
     <string name="will_be_deleted">will be deleted</string>
+    <string name="you">You</string>
 
 </resources>

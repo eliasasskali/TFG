@@ -19,7 +19,6 @@ sealed class LoginSignUpRoutes(val routeName: String) {
 
 sealed class HomeRoutesClub(val routeName: String) {
     object Home : HomeRoutesClub("homeClub")
-    object Notifications : HomeRoutesClub("notifications")
     object Chats : HomeRoutesClub("chatsClub")
     object ChatDetail : HomeRoutesAthlete("chatDetail")
     object Profile : HomeRoutesClub("profileClub")

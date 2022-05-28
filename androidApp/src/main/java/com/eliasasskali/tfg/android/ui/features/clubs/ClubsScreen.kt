@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -94,49 +95,52 @@ fun ClubsView(
             )
         }
     }
+    Surface(
+        Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+    ) {
+        Column() {
+            SearchView(state = textState, viewModel)
+            ClubsFilterView(viewModel)
+            if (viewModel.state.value.isLoading) {
+                Loading()
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    items(
+                        items = clubs
+                    ) { club ->
+                        club?.let { it ->
+                            val distanceToClub =
+                                if (viewModel.state.value.filterLocation.latitude != 0.0) {
+                                    viewModel.distanceToClub(
+                                        club.location,
+                                        viewModel.state.value.filterLocation
+                                    )
+                                } else {
+                                    viewModel.distanceToClub(
+                                        club.location,
+                                        viewModel.state.value.userLocation
+                                    )
+                                }
 
-    Column(Modifier.padding(paddingValues)) {
-        SearchView(state = textState, viewModel)
-        ClubsFilterView(viewModel)
-        if (viewModel.state.value.isLoading) {
-            Loading()
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-                modifier = Modifier
-                    .background(color = MaterialTheme.colors.background)
-                    .fillMaxSize()
-            ) {
-                items(
-                    items = clubs
-                ) { club ->
-                    club?.let { it ->
-                        val distanceToClub =
-                            if (viewModel.state.value.filterLocation.latitude != 0.0) {
-                                viewModel.distanceToClub(
-                                    club.location,
-                                    viewModel.state.value.filterLocation
-                                )
-                            } else {
-                                viewModel.distanceToClub(
-                                    club.location,
-                                    viewModel.state.value.userLocation
+                            if (viewModel.state.value.filterLocationRadius == 0 || viewModel.state.value.filterLocationRadius >= distanceToClub) {
+                                ClubCard(
+                                    club = it,
+                                    onClubClicked = onClubClicked,
+                                    distanceToClub = distanceToClub
                                 )
                             }
-
-                        if (viewModel.state.value.filterLocationRadius == 0 || viewModel.state.value.filterLocationRadius >= distanceToClub) {
-                            ClubCard(
-                                club = it,
-                                onClubClicked = onClubClicked,
-                                distanceToClub = distanceToClub
-                            )
                         }
                     }
                 }
             }
         }
     }
-
 
     error?.let {
         Text(

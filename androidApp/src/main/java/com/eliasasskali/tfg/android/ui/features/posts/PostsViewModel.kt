@@ -23,6 +23,8 @@ class PostsViewModel(
     val state: MutableState<PostsState> = mutableStateOf(PostsState())
     var posts = repository.getPosts(state.value.clubIds).cachedIn(viewModelScope)
 
+    fun isClub() = preferences.isClub()
+
     fun initPostsScreen(clubIds: List<String>) {
         if (clubIds.isNotEmpty()) {
             state.value = state.value.copy(clubIds = clubIds)
