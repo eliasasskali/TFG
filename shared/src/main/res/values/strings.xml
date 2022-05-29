@@ -2,19 +2,31 @@
 <resources>
 
     <!-- Errors -->
+    <string name="error">Error</string>
+    <string name="service_error">Service Error: Try again later please.</string>
     <string name="invalid_credentials">Invalid Credentials</string>
     <string name="nointernet_error">No internet Connection</string>
-    <string name="notfound_error">Not found</string>
-    <string name="signup_error">Sign up Error</string>
+    <string name="notfound_error">Error: Not found</string>
+    <string name="signup_error">Error Signing up</string>
+    <string name="signin_error">Error Signing in</string>
     <string name="signup_user_exists_error">User already Exists</string>
-    <string name="signin_error">Sign in Error</string>
-    <string name="signinCredential_error">Sign in with credential Error</string>
-    <string name="signinGoogle_error">Sign in with google Error</string>
-    <string name="signout_error">Sign Out Error</string>
-    <string name="error">Error</string>
-    <string name="passwordsDoNotMatch_error">Passwords do not match.</string>
-    <string name="clubs_load_error">Error loading Clubs.</string>
+    <string name="signinCredential_error">Error signing in with credential</string>
+    <string name="signinGoogle_error">Error signing in with google</string>
+    <string name="signout_error">Error signing out</string>
+    <string name="passwordsDoNotMatch_error">Passwords do not match</string>
+    <string name="clubs_load_error">Error Loading Clubs</string>
+    <string name="create_chat_error">Error creating Chat</string>
+    <string name="delete_post_error">Error deleting Post</string>
+    <string name="follow_error">Error following Club</string>
+    <string name="unfollow_error">Error unfollowing Club</string>
+    <string name="get_followed_clubs_error">Error getting followed clubs</string>
+    <string name="get_posts_error">Error getting posts</string>
+    <string name="send_message_error">Error sending message</string>
+    <string name="update_profile_error">Error updating profile</string>
+    <string name="upload_images_error">Error uploading images</string>
+    <string name="edit_post_error">Error editing Post.</string>
     <string name="create_post_error">Error Creating Post.</string>
+    <string name="try_again">Try Again</string>
 
     <!-- Login -->
     <string name="login_welcome_message">Welcome back!</string>

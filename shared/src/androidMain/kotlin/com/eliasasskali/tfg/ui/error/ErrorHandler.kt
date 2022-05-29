@@ -19,6 +19,17 @@ actual class ErrorHandler constructor(private val context: Context) {
             is DomainError.SignUpUserExistsError -> context.getString(R.string.signup_user_exists_error)
             is DomainError.LoadClubsError -> context.getString(R.string.clubs_load_error)
             is DomainError.CreatePostError -> context.getString(R.string.create_post_error)
+            is DomainError.DeletePostError -> context.getString(R.string.delete_post_error)
+            is DomainError.EditPostError -> context.getString(R.string.edit_post_error)
+            is DomainError.CreateChatError -> context.getString(R.string.create_chat_error)
+            is DomainError.FollowError -> context.getString(R.string.follow_error)
+            is DomainError.UnfollowError -> context.getString(R.string.unfollow_error)
+            is DomainError.GetFollowedClubsError -> context.getString(R.string.get_followed_clubs_error)
+            is DomainError.GetPostError -> context.getString(R.string.get_posts_error)
+            is DomainError.SendMessageError -> context.getString(R.string.send_message_error)
+            is DomainError.ServiceError -> context.getString(R.string.service_error)
+            is DomainError.UpdateProfileError -> context.getString(R.string.update_profile_error)
+            is DomainError.UploadImagesError -> context.getString(R.string.upload_images_error)
             is DomainError.ErrorNotHandled -> error.message
         }
 }
