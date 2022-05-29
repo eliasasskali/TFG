@@ -90,7 +90,7 @@ class ChatsRepositoryImpl(
 
                 Either.Right(chatId)
             } catch (e: Exception) {
-                Either.Left(DomainError.ErrorNotHandled("Error creating chat."))
+                Either.Left(DomainError.CreateChatError)
             }
         }
     }
@@ -145,7 +145,7 @@ class ChatsRepositoryImpl(
             Either.Right(Success)
         } catch (e: Exception) {
             println(e.localizedMessage)
-            Either.Left(DomainError.ErrorNotHandled("Error sending message."))
+            Either.Left(DomainError.SendMessageError)
         }
     }
 }

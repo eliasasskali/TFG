@@ -36,7 +36,7 @@ class PostsRepositoryImpl(
 
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.EditPostError)
         }
     }
 
@@ -53,7 +53,7 @@ class PostsRepositoryImpl(
                     ?.toModel(post.id)!!
             )
         } catch (e: FirebaseFirestoreException) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.GetPostError)
         }
     }
 
@@ -66,7 +66,7 @@ class PostsRepositoryImpl(
 
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.DeletePostError)
         }
     }
 }
