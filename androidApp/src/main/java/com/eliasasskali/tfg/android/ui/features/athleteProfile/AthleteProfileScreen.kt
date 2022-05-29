@@ -29,7 +29,8 @@ fun AthleteProfileScreen(
     paddingValues: PaddingValues,
     onLoggedOut: () -> Unit,
     onFollowingClubClicked: (String) -> Unit,
-    onFindClubsClicked: () -> Unit
+    onFindClubsClicked: () -> Unit,
+    onEditProfileClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
         is AthleteProfileSteps.Error -> {
@@ -42,7 +43,8 @@ fun AthleteProfileScreen(
                 paddingValues,
                 onLoggedOut,
                 onFollowingClubClicked,
-                onFindClubsClicked
+                onFindClubsClicked,
+                onEditProfileClicked
             )
         }
     }
@@ -54,7 +56,8 @@ fun AthleteProfileView(
     paddingValues: PaddingValues,
     onLoggedOut: () -> Unit,
     onFollowingClubClicked: (String) -> Unit,
-    onFindClubsClicked: () -> Unit
+    onFindClubsClicked: () -> Unit,
+    onEditProfileClicked: () -> Unit
 ) {
     val athlete = viewModel.state.value.athlete
     val followingClubs = viewModel.state.value.followingClubs
@@ -187,9 +190,7 @@ fun AthleteProfileView(
                 Spacer(Modifier.width(12.dp))
 
                 Button(
-                    onClick = {
-                        // TODO: Edit profile button clicked
-                    },
+                    onClick = onEditProfileClicked,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
