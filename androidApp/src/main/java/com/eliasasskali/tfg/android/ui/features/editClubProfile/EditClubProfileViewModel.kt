@@ -36,7 +36,6 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class EditClubProfileViewModel(
     private val repository: ClubAthleteRepository,
     private val preferences: Preferences,

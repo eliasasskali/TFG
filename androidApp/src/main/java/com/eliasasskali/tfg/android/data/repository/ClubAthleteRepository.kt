@@ -25,7 +25,7 @@ class ClubAthleteRepository(
             return Either.Right(false)
         } catch (e: Exception) {
             // TODO: Change error
-            return Either.Left(DomainError.ErrorNotHandled("Error"))
+            return Either.Left(DomainError.ServiceError)
         }
     }
 
@@ -40,7 +40,7 @@ class ClubAthleteRepository(
                     ?.toModel(clubId)
             )
         } catch (e: FirebaseFirestoreException) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.ServiceError)
         }
     }
 
@@ -55,7 +55,7 @@ class ClubAthleteRepository(
                     ?.toModel()
             )
         } catch (e: FirebaseFirestoreException) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.ServiceError)
         }
     }
 
@@ -82,7 +82,7 @@ class ClubAthleteRepository(
             }
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled("Images upload failed."))
+            Either.Left(DomainError.UploadImagesError)
         }
     }
 
@@ -135,7 +135,7 @@ class ClubAthleteRepository(
             }
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled("Follow error"))
+            Either.Left(DomainError.FollowError)
         }
     }
 
@@ -151,7 +151,7 @@ class ClubAthleteRepository(
             }
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled("Unfollow error"))
+            Either.Left(DomainError.UnfollowError)
         }
     }
 
@@ -170,7 +170,7 @@ class ClubAthleteRepository(
             }
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled("Save athlete preferences error."))
+            Either.Left(DomainError.ServiceError)
         }
     }
 
@@ -191,7 +191,7 @@ class ClubAthleteRepository(
                 }
             )
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled("Error getting followed clubs."))
+            Either.Left(DomainError.GetFollowedClubsError)
         }
     }
 
@@ -224,7 +224,7 @@ class ClubAthleteRepository(
 
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled("Error updating profile."))
+            Either.Left(DomainError.UpdateProfileError)
         }
     }
 }

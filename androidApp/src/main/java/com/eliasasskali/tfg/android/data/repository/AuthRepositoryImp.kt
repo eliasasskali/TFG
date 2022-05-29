@@ -17,7 +17,7 @@ class AuthRepositoryImp constructor(
         return try {
             Either.Right(auth.currentUser != null)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.ServiceError)
         }
     }
 
