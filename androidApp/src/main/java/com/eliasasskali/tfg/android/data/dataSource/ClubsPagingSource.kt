@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -10,7 +10,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
 // Network Data Source
-class FirestorePagingSource(
+class ClubsPagingSource(
     private val queryClubs: Query,
     private val searchString: String = "",
     private val sportsFilters: List<String> = listOf()
