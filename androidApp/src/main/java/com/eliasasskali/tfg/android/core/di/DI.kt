@@ -21,6 +21,7 @@ import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileV
 import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
+import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsViewModel
 import com.eliasasskali.tfg.data.preferences.CommonPreferences
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.ui.error.ErrorHandler
@@ -49,6 +50,7 @@ val appModule = module {
     viewModel { ChatViewModel(get(), get(), get(), get()) }
     viewModel { ChatsViewModel(get(), get(), get(), get()) }
     viewModel { AthleteProfileViewModel(get(), get(), get(), get(), get()) }
+    viewModel { ReviewsViewModel(get(), get(), get(), get()) }
 }
 
 fun dataModule(context: Context) = module {
@@ -74,6 +76,14 @@ fun dataModule(context: Context) = module {
 
     single<PostsRepository> {
         PostsRepositoryImpl(
+            config = PagingConfig(
+                pageSize = 5
+            )
+        )
+    }
+
+    single<ReviewsRepository> {
+        ReviewsRepositoryImpl(
             config = PagingConfig(
                 pageSize = 5
             )
