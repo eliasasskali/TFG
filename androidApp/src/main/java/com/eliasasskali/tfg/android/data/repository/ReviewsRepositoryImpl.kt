@@ -27,9 +27,18 @@ class ReviewsRepositoryImpl(
             .getInstance()
             .collection("Reviews")
 
+        val clubsRef = FirebaseFirestore
+            .getInstance()
+            .collection("Clubs")
+
         return try {
             reviewsRef
                 .add(reviewDto)
+                .await()
+
+            clubsRef
+                .document(reviewDto.clubId)
+                .update("reviews", FieldValue.arrayUnion(reviewDto.rating))
                 .await()
 
             Either.Right(Success)

@@ -84,7 +84,7 @@ fun PostsView(
                 text = stringResource(
                     if (viewModel.isClub()) R.string.your_posts
                     else R.string.following_club_posts
-                ),
+                ), // TODO: Own club
                 style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(

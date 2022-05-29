@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.features.reviews.RatingViewInteger
 
 @Composable
 fun ClubDetailMap(club: Club) {
@@ -69,7 +70,10 @@ fun ClubDetailTitle(
 }
 
 @Composable
-fun ClubDetailHeader(club: Club, distanceToClub: String) {
+fun ClubDetailHeader(
+    club: Club,
+    distanceToClub: String
+) {
     Row(
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -89,30 +93,10 @@ fun ClubDetailHeader(club: Club, distanceToClub: String) {
                 modifier = Modifier.align(CenterVertically)
             )
         }
-        // TODO: Rating
-        RatingView(
-            rating = "4.2",
-            modifier = Modifier.align(CenterVertically)
-        )
-    }
-}
 
-@Composable
-fun RatingView(
-    rating: String,
-    modifier: Modifier = Modifier
-) {
-    Row(modifier = modifier) {
-        Icon(
+        RatingViewInteger(
+            rating = club.ratings.average().toInt(),
             modifier = Modifier.align(CenterVertically),
-            imageVector = Icons.Outlined.Star,
-            contentDescription = stringResource(R.string.rating),
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = rating,
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier.align(CenterVertically)
         )
     }
 }
@@ -158,7 +142,8 @@ fun ClubDetailContactItem(icon: ImageVector, value: String) {
 @Composable
 fun ClubDetailEditButton(
     modifier: Modifier = Modifier,
-    onEditButtonClick: () -> Unit
+    onEditButtonClick: () -> Unit,
+    rating: Double
 ) {
     Row(
         modifier = Modifier
@@ -166,10 +151,10 @@ fun ClubDetailEditButton(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        RatingView(
-            rating = "4.3",
+        RatingViewInteger(
+            rating = rating.toInt(),
             modifier = Modifier.align(CenterVertically)
-        ) // TODO: Actual rating
+        )
 
         OutlinedButton(
             onClick = { onEditButtonClick() }

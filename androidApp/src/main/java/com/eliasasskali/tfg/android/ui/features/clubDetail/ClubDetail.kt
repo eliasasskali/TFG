@@ -100,7 +100,8 @@ fun ClubDetailScreen(
                     if (isClubOwner) {
                         ClubDetailEditButton(
                             modifier = Modifier.align(Alignment.End),
-                            onEditButtonClick = onEditButtonClick
+                            onEditButtonClick = onEditButtonClick,
+                            rating = club.ratings.average()
                         )
                     } else {
                         FollowChatButtons(

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,6 +69,18 @@ fun ReviewsView(
             Modifier
                 .fillMaxSize()
         ) {
+            Text(
+                text = stringResource(R.string.club_reviews),
+                style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(
+                    horizontal = 12.dp,
+                    vertical = 8.dp
+                )
+            )
+            Divider()
+            Spacer(Modifier.height(12.dp))
+
             if (!viewModel.isClub() && viewModel.hasNoReviewsInClub(reviews.itemSnapshotList.items)) {
                 CreateReviewView(viewModel)
                 Spacer(Modifier.height(12.dp))
@@ -229,7 +242,9 @@ fun RatingViewInteger(
     Row(modifier = modifier) {
         for (i in 1..rating) {
             Icon(
-                modifier = Modifier.align(CenterVertically),
+                modifier = Modifier
+                    .align(CenterVertically)
+                    .size(16.dp),
                 imageVector = Icons.Outlined.Star,
                 contentDescription = stringResource(com.eliasasskali.tfg.android.R.string.rating),
             )

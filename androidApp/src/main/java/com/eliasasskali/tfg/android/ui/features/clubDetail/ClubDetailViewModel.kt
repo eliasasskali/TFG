@@ -83,7 +83,7 @@ class ClubDetailViewModel(
         }
     }
 
-    fun saveAthletePreferences() {
+    private fun saveAthletePreferences() {
         viewModelScope.launch {
             execute {
                 repository.saveAthletePreferences()

@@ -1,7 +1,6 @@
 package com.eliasasskali.tfg.android.data.repository
 
 import android.net.Uri
-import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileSteps
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.auth.FirebaseAuth
@@ -9,12 +8,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 
 class ClubAthleteRepository(
@@ -229,6 +226,5 @@ class ClubAthleteRepository(
         } catch (e: Exception) {
             Either.Left(DomainError.ErrorNotHandled("Error updating profile."))
         }
-
     }
 }

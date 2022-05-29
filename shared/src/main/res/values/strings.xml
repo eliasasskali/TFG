@@ -104,6 +104,7 @@
     <string name="club_has_no_reviews">This club has no reviews</string>
     <string name="comment">Comment</string>
     <string name="create_review">Create Review</string>
+    <string name="club_reviews">Club Reviews</string>
 
     <!-- Chat -->
     <string name="type_message">Type your message</string>
