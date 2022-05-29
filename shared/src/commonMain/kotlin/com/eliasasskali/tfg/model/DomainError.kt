@@ -17,6 +17,8 @@ sealed class DomainError {
 
     object CreatePostError : DomainError()
 
+    object ErrorPostingReview : DomainError()
+
     data class ErrorNotHandled(val message: String) : DomainError()
 }
 
