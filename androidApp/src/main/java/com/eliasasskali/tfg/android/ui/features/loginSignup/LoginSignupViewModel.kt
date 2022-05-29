@@ -110,7 +110,7 @@ class LoginSignupViewModel constructor(
     }
 
     fun signOut() = viewModelScope.launch {
-        authRepository.signOut().fold(
+        authRepository.logOut().fold(
             error = {
                 setError(errorHandler.convert(it))
                 Log.d(TAG, state.value.error)

@@ -38,9 +38,9 @@ sealed class HomeRoutesAthlete(val routeName: String) {
     object Chats : HomeRoutesAthlete("chatsAthlete")
     object ChatDetail : HomeRoutesAthlete("chatDetail")
     object Profile : HomeRoutesAthlete("profileAthlete")
+    object EditAthleteProfile : HomeRoutesAthlete("editAthleteProfile")
     object ClubDetail: HomeRoutesAthlete("clubDetail")
     object PostDetail: HomeRoutesAthlete("postDetailAthlete")
-
 
     companion object {
         const val CHAT_ID = "chatId"

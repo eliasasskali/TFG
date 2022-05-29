@@ -21,6 +21,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Log in</string>
+    <string name="logout">Log out</string>
     <string name="login_signup_message">Don\'t have an account? Sign up</string>
     <string name="or">OR</string>
     <string name="continue_with_google">Continue with Google</string>
@@ -109,6 +110,12 @@
     <string name="find_clubs_to_start_a_chat">Find clubs to start a chat.</string>
     <string name="you_have_no_active_chats">You have no active chats.</string>
     <string name="no_messages_yet">No messages from this chat yet.</string>
+
+    <!-- Athlete Profile -->
+    <string name="interests">Interests</string>
+    <string name="following_clubs">Following Clubs</string>
+    <string name="not_following_any_club">You are not following any club</string>
+    <string name="find_clubs_to_follow">Find clubs to follow:</string>
 
     <!-- Others -->
     <string name="unknown">Unknown</string>

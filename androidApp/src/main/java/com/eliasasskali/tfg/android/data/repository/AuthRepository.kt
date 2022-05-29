@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 interface AuthRepository {
     fun isUserAuthenticated(): Either<DomainError, Boolean>
 
-    suspend fun signOut(): Either<DomainError, Success>
+    suspend fun logOut(): Either<DomainError, Success>
 
     suspend fun createUserWithEmailAndPassword(userEmail: String, password: String): Either<DomainError, Task<AuthResult>>
 

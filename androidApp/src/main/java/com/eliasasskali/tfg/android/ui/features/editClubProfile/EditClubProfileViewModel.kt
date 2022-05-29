@@ -272,7 +272,7 @@ class EditClubProfileViewModel(
         }
     }
 
-    fun updatePreferencesClub(clubId: String, onUpdateFinished: () -> Unit = {}) {
+    private fun updatePreferencesClub(clubId: String, onUpdateFinished: () -> Unit = {}) {
         viewModelScope.launch {
             execute {
                 repository.getClubById(clubId)

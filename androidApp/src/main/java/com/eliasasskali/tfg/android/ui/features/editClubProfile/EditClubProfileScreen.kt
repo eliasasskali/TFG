@@ -47,12 +47,11 @@ import com.google.android.libraries.maps.model.LatLng
 fun EditClubProfileScreen(
     viewModel: EditClubProfileViewModel,
     onBackClicked: () -> Unit,
-    onProfileUpdated: () -> Unit
 ) {
     when (viewModel.state.value.step) {
         is EditClubProfileSteps.Error -> {}
         is EditClubProfileSteps.IsLoading -> Loading()
-        is EditClubProfileSteps.ShowEditClub -> EditClubProfileView(viewModel, onBackClicked, onProfileUpdated)
+        is EditClubProfileSteps.ShowEditClub -> EditClubProfileView(viewModel, onBackClicked)
         is EditClubProfileSteps.ShowEditLocation -> EditClubLocationView(
             viewModel = viewModel,
             onBackClicked = { viewModel.setStep(EditClubProfileSteps.ShowEditClub) }
@@ -65,7 +64,6 @@ fun EditClubProfileScreen(
 fun EditClubProfileView(
     viewModel: EditClubProfileViewModel,
     onBackClicked: () -> Unit,
-    onProfileUpdated: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -147,7 +145,7 @@ fun EditClubProfileView(
                         }
                     }
 
-                    ApplyCancelChangesButtons(viewModel, onBackClicked, onProfileUpdated)
+                    ApplyCancelChangesButtons(viewModel, onBackClicked)
                 }
             }
         }
@@ -385,7 +383,6 @@ fun AddressField(viewModel: EditClubProfileViewModel) {
 fun ApplyCancelChangesButtons(
     viewModel: EditClubProfileViewModel,
     onCancelButtonClicked: () -> Unit,
-    onProfileUpdated: () -> Unit
 ) {
     val context = LocalContext.current
     Row(

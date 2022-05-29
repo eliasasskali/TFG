@@ -1,6 +1,7 @@
 package com.eliasasskali.tfg.android.data.repository
 
 import android.net.Uri
+import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileSteps
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +19,6 @@ import kotlinx.coroutines.tasks.await
 
 class ClubAthleteRepository(
     private val preferences: Preferences,
-
 ) {
     fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
         try {
@@ -174,6 +174,60 @@ class ClubAthleteRepository(
             Either.Right(Success)
         } catch (e: Exception) {
             Either.Left(DomainError.ErrorNotHandled("Save athlete preferences error."))
+        }
+    }
+
+    suspend fun getFollowingClubNames(following: List<String>): Either<DomainError, List<Pair<String, String>>> {
+        val clubsRef = FirebaseFirestore.getInstance().collection("Clubs")
+        return try {
+            Either.Right(
+                following.map { clubId ->
+                    Pair(
+                        clubId,
+                        clubsRef
+                            .document(clubId)
+                            .get()
+                            .await()
+                            .get("name")
+                            .toString()
+                    )
+                }
+            )
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Error getting followed clubs."))
+        }
+    }
+
+    suspend fun updateAthleteProfile(
+        athlete: Athlete,
+        newAthleteName: String,
+        newInterests: List<String>
+    ) : Either<DomainError, Success> {
+        return try {
+            val athleteReference = FirebaseFirestore
+                .getInstance()
+                .collection("Athletes")
+                .document(preferences.getLoggedUid())
+
+            if (athlete.name != newAthleteName) {
+                athleteReference
+                    .update(
+                        "name", newAthleteName,
+                    )
+                    .await()
+            }
+
+            if (athlete.interests != newInterests) {
+                athleteReference
+                    .update(
+                        "interests", newInterests
+                    )
+                    .await()
+            }
+
+            Either.Right(Success)
+        } catch (e: Exception) {
+            Either.Left(DomainError.ErrorNotHandled("Error updating profile."))
         }
 
     }

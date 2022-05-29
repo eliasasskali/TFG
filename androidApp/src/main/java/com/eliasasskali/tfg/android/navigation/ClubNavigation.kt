@@ -180,9 +180,6 @@ fun ClubNavigation(
                 viewModel = viewModel,
                 onBackClicked = {
                     navController.popBackStack()
-                },
-                onProfileUpdated = {
-                    viewModel.updatePreferencesClub(viewModel.state.value.club.id)
                 }
             )
         }
