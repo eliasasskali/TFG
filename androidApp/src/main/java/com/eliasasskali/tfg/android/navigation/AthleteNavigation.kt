@@ -266,6 +266,17 @@ fun AthleteNavigation(
                         // TODO: Distance to club
                         val distanceToClub = "TODO"
                         navController.navigate(HomeRoutesAthlete.ClubDetail.routeName.plus("/$clubId/$distanceToClub"))
+                    },
+                    onFindClubsClicked = {
+                        navController.navigate(HomeRoutesAthlete.Clubs.routeName) {
+                            navController.graph.startDestinationRoute?.let { screen_route ->
+                                popUpTo(screen_route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 )
             }

@@ -29,7 +29,8 @@ fun AthleteProfileScreen(
     paddingValues: PaddingValues,
     onLoggedOut: () -> Unit,
     onFollowingClubClicked: (String) -> Unit,
-    ) {
+    onFindClubsClicked: () -> Unit
+) {
     when (viewModel.state.value.step) {
         is AthleteProfileSteps.Error -> {
             // TODO: Handle Error
@@ -41,6 +42,7 @@ fun AthleteProfileScreen(
                 paddingValues,
                 onLoggedOut,
                 onFollowingClubClicked,
+                onFindClubsClicked
             )
         }
     }
@@ -52,6 +54,7 @@ fun AthleteProfileView(
     paddingValues: PaddingValues,
     onLoggedOut: () -> Unit,
     onFollowingClubClicked: (String) -> Unit,
+    onFindClubsClicked: () -> Unit
 ) {
     val athlete = viewModel.state.value.athlete
     val followingClubs = viewModel.state.value.followingClubs
@@ -101,18 +104,20 @@ fun AthleteProfileView(
                     }
                 }
 
-                Text(
-                    text = stringResource(id = R.string.following_clubs) + ":",
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.body1.copy(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    ),
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(Modifier.height(12.dp))
 
                 if (followingClubs.isNotEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.following_clubs) + ":",
+                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.body1.copy(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        ),
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     LazyColumn(
                         Modifier
                             .fillMaxSize()
@@ -127,6 +132,39 @@ fun AthleteProfileView(
                                 },
                             )
                         }
+                    }
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.not_following_any_club),
+                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.h1,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    Text(
+                        text = stringResource(R.string.find_clubs_to_follow),
+                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.h1,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onFindClubsClicked()
+                        }) {
+                        Text(
+                            text = stringResource(R.string.find_clubs),
+                            style = MaterialTheme.typography.h1,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }

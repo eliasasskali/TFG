@@ -114,6 +114,8 @@
     <!-- Athlete Profile -->
     <string name="interests">Interests</string>
     <string name="following_clubs">Following Clubs</string>
+    <string name="not_following_any_club">You are not following any club</string>
+    <string name="find_clubs_to_follow">Find clubs to follow:</string>
 
     <!-- Others -->
     <string name="unknown">Unknown</string>
