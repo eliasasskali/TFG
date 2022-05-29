@@ -16,6 +16,7 @@ import com.eliasasskali.tfg.android.ui.features.completeProfile.MapViewModel
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginSignupViewModel
 import com.eliasasskali.tfg.android.ui.features.splash.SplashViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
+import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
@@ -37,6 +38,7 @@ val appModule = module {
     viewModel { CompleteProfileViewModel(get(), get(), get(), get()) }
     viewModel { ClubsViewModel(get(), get(), get()) }
     viewModel { ClubDetailViewModel(get(), get(), get(), get()) }
+    viewModel { EditAthleteProfileViewModel(get(), get(), get(), get()) }
     viewModel { EditClubProfileViewModel(get(), get(), get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get(), get()) }

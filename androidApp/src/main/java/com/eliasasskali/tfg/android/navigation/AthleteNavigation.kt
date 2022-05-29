@@ -1,7 +1,6 @@
 package com.eliasasskali.tfg.android.navigation
 
 import android.app.Activity
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.*
@@ -21,6 +20,9 @@ import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsScreen
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
+import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileScreen
+import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileViewModel
+import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
@@ -277,9 +279,28 @@ fun AthleteNavigation(
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    onEditProfileClicked = {
+                        navController.navigate(HomeRoutesAthlete.EditAthleteProfile.routeName)
                     }
                 )
             }
+        }
+
+        composable(
+            route = HomeRoutesAthlete.EditAthleteProfile.routeName
+        ) {
+            val viewModel : EditAthleteProfileViewModel = get()
+            LaunchedEffect(Unit) {
+                viewModel.initEditAthleteProfileScreen()
+            }
+
+            EditAthleteProfileScreen(
+                viewModel = viewModel,
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
