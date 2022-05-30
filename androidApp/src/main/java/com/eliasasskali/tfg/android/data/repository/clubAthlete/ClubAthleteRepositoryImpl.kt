@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.clubAthlete
 
 import android.net.Uri
 import com.eliasasskali.tfg.data.preferences.Preferences
@@ -14,10 +14,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import kotlinx.coroutines.tasks.await
 
-class ClubAthleteRepository(
+class ClubAthleteRepositoryImpl(
     private val preferences: Preferences,
-) {
-    fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
+) : ClubAthleteRepository {
+    override fun isClubOwner(clubId: String): Either<DomainError, Boolean> {
         try {
             FirebaseAuth.getInstance().currentUser?.let { user ->
                 return Either.Right(user.uid == clubId)
@@ -29,7 +29,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun getClubById(clubId: String): Either<DomainError, Club?> {
+    override suspend fun getClubById(clubId: String): Either<DomainError, Club?> {
         return try {
             Either.Right(
                 FirebaseFirestore.getInstance().collection("Clubs")
@@ -44,7 +44,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun getAthleteById(userId: String): Either<DomainError, Athlete?> {
+    override suspend fun getAthleteById(userId: String): Either<DomainError, Athlete?> {
         return try {
             Either.Right(
                 FirebaseFirestore.getInstance().collection("Athletes")
@@ -59,7 +59,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun uploadImages(clubImages: List<Uri>) : Either<DomainError, Success> {
+    override suspend fun uploadImages(clubImages: List<Uri>) : Either<DomainError, Success> {
         return try {
             if (clubImages.isNotEmpty()) {
                 val storage = FirebaseStorage.getInstance()
@@ -86,7 +86,7 @@ class ClubAthleteRepository(
         }
     }
 
-    fun deleteClubImages(clubId: String, numberOfImages: Int) {
+    override fun deleteClubImages(clubId: String, numberOfImages: Int) {
         for (index in 0..numberOfImages) {
             val storage = FirebaseStorage.getInstance()
             storage.reference.child("clubImages/$clubId/$index").delete()
@@ -96,7 +96,7 @@ class ClubAthleteRepository(
             .update("images", FieldValue.delete())
     }
 
-    suspend fun uploadPost(title: String, content: String) : Either<DomainError, Success> {
+    override suspend fun uploadPost(title: String, content: String) : Either<DomainError, Success> {
         val uid = Firebase.auth.currentUser?.uid
         val db = Firebase.firestore
         uid?.let {
@@ -123,7 +123,7 @@ class ClubAthleteRepository(
         return Either.Left(DomainError.CreatePostError)
     }
 
-    suspend fun followClub(clubId: String) : Either<DomainError, Success> {
+    override suspend fun followClub(clubId: String) : Either<DomainError, Success> {
         val uid = Firebase.auth.currentUser?.uid
         val db =  Firebase.firestore
         return try {
@@ -139,7 +139,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun unFollowClub(clubId: String) : Either<DomainError, Success> {
+    override suspend fun unFollowClub(clubId: String) : Either<DomainError, Success> {
         val uid = Firebase.auth.currentUser?.uid
         val db =  Firebase.firestore
         return try {
@@ -155,7 +155,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun saveAthletePreferences() : Either<DomainError, Success> {
+    override suspend fun saveAthletePreferences() : Either<DomainError, Success> {
         val uid = Firebase.auth.currentUser?.uid
         return try {
             uid?.let {
@@ -174,7 +174,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun getFollowingClubNames(following: List<String>): Either<DomainError, List<Pair<String, String>>> {
+    override suspend fun getFollowingClubNames(following: List<String>): Either<DomainError, List<Pair<String, String>>> {
         val clubsRef = FirebaseFirestore.getInstance().collection("Clubs")
         return try {
             Either.Right(
@@ -195,7 +195,7 @@ class ClubAthleteRepository(
         }
     }
 
-    suspend fun updateAthleteProfile(
+    override suspend fun updateAthleteProfile(
         athlete: Athlete,
         newAthleteName: String,
         newInterests: List<String>

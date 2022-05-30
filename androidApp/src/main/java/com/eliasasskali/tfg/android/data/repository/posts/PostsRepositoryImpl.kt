@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.posts
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig

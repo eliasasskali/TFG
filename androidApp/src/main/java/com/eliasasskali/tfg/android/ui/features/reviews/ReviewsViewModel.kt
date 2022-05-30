@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.ReviewsRepository
+import com.eliasasskali.tfg.android.data.repository.reviews.ReviewsRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Review
 import com.eliasasskali.tfg.model.ReviewDto

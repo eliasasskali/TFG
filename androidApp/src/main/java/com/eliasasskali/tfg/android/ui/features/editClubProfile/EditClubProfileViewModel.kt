@@ -11,13 +11,12 @@ import android.os.CountDownTimer
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubLocation
@@ -28,16 +27,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import java.io.ByteArrayOutputStream
 import java.net.URLDecoder
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.ArrayList
 
 class EditClubProfileViewModel(
-    private val repository: ClubAthleteRepository,
+    private val repository: ClubAthleteRepositoryImpl,
     private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler

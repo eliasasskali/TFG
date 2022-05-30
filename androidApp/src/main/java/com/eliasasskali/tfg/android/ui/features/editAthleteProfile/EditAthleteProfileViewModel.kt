@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
 import com.eliasasskali.tfg.ui.error.ErrorHandler
@@ -13,7 +13,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 class EditAthleteProfileViewModel(
-    private val repository: ClubAthleteRepository,
+    private val repository: ClubAthleteRepositoryImpl,
     private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler

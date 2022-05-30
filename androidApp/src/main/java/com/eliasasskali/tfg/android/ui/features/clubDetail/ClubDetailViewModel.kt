@@ -4,8 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eliasasskali.tfg.android.data.repository.ChatsRepository
-import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepository
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
 import com.eliasasskali.tfg.model.DomainError
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ClubDetailViewModel(
-    private val repository: ClubAthleteRepository,
+    private val repository: ClubAthleteRepositoryImpl,
     private val chatsRepository: ChatsRepository,
     private val executor: Executor,
     private val preferences: Preferences

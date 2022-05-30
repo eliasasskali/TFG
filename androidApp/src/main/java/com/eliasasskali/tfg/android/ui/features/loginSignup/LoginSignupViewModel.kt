@@ -5,7 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor

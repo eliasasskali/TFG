@@ -2,10 +2,17 @@ package com.eliasasskali.tfg.android.core.di
 
 import android.content.Context
 import androidx.paging.PagingConfig
-import com.eliasasskali.tfg.android.data.repository.*
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
-import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
-import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepositoryImp
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepository
+import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubs.ClubsRepository
+import com.eliasasskali.tfg.android.data.repository.clubs.ClubsRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.posts.PostsRepository
+import com.eliasasskali.tfg.android.data.repository.posts.PostsRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.reviews.ReviewsRepository
+import com.eliasasskali.tfg.android.data.repository.reviews.ReviewsRepositoryImpl
 import com.eliasasskali.tfg.android.ui.features.athleteProfile.AthleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
@@ -61,7 +68,7 @@ fun dataModule(context: Context) = module {
     }
 
     single {
-        ClubAthleteRepository(
+        ClubAthleteRepositoryImpl(
             get()
         )
     }

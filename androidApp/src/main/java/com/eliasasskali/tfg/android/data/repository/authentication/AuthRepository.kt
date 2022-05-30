@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.authentication
 
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Either

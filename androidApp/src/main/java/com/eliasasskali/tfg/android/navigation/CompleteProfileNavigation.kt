@@ -5,12 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
 import com.eliasasskali.tfg.android.ui.features.completeProfile.*
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.CompleteClubProfileScreenFirst
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.CompleteClubProfileScreenSecond
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.CompleteProfileMapScreen
-import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.MapAddressPickerView
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.getViewModel
 

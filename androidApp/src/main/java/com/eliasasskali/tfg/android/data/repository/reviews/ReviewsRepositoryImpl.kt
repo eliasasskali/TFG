@@ -1,8 +1,9 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.reviews
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.eliasasskali.tfg.android.data.dataSource.ReviewsPagingSource
+import com.eliasasskali.tfg.android.data.repository.reviews.ReviewsRepository
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
