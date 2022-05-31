@@ -30,6 +30,7 @@ actual class ErrorHandler constructor(private val context: Context) {
             is DomainError.ServiceError -> context.getString(R.string.service_error)
             is DomainError.UpdateProfileError -> context.getString(R.string.update_profile_error)
             is DomainError.UploadImagesError -> context.getString(R.string.upload_images_error)
+            is DomainError.LoadProfileError -> context.getString(R.string.load_profile_error)
             is DomainError.ErrorNotHandled -> error.message
         }
 }

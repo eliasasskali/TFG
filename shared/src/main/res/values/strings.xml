@@ -25,7 +25,8 @@
     <string name="update_profile_error">Error updating profile</string>
     <string name="upload_images_error">Error uploading images</string>
     <string name="edit_post_error">Error editing Post.</string>
-    <string name="create_post_error">Error Creating Post.</string>
+    <string name="create_post_error">Error creating Post.</string>
+    <string name="load_profile_error">Error loading Profile.</string>
     <string name="try_again">Try Again</string>
 
     <!-- Login -->

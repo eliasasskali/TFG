@@ -11,5 +11,5 @@ data class ClubProfileState(
 sealed class ClubProfileSteps {
     object IsLoading : ClubProfileSteps()
     object ShowClubProfile : ClubProfileSteps()
-    class Error(val error: String) : ClubProfileSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : ClubProfileSteps()
 }
