@@ -100,20 +100,20 @@ class ClubAthleteRepository(
         val uid = Firebase.auth.currentUser?.uid
         val db = Firebase.firestore
         uid?.let {
-            val clubName = db.collection("Clubs")
-                .document(uid)
-                .get()
-                .await()
-                .getString("name")
-
-            val post = Post(
-                title = title,
-                content = content,
-                date = System.currentTimeMillis(),
-                clubName = clubName ?: ""
-            )
-
             return try {
+                val clubName = db.collection("Clubs")
+                    .document(uid)
+                    .get()
+                    .await()
+                    .getString("name")
+
+                val post = Post(
+                    title = title,
+                    content = content,
+                    date = System.currentTimeMillis(),
+                    clubName = clubName ?: ""
+                )
+
                 db.collection("Posts").add(post.toModel(uid)).await()
                 Either.Right(Success)
             } catch (e: Exception) {

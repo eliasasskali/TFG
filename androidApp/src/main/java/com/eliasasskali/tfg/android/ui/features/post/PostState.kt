@@ -10,6 +10,6 @@ sealed class PostSteps {
     object IsLoading : PostSteps()
     object ShowCreatePost : PostSteps()
     object PostCreated : PostSteps()
-    class Error(val error: String) : PostSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : PostSteps()
 }
 

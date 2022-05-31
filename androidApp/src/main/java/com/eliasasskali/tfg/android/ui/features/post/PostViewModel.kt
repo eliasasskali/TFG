@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 
 class PostViewModel(
     private val repository: ClubAthleteRepository,
-    private val authRepository: AuthRepository,
     executor: Executor,
     errorHandler: ErrorHandler
 ) : RootViewModel(executor, errorHandler) {
@@ -30,10 +29,6 @@ class PostViewModel(
         state.value = state.value.copy(step = step)
     }
 
-    fun resetState() {
-        state.value = PostState()
-    }
-
     fun uploadPost() {
         setStep(PostSteps.IsLoading)
         viewModelScope.launch {
@@ -41,7 +36,12 @@ class PostViewModel(
                 repository.uploadPost(state.value.title, state.value.content)
             }.fold(
                 error = {
-                    // TODO; Handle error
+                    setStep(
+                        PostSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { uploadPost() }
+                        )
+                    )
                 },
                 success = {
                     setStep(PostSteps.PostCreated)

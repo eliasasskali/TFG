@@ -7,7 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
+import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailSteps
 
 @Composable
 fun PostScreen(
@@ -17,7 +19,14 @@ fun PostScreen(
 ) {
     when (viewModel.state.value.step) {
         is PostSteps.Error -> {
-            // TODO: Implement error screen
+            val errorStep = viewModel.state.value.step as PostSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(PostSteps.ShowCreatePost)
+                }
+            )
         }
         is PostSteps.IsLoading -> Loading()
         is PostSteps.ShowCreatePost -> PostView(

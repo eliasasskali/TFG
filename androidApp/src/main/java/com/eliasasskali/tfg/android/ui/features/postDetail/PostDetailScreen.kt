@@ -26,9 +26,10 @@ fun PostDetailScreen(
 ) {
     when (viewModel.state.value.step) {
         is PostDetailSteps.Error -> {
+            val errorStep = viewModel.state.value.step as PostDetailSteps.Error
             ErrorDialog(
-                errorMessage = (viewModel.state.value.step as PostDetailSteps.Error).error,
-                onRetryClick = (viewModel.state.value.step as PostDetailSteps.Error).onRetry,
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
                 onCancelClick = {
                     viewModel.setStep(PostDetailSteps.ShowPostDetail)
                 }
