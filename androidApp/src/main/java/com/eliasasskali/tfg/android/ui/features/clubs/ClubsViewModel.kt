@@ -103,7 +103,7 @@ class ClubsViewModel(
     }
 
     fun updateLocation(latitude: Double, longitude: Double){
-        if(latitude != location.value.latitude) {
+        if (latitude != location.value.latitude) {
             val location = Location("")
             location.latitude = latitude
             location.longitude = longitude
@@ -111,41 +111,61 @@ class ClubsViewModel(
         }
     }
 
-    fun setLocation(loc: Location) {
+    private fun setLocation(loc: Location) {
         location.value = loc
     }
 
     fun getAddressFromLocation(context: Context): String {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        var addresses: List<Address>? = null
-        val address: Address?
-        var addressText = ""
+        return try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            var addresses: List<Address>? = null
+            val address: Address?
+            var addressText = ""
 
-        try {
-            addresses = geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
-        }catch(ex: Exception){
-            ex.printStackTrace()
+            try {
+                addresses =
+                    geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+
+            address = addresses?.get(0)
+            if (address != null) {
+                addressText = "${address.locality ?: address.subAdminArea}, ${address.countryName}"
+            }
+
+
+            addressText
+        } catch (e: Exception) {
+            setStep(
+                ClubListSteps.Error(
+                    error = errorHandler.convert(DomainError.ServiceError),
+                    onRetry = { getAddressFromLocation(context) }
+                )
+            )
+            ""
         }
-
-        address = addresses?.get(0)
-        if (address != null) {
-            addressText = "${address.locality ?: address.subAdminArea}, ${address.countryName}"
-        }
-
-
-        return addressText
     }
 
-    fun onTextChanged(context: Context, text: String){
-        if(text == "")
-            return
-        timer?.cancel()
-        timer = object : CountDownTimer(1000, 1500) {
-            override fun onTick(millisUntilFinished: Long) { }
-            override fun onFinish() {
-                location.value = getLocationFromAddress(context, text)
-            }
-        }.start()
+    fun onTextChanged(context: Context, text: String) {
+        try {
+            if (text == "")
+                return
+            timer?.cancel()
+            timer = object : CountDownTimer(1000, 1500) {
+                override fun onTick(millisUntilFinished: Long) {}
+                override fun onFinish() {
+                    location.value = getLocationFromAddress(context, text)
+                }
+            }.start()
+        } catch (e: Exception) {
+            setStep(
+                ClubListSteps.Error(
+                    error = errorHandler.convert(DomainError.ServiceError),
+                    onRetry = { onTextChanged(context, text) }
+                )
+            )
+        }
     }
 
     fun getLocationFromAddress(context: Context, strAddress: String): Location {
