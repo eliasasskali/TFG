@@ -13,6 +13,7 @@ import androidx.paging.cachedIn
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubsRepository
 import com.eliasasskali.tfg.model.ClubLocation
+import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.android.gms.location.LocationServices
@@ -33,10 +34,6 @@ class ClubsViewModel(
     val addressText = mutableStateOf("")
     var isMapEditable = mutableStateOf(true)
     var timer: CountDownTimer? = null
-
-    fun setError(error: String) {
-        state.value = state.value.copy(error = error)
-    }
 
     fun setSearchString(searchString: String) {
         state.value = state.value.copy(searchString = searchString)
@@ -68,7 +65,7 @@ class ClubsViewModel(
         state.value = state.value.copy(filterLocation = filterLocation)
     }
 
-    fun getInitialLocation() : Location {
+    private fun getInitialLocation() : Location {
         val initialLocation = Location("")
         initialLocation.latitude = 51.506874
         initialLocation.longitude = -0.139800
@@ -76,14 +73,22 @@ class ClubsViewModel(
     }
 
     fun setUserLocation(context: Activity) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                location?.let {
-                    state.value = state.value.copy(userLocation = it)
+        try {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        state.value = state.value.copy(userLocation = it)
+                    }
                 }
-            }
-
+        } catch (e: Exception) {
+            setStep(
+                ClubListSteps.Error(
+                    error = errorHandler.convert(DomainError.ServiceError),
+                    onRetry = { setUserLocation(context) }
+                )
+            )
+        }
     }
 
     fun distanceToClub(clubLocation: ClubLocation, userLocation: Location) : Int {
