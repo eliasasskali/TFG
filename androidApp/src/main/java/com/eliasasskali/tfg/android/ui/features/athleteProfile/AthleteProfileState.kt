@@ -12,5 +12,5 @@ data class AthleteProfileState(
 sealed class AthleteProfileSteps {
     object IsLoading : AthleteProfileSteps()
     object ShowAthleteProfile : AthleteProfileSteps()
-    class Error(val error: DomainError) : AthleteProfileSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : AthleteProfileSteps()
 }

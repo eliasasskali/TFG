@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eliasasskali.tfg.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.components.ScrollableChipsRow
-import com.eliasasskali.tfg.android.ui.features.chats.ChatCard
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 
@@ -34,7 +34,14 @@ fun AthleteProfileScreen(
 ) {
     when (viewModel.state.value.step) {
         is AthleteProfileSteps.Error -> {
-            // TODO: Handle Error
+            val errorStep = viewModel.state.value.step as AthleteProfileSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(AthleteProfileSteps.ShowAthleteProfile)
+                }
+            )
         }
         is AthleteProfileSteps.IsLoading -> Loading()
         is AthleteProfileSteps.ShowAthleteProfile -> {
