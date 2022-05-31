@@ -29,7 +29,7 @@ sealed class DomainError {
     // POSTS ERRORS
     object CreatePostError : DomainError()
     object EditPostError : DomainError()
-    object GetPostError : DomainError()
+    object GetPostsError : DomainError()
     object DeletePostError : DomainError()
 
     // CHATS ERRORS

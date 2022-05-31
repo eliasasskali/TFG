@@ -10,5 +10,5 @@ data class PostsState(
 sealed class PostsSteps {
     object IsLoading : PostsSteps()
     object ShowPosts : PostsSteps()
-    class Error(val error: DomainError) : PostsSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : PostsSteps()
 }

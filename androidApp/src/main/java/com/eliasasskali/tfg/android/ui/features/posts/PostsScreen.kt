@@ -1,15 +1,13 @@
 package com.eliasasskali.tfg.android.ui.features.posts
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -21,9 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.eliasasskali.tfg.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Post
@@ -37,7 +38,16 @@ fun PostsScreen(
     onFindClubsClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
-        is PostsSteps.Error -> {}
+        is PostsSteps.Error -> {
+            val errorStep = viewModel.state.value.step as PostsSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(PostsSteps.ShowPosts)
+                }
+            )
+        }
         is PostsSteps.IsLoading -> Loading()
         is PostsSteps.ShowPosts ->
             PostsView(
@@ -59,18 +69,70 @@ fun PostsView(
     onFindClubsClicked: () -> Unit
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
+    var isAppending by remember { mutableStateOf(false) }
 
     posts.apply {
         when {
             loadState.refresh is LoadState.Loading -> {
+                isAppending = false
                 Loading()
             }
-            loadState.refresh is LoadState.NotLoading -> {}
-            loadState.refresh is LoadState.Error -> {}
-            loadState.append is LoadState.Loading -> {}
-            loadState.append is LoadState.Error -> {}
+            loadState.refresh is LoadState.NotLoading -> {
+                isAppending = false
+                PostsList(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues,
+                    posts = posts,
+                    onCreatePostClicked = onCreatePostClicked,
+                    onFindClubsClicked = onFindClubsClicked,
+                    onPostClicked = onPostClicked,
+                    isAppending = isAppending
+                )
+            }
+            loadState.refresh is LoadState.Error -> {
+                isAppending = false
+                viewModel.setStep(
+                    PostsSteps.Error(
+                        error = stringResource(id = R.string.get_posts_error),
+                        onRetry = { viewModel.initPostsScreen(viewModel.state.value.clubIds) }
+                    )
+                )
+            }
+            loadState.append is LoadState.Loading -> {
+                isAppending = true
+                PostsList(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues,
+                    posts = posts,
+                    onCreatePostClicked = onCreatePostClicked,
+                    onFindClubsClicked = onFindClubsClicked,
+                    onPostClicked = onPostClicked,
+                    isAppending = isAppending
+                )
+            }
+            loadState.append is LoadState.Error -> {
+                isAppending = false
+                viewModel.setStep(
+                    PostsSteps.Error(
+                        error = stringResource(id = R.string.get_posts_error),
+                        onRetry = { viewModel.initPostsScreen(viewModel.state.value.clubIds) }
+                    )
+                )
+            }
         }
     }
+}
+
+@Composable
+fun PostsList(
+    viewModel: PostsViewModel,
+    paddingValues: PaddingValues,
+    posts: LazyPagingItems<Post>,
+    onPostClicked: (Post) -> Unit = {},
+    onCreatePostClicked: () -> Unit,
+    onFindClubsClicked: () -> Unit,
+    isAppending: Boolean
+) {
     Surface(
         Modifier
             .padding(paddingValues)
@@ -149,6 +211,10 @@ fun PostsView(
                         }
                     }
                 }
+                if (isAppending) {
+                    Spacer(Modifier.height(12.dp))
+                    CircularProgressIndicator(Modifier.align(CenterHorizontally))
+                }
             }
         }
     }
@@ -180,7 +246,7 @@ fun PostCard(post: Post, onPostClicked: (Post) -> Unit = {}) {
                 )
 
                 Text(
-                    text = post.dateString, //post.date.toString(),
+                    text = post.dateString,
                     style = MaterialTheme.typography.caption,
                     modifier = Modifier.align(CenterVertically)
                 )

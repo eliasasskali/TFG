@@ -9,6 +9,7 @@ import com.eliasasskali.tfg.android.data.repository.PostsRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
 import com.eliasasskali.tfg.model.Club
+import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.gson.Gson
@@ -25,22 +26,35 @@ class PostsViewModel(
 
     fun isClub() = preferences.isClub()
 
+    fun setStep(step: PostsSteps) {
+        state.value = state.value.copy(step = step)
+    }
+
     fun initPostsScreen(clubIds: List<String>) {
-        if (clubIds.isNotEmpty()) {
-            state.value = state.value.copy(clubIds = clubIds)
-            posts = repository.getPosts(state.value.clubIds).cachedIn(viewModelScope)
-            state.value = state.value.copy(step = PostsSteps.ShowPosts)
-        } else {
-            val json = preferences.getProfileJson()
-            if (preferences.isClub()) {
-                val club = Gson().fromJson(json, Club::class.java)
-                state.value = state.value.copy(clubIds = listOf(club.id))
+        try {
+            if (clubIds.isNotEmpty()) {
+                state.value = state.value.copy(clubIds = clubIds)
+                posts = repository.getPosts(state.value.clubIds).cachedIn(viewModelScope)
+                setStep(PostsSteps.ShowPosts)
             } else {
-                val athlete = Gson().fromJson(json, Athlete::class.java)
-                state.value = state.value.copy(clubIds = athlete.following)
+                val json = preferences.getProfileJson()
+                if (preferences.isClub()) {
+                    val club = Gson().fromJson(json, Club::class.java)
+                    state.value = state.value.copy(clubIds = listOf(club.id))
+                } else {
+                    val athlete = Gson().fromJson(json, Athlete::class.java)
+                    state.value = state.value.copy(clubIds = athlete.following)
+                }
+                posts = repository.getPosts(state.value.clubIds).cachedIn(viewModelScope)
+                setStep(PostsSteps.ShowPosts)
             }
-            posts = repository.getPosts(state.value.clubIds).cachedIn(viewModelScope)
-            state.value = state.value.copy(step = PostsSteps.ShowPosts)
+        } catch (e: Exception) {
+            setStep(
+                PostsSteps.Error(
+                    error = errorHandler.convert(DomainError.GetPostsError),
+                    onRetry = { initPostsScreen(clubIds) }
+                )
+            )
         }
     }
 }
