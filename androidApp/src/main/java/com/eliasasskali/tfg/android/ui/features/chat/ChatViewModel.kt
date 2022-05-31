@@ -59,7 +59,12 @@ class ChatViewModel(
                     setNewMessage("")
                 },
                 error = {
-
+                    setStep(
+                        ChatSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { sendMessage(newMessage) }
+                        )
+                    )
                 }
             )
         }

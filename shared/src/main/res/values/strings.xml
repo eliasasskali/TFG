@@ -28,6 +28,7 @@
     <string name="create_post_error">Error creating Post.</string>
     <string name="load_profile_error">Error loading Profile.</string>
     <string name="load_chats_error">Error loading Chats.</string>
+    <string name="load_messages_error">Error loading Messages.</string>
     <string name="try_again">Try Again</string>
 
     <!-- Login -->
