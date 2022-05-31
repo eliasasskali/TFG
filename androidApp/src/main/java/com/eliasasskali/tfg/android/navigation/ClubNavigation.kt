@@ -1,6 +1,6 @@
 package com.eliasasskali.tfg.android.navigation
 
-import android.content.Context
+import android.app.Activity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -31,7 +31,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun ClubNavigation(
     navController: NavHostController,
-    context: Context,
+    context: Activity,
 ) {
     NavHost(
         navController = navController,
@@ -58,7 +58,6 @@ fun ClubNavigation(
                         navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/$jsonPost"))
                     },
                     onCreatePostClicked = {
-                        //navController.navigate(HomeRoutesClub.Post.routeName)
                         navController.navigate(HomeRoutesClub.Post.routeName) {
                             navController.graph.startDestinationRoute?.let { screen_route ->
                                 popUpTo(screen_route) {
@@ -163,7 +162,12 @@ fun ClubNavigation(
                     onEditButtonClick = {
                         navController.navigate(HomeRoutesClub.EditClubProfile.routeName)
                     },
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    onLogOutButtonClick = {
+                        viewModel.logOut {
+                            goToLogin(context)
+                        }
+                    }
                 )
             }
         }

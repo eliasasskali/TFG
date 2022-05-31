@@ -32,6 +32,7 @@ fun ClubDetailScreen(
     onFollowButtonClick: () -> Unit = {},
     onUnfollowButtonClick: () -> Unit = {},
     onChatButtonClick: () -> Unit = {},
+    onLogOutButtonClick: () -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     Scaffold(
@@ -90,50 +91,86 @@ fun ClubDetailScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
                 ) {
-                    if (club.images.isNotEmpty()) {
-                        ImagePager(imageList = club.images)
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        if (club.images.isNotEmpty()) {
+                            ImagePager(imageList = club.images)
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        if (isClubOwner) {
+                            ClubDetailEditButton(
+                                modifier = Modifier.align(Alignment.End),
+                                onEditButtonClick = onEditButtonClick,
+                                rating = club.ratings.average()
+                            )
+                        } else {
+                            FollowChatButtons(
+                                isFollowing = detailState.athleteFollowsClub,
+                                onFollowButtonClick = onFollowButtonClick,
+                                onUnfollowButtonClick = onUnfollowButtonClick,
+                                onChatButtonClick = onChatButtonClick
+                            )
+                            ClubDetailHeader(club, distanceToClub)
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        ClubDetailTitle(club)
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        if (club.services.isNotEmpty()) {
+                            ScrollableChipsRow(elements = club.services)
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        club.description?.let {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 12.dp),
+                                text = it,
+                                style = MaterialTheme.typography.body1
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        ClubDetailContact(club)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        if (club.location.latitude != 0.0 && club.location.longitude != 0.0) {
+                            ClubDetailMap(club)
+                        }
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
 
                     if (isClubOwner) {
-                        ClubDetailEditButton(
-                            modifier = Modifier.align(Alignment.End),
-                            onEditButtonClick = onEditButtonClick,
-                            rating = club.ratings.average()
-                        )
-                    } else {
-                        FollowChatButtons(
-                            isFollowing = detailState.athleteFollowsClub,
-                            onFollowButtonClick = onFollowButtonClick,
-                            onUnfollowButtonClick = onUnfollowButtonClick,
-                            onChatButtonClick = onChatButtonClick
-                        )
-                        ClubDetailHeader(club, distanceToClub)
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            Modifier
+                                .padding(12.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Button(
+                                onClick = {
+                                    onLogOutButtonClick()
+                                },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = stringResource(id = com.eliasasskali.tfg.R.string.logout)
+                                )
+                            }
 
-                    ClubDetailTitle(club)
-                    Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(Modifier.width(12.dp))
 
-                    if (club.services.isNotEmpty()) {
-                        ScrollableChipsRow(elements = club.services)
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    club.description?.let {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            text = it,
-                            style = MaterialTheme.typography.body1
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    ClubDetailContact(club)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    if (club.location.latitude != 0.0 && club.location.longitude != 0.0) {
-                        ClubDetailMap(club)
+                            Button(
+                                onClick = onEditButtonClick,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = stringResource(id = com.eliasasskali.tfg.R.string.edit_profile)
+                                )
+                            }
+                        }
                     }
                 }
             }
