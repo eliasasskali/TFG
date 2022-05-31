@@ -52,7 +52,7 @@ class PostsRepositoryImpl(
                     .toObject(PostDto::class.java)
                     ?.toModel(post.id)!!
             )
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: Exception) {
             Either.Left(DomainError.GetPostError)
         }
     }

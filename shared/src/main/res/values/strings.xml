@@ -138,6 +138,7 @@
     <string name="name">Name</string>
     <string name="cancel">Cancel</string>
     <string name="apply_changes">Apply changes</string>
+    <string name="retry">Retry</string>
     <string name="will_be_deleted">will be deleted</string>
     <string name="you">You</string>
 

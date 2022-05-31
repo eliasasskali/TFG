@@ -56,7 +56,12 @@ class PostDetailViewModel(
                 )
             }.fold(
                 error = {
-
+                    setStep(
+                        PostDetailSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { editPostContent() }
+                        )
+                    )
                 },
                 success = {
                     viewModelScope.launch {
@@ -64,7 +69,12 @@ class PostDetailViewModel(
                             repository.getPost(state.value.post.postId)
                         }.fold(
                             error = {
-
+                                setStep(
+                                    PostDetailSteps.Error(
+                                        error = errorHandler.convert(it),
+                                        onRetry = { editPostContent() }
+                                    )
+                                )
                             },
                             success = { post ->
                                 initPostDetailScreen(post = post)
@@ -84,7 +94,12 @@ class PostDetailViewModel(
                 repository.deletePost(postId = state.value.post.postId)
             }.fold(
                 error = {
-
+                    setStep(
+                        PostDetailSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { deletePost(onPostDeleted) }
+                        )
+                    )
                 },
                 success = {
                     state.value = PostDetailState()
