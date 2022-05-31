@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.ui.features.post.PostSteps
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
+import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.gson.Gson
@@ -53,7 +55,12 @@ class EditAthleteProfileViewModel(
                 )
             }.fold(
                 error = {
-                    // TODO: Handle Error
+                    setStep(
+                        EditAthleteProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { updateAthleteProfile(onUpdateFinished) }
+                        )
+                    )
                 },
                 success = {
                     updatePreferencesClub(onUpdateFinished)
@@ -67,13 +74,29 @@ class EditAthleteProfileViewModel(
             execute {
                 repository.getAthleteById(preferences.getLoggedUid())
             }.fold(
-                error = {},
+                error = {
+                    setStep(
+                        EditAthleteProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { updatePreferencesClub(onUpdateFinished) }
+                        )
+                    )
+                },
                 success = { athlete ->
-                    athlete?.let {
-                        val jsonAthlete = Gson().toJson(it)
-                        preferences.saveProfileJson(jsonAthlete)
-                        setStep(EditAthleteProfileSteps.ShowEditAthleteProfile)
-                        onUpdateFinished()
+                    try {
+                        athlete?.let {
+                            val jsonAthlete = Gson().toJson(it)
+                            preferences.saveProfileJson(jsonAthlete)
+                            setStep(EditAthleteProfileSteps.ShowEditAthleteProfile)
+                            onUpdateFinished()
+                        }
+                    } catch (e: Exception) {
+                        setStep(
+                            EditAthleteProfileSteps.Error(
+                                error = errorHandler.convert(DomainError.ServiceError),
+                                onRetry = { updatePreferencesClub(onUpdateFinished) }
+                            )
+                        )
                     }
                 }
             )

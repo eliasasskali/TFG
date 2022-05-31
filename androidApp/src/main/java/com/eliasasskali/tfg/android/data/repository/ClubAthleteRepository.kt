@@ -24,7 +24,6 @@ class ClubAthleteRepository(
             }
             return Either.Right(false)
         } catch (e: Exception) {
-            // TODO: Change error
             return Either.Left(DomainError.ServiceError)
         }
     }
@@ -54,7 +53,7 @@ class ClubAthleteRepository(
                     .toObject(AthleteDto::class.java)
                     ?.toModel()
             )
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: Exception) {
             Either.Left(DomainError.ServiceError)
         }
     }

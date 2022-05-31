@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.components.Mockup
 import com.eliasasskali.tfg.android.ui.components.StaggeredGrid
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
+import com.eliasasskali.tfg.android.ui.features.post.PostSteps
 
 @Composable
 fun EditAthleteProfileScreen(
@@ -27,7 +29,16 @@ fun EditAthleteProfileScreen(
     onBackClicked: () -> Unit,
 ) {
     when (viewModel.state.value.step) {
-        is EditAthleteProfileSteps.Error -> {}
+        is EditAthleteProfileSteps.Error -> {
+            val errorStep = viewModel.state.value.step as EditAthleteProfileSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(EditAthleteProfileSteps.ShowEditAthleteProfile)
+                }
+            )
+        }
         is EditAthleteProfileSteps.IsLoading -> Loading()
         is EditAthleteProfileSteps.ShowEditAthleteProfile -> EditAthleteProfileView(
             viewModel,
