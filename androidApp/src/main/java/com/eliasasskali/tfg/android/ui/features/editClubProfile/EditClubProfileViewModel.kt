@@ -11,7 +11,6 @@ import android.os.CountDownTimer
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -21,20 +20,16 @@ import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubLocation
-import com.eliasasskali.tfg.model.generateKeywords
+import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import java.io.ByteArrayOutputStream
 import java.net.URLDecoder
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.*
-import kotlin.collections.ArrayList
 
 class EditClubProfileViewModel(
     private val repository: ClubAthleteRepository,
@@ -200,18 +195,23 @@ class EditClubProfileViewModel(
         return location.value
     }
 
-    fun imagesChanged() : Boolean {
+    private fun imagesChanged() : Boolean {
         return state.value.previousBitmapImages != state.value.bitmapImages
     }
 
-    fun uploadNewImages(clubId: String, uriImages: List<Uri>, onUpdateFinished: () -> Unit) {
+    private fun uploadNewImages(clubId: String, uriImages: List<Uri>, onUpdateFinished: () -> Unit) {
         viewModelScope.launch {
             execute {
                 repository.deleteClubImages(clubId, state.value.club.images.size)
                 repository.uploadImages(uriImages)
             }.fold(
                 error = {
-
+                    setStep(
+                        EditClubProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { uploadNewImages(clubId, uriImages, onUpdateFinished) }
+                        )
+                    )
                 },
                 success = {
                     updatePreferencesClub(clubId, onUpdateFinished)
@@ -220,7 +220,7 @@ class EditClubProfileViewModel(
         }
     }
 
-    fun getImageUri(context: Context, inImage: Bitmap): Uri {
+    private fun getImageUri(context: Context, inImage: Bitmap): Uri {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path =
@@ -229,45 +229,49 @@ class EditClubProfileViewModel(
     }
 
     fun updateClub(context: Context, onUpdateFinished: () -> Unit) {
+        // TODO: Improve this function, not working properly
         setStep(EditClubProfileSteps.IsLoading)
-        val club = state.value.club
-        val clubReference = FirebaseFirestore
-            .getInstance()
-            .collection("Clubs")
-            .document(club.id)
-
-        if (club.name != state.value.name) {
-            val keywords = generateKeywords(state.value.name)
-            clubReference
-                .update(
-                    "name", state.value.name,
-                    "keywords", keywords
+        viewModelScope.launch {
+            execute {
+                repository.updateClub(
+                    club = state.value.club,
+                    newName = state.value.name,
+                    newAddress = state.value.address,
+                    newContactEmail = state.value.contactEmail,
+                    newContactPhone = state.value.contactPhone,
+                    newDescription = state.value.description,
+                    newLocation = state.value.location,
+                    newServices = state.value.services.toList()
                 )
-        }
-        if (club.contactEmail != state.value.contactEmail) {
-            clubReference.update("contactEmail", state.value.contactEmail)
-        }
-        if (club.contactPhone != state.value.contactPhone) {
-            clubReference.update("contactPhone", state.value.contactPhone)
-        }
-        if (club.description != state.value.description) {
-            clubReference.update("description", state.value.description)
-        }
-        if (club.services != state.value.services) {
-            clubReference.update("services", state.value.services.toList())
-        }
-        if (club.location != state.value.location) {
-            clubReference.update(
-                "address", state.value.address,
-                "location", state.value.location
+            }.fold(
+                error = {
+                    setStep(
+                        EditClubProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = {
+                                updateClub(context, onUpdateFinished)
+                            }
+                        )
+                    )
+                },
+                success = {
+                    try {
+                        if (imagesChanged()) {
+                            val uriImages = state.value.bitmapImages.map {
+                                getImageUri(context, it)
+                            }
+                            uploadNewImages(state.value.club.id, uriImages, onUpdateFinished)
+                        }
+                    } catch (e: Exception) {
+                        setStep(
+                            EditClubProfileSteps.Error(
+                                error = errorHandler.convert(DomainError.UpdateProfileError),
+                                onRetry = { updateClub(context, onUpdateFinished) }
+                            )
+                        )
+                    }
+                }
             )
-        }
-
-        if (imagesChanged()) {
-            val uriImages = state.value.bitmapImages.map {
-                getImageUri(context, it)
-            }
-            uploadNewImages(state.value.club.id, uriImages, onUpdateFinished)
         }
     }
 
@@ -276,7 +280,14 @@ class EditClubProfileViewModel(
             execute {
                 repository.getClubById(clubId)
             }.fold(
-                error = {},
+                error = {
+                    setStep(
+                        EditClubProfileSteps.Error(
+                            error = errorHandler.convert(DomainError.UpdateProfileError),
+                            onRetry = { updatePreferencesClub(clubId, onUpdateFinished) }
+                        )
+                    )
+                },
                 success = { club ->
                     club?.let {
                         val jsonClub = Gson().toJson(it)
