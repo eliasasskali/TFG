@@ -1,7 +1,8 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.posts
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.eliasasskali.tfg.android.data.dataSource.PostsPagingSource
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -36,7 +37,7 @@ class PostsRepositoryImpl(
 
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.EditPostError)
         }
     }
 
@@ -53,7 +54,7 @@ class PostsRepositoryImpl(
                     ?.toModel(post.id)!!
             )
         } catch (e: FirebaseFirestoreException) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.GetPostError)
         }
     }
 
@@ -66,7 +67,7 @@ class PostsRepositoryImpl(
 
             Either.Right(Success)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.DeletePostError)
         }
     }
 }

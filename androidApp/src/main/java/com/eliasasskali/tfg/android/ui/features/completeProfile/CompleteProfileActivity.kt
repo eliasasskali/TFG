@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
 import com.eliasasskali.tfg.android.navigation.CompleteProfileNavigation
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import org.koin.androidx.compose.get

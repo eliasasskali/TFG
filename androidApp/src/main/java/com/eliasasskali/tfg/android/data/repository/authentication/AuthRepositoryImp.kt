@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.authentication
 
 import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Either
@@ -8,7 +8,6 @@ import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImp constructor(
     private val auth: FirebaseAuth
@@ -17,7 +16,7 @@ class AuthRepositoryImp constructor(
         return try {
             Either.Right(auth.currentUser != null)
         } catch (e: Exception) {
-            Either.Left(DomainError.ErrorNotHandled(e.toString()))
+            Either.Left(DomainError.ServiceError)
         }
     }
 

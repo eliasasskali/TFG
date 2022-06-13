@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.ClubsRepository
+import com.eliasasskali.tfg.android.data.repository.clubs.ClubsRepository
 import com.eliasasskali.tfg.model.ClubLocation
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor

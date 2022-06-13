@@ -2,10 +2,17 @@ package com.eliasasskali.tfg.android.core.di
 
 import android.content.Context
 import androidx.paging.PagingConfig
-import com.eliasasskali.tfg.android.data.repository.*
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
-import com.eliasasskali.tfg.android.data.repository.AuthRepositoryImp
-import com.eliasasskali.tfg.android.data.repository.ClubAthleteRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepositoryImp
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepository
+import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubs.ClubsRepository
+import com.eliasasskali.tfg.android.data.repository.clubs.ClubsRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.posts.PostsRepository
+import com.eliasasskali.tfg.android.data.repository.posts.PostsRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.reviews.ReviewsRepository
+import com.eliasasskali.tfg.android.data.repository.reviews.ReviewsRepositoryImpl
 import com.eliasasskali.tfg.android.ui.features.athleteProfile.AthleteProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
@@ -21,6 +28,7 @@ import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileV
 import com.eliasasskali.tfg.android.ui.features.post.PostViewModel
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
+import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsViewModel
 import com.eliasasskali.tfg.data.preferences.CommonPreferences
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.ui.error.ErrorHandler
@@ -42,13 +50,14 @@ val appModule = module {
     viewModel { EditClubProfileViewModel(get(), get(), get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get(), get()) }
-    viewModel { ClubProfileViewModel(get(), get(), get())}
+    viewModel { ClubProfileViewModel(get(), get(), get(), get())}
     viewModel { PostViewModel(get(), get(), get(), get()) }
     viewModel { PostsViewModel(get(), get(), get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get()) }
     viewModel { ChatViewModel(get(), get(), get(), get()) }
     viewModel { ChatsViewModel(get(), get(), get(), get()) }
     viewModel { AthleteProfileViewModel(get(), get(), get(), get(), get()) }
+    viewModel { ReviewsViewModel(get(), get(), get(), get()) }
 }
 
 fun dataModule(context: Context) = module {
@@ -59,7 +68,7 @@ fun dataModule(context: Context) = module {
     }
 
     single {
-        ClubAthleteRepository(
+        ClubAthleteRepositoryImpl(
             get()
         )
     }
@@ -74,6 +83,14 @@ fun dataModule(context: Context) = module {
 
     single<PostsRepository> {
         PostsRepositoryImpl(
+            config = PagingConfig(
+                pageSize = 5
+            )
+        )
+    }
+
+    single<ReviewsRepository> {
+        ReviewsRepositoryImpl(
             config = PagingConfig(
                 pageSize = 5
             )

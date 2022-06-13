@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.clubs
 
 import androidx.paging.PagingData
 import com.eliasasskali.tfg.model.Club

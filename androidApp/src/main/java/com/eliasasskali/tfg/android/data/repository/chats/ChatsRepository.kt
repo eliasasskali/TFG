@@ -1,4 +1,4 @@
-package com.eliasasskali.tfg.android.data.repository
+package com.eliasasskali.tfg.android.data.repository.chats
 
 import com.eliasasskali.tfg.android.ui.features.chat.ChatResponse
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsResponse

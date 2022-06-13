@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.eliasasskali.tfg.android.data.repository.AuthRepository
+import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
 import com.eliasasskali.tfg.android.ui.features.clubs.HomeActivity
 import com.eliasasskali.tfg.android.ui.features.completeProfile.CompleteProfileActivity
 import com.eliasasskali.tfg.android.ui.features.loginSignup.LoginScreen

@@ -27,6 +27,8 @@ import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
+import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsScreen
+import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsViewModel
 import com.eliasasskali.tfg.model.Post
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -196,7 +198,18 @@ fun AthleteNavigation(
                             }
                         )
                     }
-                    2 -> Text("Club Reviews content: NOT IMPLEMENTED")
+                    2 -> {
+                        val reviewsViewModel: ReviewsViewModel = get()
+
+                        LaunchedEffect(Unit) {
+                            reviewsViewModel.initReviewsScreen(clubId)
+                        }
+
+                        ReviewsScreen(
+                            viewModel = reviewsViewModel,
+                            paddingValues = PaddingValues(0.dp)
+                        )
+                    }
                 }
             }
         }
