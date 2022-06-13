@@ -138,7 +138,17 @@ fun ClubNavigation(
                 val viewModel: PostViewModel = get()
                 PostScreen(
                     viewModel = viewModel,
-                    onPostCreated = {},
+                    onPostCreated = {
+                        navController.navigate(HomeRoutesClub.Home.routeName) {
+                            navController.graph.startDestinationRoute?.let { screen_route ->
+                                popUpTo(screen_route) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     paddingValues = paddingValues
                 )
             }

@@ -34,11 +34,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.components.Mockup
 import com.eliasasskali.tfg.android.ui.components.StaggeredGrid
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 import com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub.MapPinOverlay
 import com.eliasasskali.tfg.android.ui.features.completeProfile.rememberMapViewWithLifecycle
+import com.eliasasskali.tfg.android.ui.features.post.PostSteps
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.MapView
 import com.google.android.libraries.maps.model.LatLng
@@ -49,7 +51,16 @@ fun EditClubProfileScreen(
     onBackClicked: () -> Unit,
 ) {
     when (viewModel.state.value.step) {
-        is EditClubProfileSteps.Error -> {}
+        is EditClubProfileSteps.Error -> {
+            val errorStep = viewModel.state.value.step as EditClubProfileSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(EditClubProfileSteps.ShowEditClub)
+                }
+            )
+        }
         is EditClubProfileSteps.IsLoading -> Loading()
         is EditClubProfileSteps.ShowEditClub -> EditClubProfileView(viewModel, onBackClicked)
         is EditClubProfileSteps.ShowEditLocation -> EditClubLocationView(

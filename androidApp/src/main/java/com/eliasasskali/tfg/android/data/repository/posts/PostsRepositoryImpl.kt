@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import com.eliasasskali.tfg.android.data.dataSource.PostsPagingSource
 import com.eliasasskali.tfg.model.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 
 class PostsRepositoryImpl(
@@ -53,8 +52,8 @@ class PostsRepositoryImpl(
                     .toObject(PostDto::class.java)
                     ?.toModel(post.id)!!
             )
-        } catch (e: FirebaseFirestoreException) {
-            Either.Left(DomainError.GetPostError)
+        } catch (e: Exception) {
+            Either.Left(DomainError.GetPostsError)
         }
     }
 

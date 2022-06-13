@@ -20,6 +20,7 @@ sealed class DomainError {
     object LoadClubsError : DomainError()
     object UploadImagesError : DomainError()
     object UpdateProfileError : DomainError()
+    object LoadProfileError : DomainError()
 
     // ATHLETE ERRORS
     object FollowError : DomainError()
@@ -29,7 +30,7 @@ sealed class DomainError {
     // POSTS ERRORS
     object CreatePostError : DomainError()
     object EditPostError : DomainError()
-    object GetPostError : DomainError()
+    object GetPostsError : DomainError()
     object DeletePostError : DomainError()
 
     // CHATS ERRORS

@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 
 @Composable
@@ -24,7 +25,16 @@ fun PostDetailScreen(
     onBackClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
-        is PostDetailSteps.Error -> {}
+        is PostDetailSteps.Error -> {
+            val errorStep = viewModel.state.value.step as PostDetailSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(PostDetailSteps.ShowPostDetail)
+                }
+            )
+        }
         is PostDetailSteps.IsLoading -> Loading()
         is PostDetailSteps.ShowPostDetail ->
             PostDetailView(

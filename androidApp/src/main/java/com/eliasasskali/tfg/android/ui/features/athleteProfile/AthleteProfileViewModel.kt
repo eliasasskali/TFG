@@ -42,7 +42,12 @@ class AthleteProfileViewModel(
                 authRepository.logOut()
             }.fold(
                 error = {
-                    // TODO: Handle error
+                    setStep(
+                        AthleteProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { logOut(onLoggedOut) }
+                        )
+                    )
                 },
                 success = {
                     onLoggedOut()
@@ -57,7 +62,12 @@ class AthleteProfileViewModel(
                 repository.getFollowingClubNames(following)
             }.fold(
                 error = {
-                    // TODO: Handle Error
+                    setStep(
+                        AthleteProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { getFollowingClubNames(following) }
+                        )
+                    )
                 },
                 success = { followingClubs ->
                     state.value = state.value.copy(followingClubs = followingClubs)
@@ -71,7 +81,14 @@ class AthleteProfileViewModel(
             execute {
                 repository.unFollowClub(clubId)
             }.fold(
-                error = {},
+                error = {
+                    setStep(
+                        AthleteProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { unFollowClub(clubId) }
+                        )
+                    )
+                },
                 success = {
                     saveAthletePreferences()
                 }
@@ -84,7 +101,14 @@ class AthleteProfileViewModel(
             execute {
                 repository.saveAthletePreferences()
             }.fold(
-                error = {},
+                error = {
+                    setStep(
+                        AthleteProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { saveAthletePreferences() }
+                        )
+                    )
+                },
                 success = {
                     initAthleteProfileScreen()
                 }

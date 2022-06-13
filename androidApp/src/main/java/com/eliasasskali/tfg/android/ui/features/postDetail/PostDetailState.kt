@@ -1,6 +1,5 @@
 package com.eliasasskali.tfg.android.ui.features.postDetail
 
-import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.model.Post
 
 data class PostDetailState(
@@ -18,5 +17,5 @@ sealed class PostDetailSteps {
     object IsLoading : PostDetailSteps()
     object ShowPostDetail : PostDetailSteps()
     object ShowEditPost : PostDetailSteps()
-    class Error(val error: DomainError) : PostDetailSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : PostDetailSteps()
 }

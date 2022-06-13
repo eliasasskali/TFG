@@ -25,5 +25,5 @@ sealed class EditClubProfileSteps {
     object IsLoading : EditClubProfileSteps()
     object ShowEditClub : EditClubProfileSteps()
     object ShowEditLocation : EditClubProfileSteps()
-    class Error(val error: DomainError) : EditClubProfileSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : EditClubProfileSteps()
 }

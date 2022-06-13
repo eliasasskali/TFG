@@ -13,6 +13,7 @@ import androidx.paging.cachedIn
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.clubs.ClubsRepository
 import com.eliasasskali.tfg.model.ClubLocation
+import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.android.gms.location.LocationServices
@@ -33,10 +34,6 @@ class ClubsViewModel(
     val addressText = mutableStateOf("")
     var isMapEditable = mutableStateOf(true)
     var timer: CountDownTimer? = null
-
-    fun setError(error: String) {
-        state.value = state.value.copy(error = error)
-    }
 
     fun setSearchString(searchString: String) {
         state.value = state.value.copy(searchString = searchString)
@@ -68,7 +65,7 @@ class ClubsViewModel(
         state.value = state.value.copy(filterLocation = filterLocation)
     }
 
-    fun getInitialLocation() : Location {
+    private fun getInitialLocation() : Location {
         val initialLocation = Location("")
         initialLocation.latitude = 51.506874
         initialLocation.longitude = -0.139800
@@ -76,14 +73,22 @@ class ClubsViewModel(
     }
 
     fun setUserLocation(context: Activity) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                location?.let {
-                    state.value = state.value.copy(userLocation = it)
+        try {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        state.value = state.value.copy(userLocation = it)
+                    }
                 }
-            }
-
+        } catch (e: Exception) {
+            setStep(
+                ClubListSteps.Error(
+                    error = errorHandler.convert(DomainError.ServiceError),
+                    onRetry = { setUserLocation(context) }
+                )
+            )
+        }
     }
 
     fun distanceToClub(clubLocation: ClubLocation, userLocation: Location) : Int {
@@ -98,7 +103,7 @@ class ClubsViewModel(
     }
 
     fun updateLocation(latitude: Double, longitude: Double){
-        if(latitude != location.value.latitude) {
+        if (latitude != location.value.latitude) {
             val location = Location("")
             location.latitude = latitude
             location.longitude = longitude
@@ -106,41 +111,61 @@ class ClubsViewModel(
         }
     }
 
-    fun setLocation(loc: Location) {
+    private fun setLocation(loc: Location) {
         location.value = loc
     }
 
     fun getAddressFromLocation(context: Context): String {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        var addresses: List<Address>? = null
-        val address: Address?
-        var addressText = ""
+        return try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            var addresses: List<Address>? = null
+            val address: Address?
+            var addressText = ""
 
-        try {
-            addresses = geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
-        }catch(ex: Exception){
-            ex.printStackTrace()
+            try {
+                addresses =
+                    geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+
+            address = addresses?.get(0)
+            if (address != null) {
+                addressText = "${address.locality ?: address.subAdminArea}, ${address.countryName}"
+            }
+
+
+            addressText
+        } catch (e: Exception) {
+            setStep(
+                ClubListSteps.Error(
+                    error = errorHandler.convert(DomainError.ServiceError),
+                    onRetry = { getAddressFromLocation(context) }
+                )
+            )
+            ""
         }
-
-        address = addresses?.get(0)
-        if (address != null) {
-            addressText = "${address.locality ?: address.subAdminArea}, ${address.countryName}"
-        }
-
-
-        return addressText
     }
 
-    fun onTextChanged(context: Context, text: String){
-        if(text == "")
-            return
-        timer?.cancel()
-        timer = object : CountDownTimer(1000, 1500) {
-            override fun onTick(millisUntilFinished: Long) { }
-            override fun onFinish() {
-                location.value = getLocationFromAddress(context, text)
-            }
-        }.start()
+    fun onTextChanged(context: Context, text: String) {
+        try {
+            if (text == "")
+                return
+            timer?.cancel()
+            timer = object : CountDownTimer(1000, 1500) {
+                override fun onTick(millisUntilFinished: Long) {}
+                override fun onFinish() {
+                    location.value = getLocationFromAddress(context, text)
+                }
+            }.start()
+        } catch (e: Exception) {
+            setStep(
+                ClubListSteps.Error(
+                    error = errorHandler.convert(DomainError.ServiceError),
+                    onRetry = { onTextChanged(context, text) }
+                )
+            )
+        }
     }
 
     fun getLocationFromAddress(context: Context, strAddress: String): Location {

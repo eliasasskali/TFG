@@ -8,11 +8,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Chat
@@ -35,7 +34,16 @@ fun ChatsScreen(
     onFindClubsClicked: () -> Unit = {}
 ) {
     when (viewModel.state.value.step) {
-        is ChatsSteps.Error -> {}
+        is ChatsSteps.Error -> {
+            val errorStep = viewModel.state.value.step as ChatsSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(ChatsSteps.ShowChats)
+                }
+            )
+        }
         is ChatsSteps.IsLoading -> Loading()
         is ChatsSteps.ShowChats -> ChatsView(
             viewModel,
@@ -80,8 +88,14 @@ fun ChatsView(
                 ).value
             ) {
                 is OnErrorChats -> {
-                    // TODO
-                    println("ERROR OBTAINING CHATS")
+                    viewModel.setStep(
+                        ChatsSteps.Error(
+                            error = stringResource(id = R.string.load_chats_error),
+                            onRetry = {
+                                // TODO
+                            }
+                        )
+                    )
                 }
                 is OnSuccessChats -> {
                     val chatSnapshot = chatsMutable.querySnapshot

@@ -1,7 +1,5 @@
 package com.eliasasskali.tfg.android.ui.features.chat
 
-import com.eliasasskali.tfg.model.DomainError
-
 data class ChatState(
     val chatId: String = "",
     val newMessage: String = "",
@@ -11,5 +9,5 @@ data class ChatState(
 sealed class ChatSteps {
     object IsLoading : ChatSteps()
     object ShowChat : ChatSteps()
-    class Error(val error: DomainError) : ChatSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : ChatSteps()
 }

@@ -25,7 +25,10 @@
     <string name="update_profile_error">Error updating profile</string>
     <string name="upload_images_error">Error uploading images</string>
     <string name="edit_post_error">Error editing Post.</string>
-    <string name="create_post_error">Error Creating Post.</string>
+    <string name="create_post_error">Error creating Post.</string>
+    <string name="load_profile_error">Error loading Profile.</string>
+    <string name="load_chats_error">Error loading Chats.</string>
+    <string name="load_messages_error">Error loading Messages.</string>
     <string name="try_again">Try Again</string>
     <string name="error_creating_review">Error creating Review</string>
 
@@ -146,6 +149,7 @@
     <string name="name">Name</string>
     <string name="cancel">Cancel</string>
     <string name="apply_changes">Apply changes</string>
+    <string name="retry">Retry</string>
     <string name="will_be_deleted">will be deleted</string>
     <string name="you">You</string>
 

@@ -7,6 +7,7 @@ import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
+import com.eliasasskali.tfg.model.DomainError
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import com.google.gson.Gson
@@ -25,9 +26,18 @@ class ClubProfileViewModel(
     }
 
     fun initClubProfile() {
-        val club = Gson().fromJson(preferences.getProfileJson(), Club::class.java)
-        state.value = state.value.copy(club = club)
-        setStep(ClubProfileSteps.ShowClubProfile)
+        try {
+            val club = Gson().fromJson(preferences.getProfileJson(), Club::class.java)
+            state.value = state.value.copy(club = club)
+            setStep(ClubProfileSteps.ShowClubProfile)
+        } catch (e: Exception) {
+            setStep(
+                ClubProfileSteps.Error(
+                    error = errorHandler.convert(DomainError.LoadProfileError),
+                    onRetry = { initClubProfile() }
+                )
+            )
+        }
     }
 
     fun logOut(onLoggedOut: () -> Unit) {

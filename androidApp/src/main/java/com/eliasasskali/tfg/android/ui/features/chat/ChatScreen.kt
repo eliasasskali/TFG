@@ -24,7 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eliasasskali.tfg.android.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
+import com.eliasasskali.tfg.android.ui.features.post.PostSteps
 import com.eliasasskali.tfg.model.ChatDto
 
 /**
@@ -40,7 +42,16 @@ fun ChatScreen(
     onBackClicked: () -> Unit
 ) {
     when (viewModel.state.value.step) {
-        is ChatSteps.Error -> {}
+        is ChatSteps.Error -> {
+            val errorStep = viewModel.state.value.step as ChatSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(ChatSteps.ShowChat)
+                }
+            )
+        }
         is ChatSteps.IsLoading -> Loading()
         is ChatSteps.ShowChat ->
             ChatView(
@@ -59,13 +70,21 @@ fun ChatView(
     val newMessage = viewModel.state.value.newMessage
     val focusManager = LocalFocusManager.current
 
-    when (val chatMutable = viewModel.getChatMutable()
+    when (
+        val chatMutable = viewModel.getChatMutable()
         .collectAsState(
             initial = null
-        ).value) {
-
+        ).value
+    ) {
         is OnErrorChat -> {
-            // TODO
+            viewModel.setStep(
+                ChatSteps.Error(
+                    error = stringResource(id = R.string.load_messages_error),
+                    onRetry = {
+                        // TODO
+                    }
+                )
+            )
         }
         is OnSuccessChat -> {
             val chatSnapshot = chatMutable.querySnapshot

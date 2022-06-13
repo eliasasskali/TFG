@@ -21,10 +21,12 @@ import androidx.paging.LoadState.*
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.eliasasskali.tfg.android.ui.components.ClubCard
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.components.SearchView
 import com.eliasasskali.tfg.android.ui.features.clubs.filterClubs.ClubsFilterView
 import com.eliasasskali.tfg.android.ui.features.clubs.filterClubs.FilterByLocationScreen
 import com.eliasasskali.tfg.android.ui.features.clubs.filterClubs.FilterBySportsView
+import com.eliasasskali.tfg.android.ui.features.post.PostSteps
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.DomainError
 
@@ -51,7 +53,16 @@ fun ClubsScreen(
     paddingValues: PaddingValues
 ) {
     when (viewModel.state.value.step) {
-        is ClubListSteps.Error -> {}
+        is ClubListSteps.Error -> {
+            val errorStep = viewModel.state.value.step as ClubListSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(ClubListSteps.ShowClubs)
+                }
+            )
+        }
         is ClubListSteps.IsLoading -> Loading()
         is ClubListSteps.ShowClubs -> ClubsView(viewModel, onClubClicked, paddingValues)
         is ClubListSteps.ShowFilterByLocation -> FilterByLocationScreen(
@@ -86,17 +97,27 @@ fun ClubsView(
         when {
             loadState.refresh is Loading -> viewModel.setIsLoading(true)
             loadState.refresh is NotLoading -> viewModel.setIsLoading(false)
-            loadState.refresh is Error -> viewModel.setError(
-                viewModel.errorHandler.convert(
-                    DomainError.LoadClubsError
+            loadState.refresh is Error -> {
+                val errorStep = viewModel.state.value.step as ClubListSteps.Error
+                ErrorDialog(
+                    errorMessage = errorStep.error,
+                    onRetryClick = errorStep.onRetry,
+                    onCancelClick = {
+                        viewModel.setStep(ClubListSteps.ShowClubs)
+                    }
                 )
-            )
+            }
             loadState.append is Loading -> {}
-            loadState.append is Error -> viewModel.setError(
-                viewModel.errorHandler.convert(
-                    DomainError.LoadClubsError
+            loadState.append is Error -> {
+                val errorStep = viewModel.state.value.step as ClubListSteps.Error
+                ErrorDialog(
+                    errorMessage = errorStep.error,
+                    onRetryClick = errorStep.onRetry,
+                    onCancelClick = {
+                        viewModel.setStep(ClubListSteps.ShowClubs)
+                    }
                 )
-            )
+            }
         }
     }
     Surface(
@@ -144,12 +165,5 @@ fun ClubsView(
                 }
             }
         }
-    }
-
-    error?.let {
-        Text(
-            text = it.toString(), // TODO
-            modifier = Modifier.padding(16.dp)
-        )
     }
 }

@@ -25,5 +25,5 @@ sealed class ClubListSteps {
     object ShowClubs : ClubListSteps()
     object ShowFilterBySports : ClubListSteps()
     object ShowFilterByLocation : ClubListSteps()
-    class Error(val error: DomainError) : ClubListSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : ClubListSteps()
 }

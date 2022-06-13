@@ -50,8 +50,8 @@ val appModule = module {
     viewModel { EditClubProfileViewModel(get(), get(), get(), get()) }
     viewModel { MapViewModel() }
     viewModel { SplashViewModel(get(), get(), get(), get(), get()) }
-    viewModel { ClubProfileViewModel(get(), get(), get(), get())}
-    viewModel { PostViewModel(get(), get(), get(), get()) }
+    viewModel { ClubProfileViewModel(get(), get(), get())}
+    viewModel { PostViewModel(get(), get(), get()) }
     viewModel { PostsViewModel(get(), get(), get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get()) }
     viewModel { ChatViewModel(get(), get(), get(), get()) }
