@@ -44,6 +44,7 @@ fun PostsScreen(
                 errorMessage = errorStep.error,
                 onRetryClick = errorStep.onRetry,
                 onCancelClick = {
+                    // TODO: Go to another screen
                     viewModel.setStep(PostsSteps.ShowPosts)
                 }
             )
