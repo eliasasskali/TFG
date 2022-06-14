@@ -27,7 +27,7 @@ sealed class HomeRoutesClub(val routeName: String) {
     object EditClubProfile: HomeRoutesClub("editClubProfile")
 
     companion object {
-        const val JSON_POST = "jsonPost"
+        const val POST_ID = "postId"
         const val CHAT_ID = "chatId"
     }
 }
@@ -44,7 +44,7 @@ sealed class HomeRoutesAthlete(val routeName: String) {
 
     companion object {
         const val CHAT_ID = "chatId"
-        const val JSON_POST = "jsonPost"
+        const val POST_ID = "postId"
         const val CLUB_ID = "clubId"
         const val DISTANCE_TO_CLUB = "distanceToClub"
     }

@@ -26,8 +26,6 @@ import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
 import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsScreen
 import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsViewModel
-import com.eliasasskali.tfg.model.Post
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
@@ -58,8 +56,7 @@ fun ClubNavigation(
                     viewModel = viewModel,
                     paddingValues = paddingValues,
                     onPostClicked = { post ->
-                        val jsonPost = Gson().toJson(post)
-                        navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/$jsonPost"))
+                        navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/${post.postId}"))
                     },
                     onCreatePostClicked = {
                         navController.navigate(HomeRoutesClub.Post.routeName) {
@@ -77,12 +74,13 @@ fun ClubNavigation(
             }
         }
 
-        composable(route = HomeRoutesClub.PostDetail.routeName.plus("/{${HomeRoutesClub.JSON_POST}}")) { entry ->
+        composable(route = HomeRoutesClub.PostDetail.routeName.plus("/{${HomeRoutesClub.POST_ID}}")) { entry ->
             val viewModel: PostDetailViewModel = get()
-            val jsonPost = entry.arguments?.getString(HomeRoutesClub.JSON_POST)
-            val post = Gson().fromJson(jsonPost, Post::class.java)
+            val postId = entry.arguments?.getString(HomeRoutesClub.POST_ID)
             LaunchedEffect(Unit) {
-                viewModel.initPostDetailScreen(post)
+                if (postId != null) {
+                    viewModel.initPostDetailScreen(postId)
+                }
             }
 
             PostDetailScreen(
@@ -199,8 +197,7 @@ fun ClubNavigation(
                             viewModel = postsViewModel,
                             paddingValues = PaddingValues(0.dp),
                             onPostClicked = { post ->
-                                val jsonPost = Gson().toJson(post)
-                                navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
+                                navController.navigate(HomeRoutesClub.PostDetail.routeName.plus("/${post.postId}"))
                             },
                             onCreatePostClicked = {
                                 navController.navigate(HomeRoutesClub.Post.routeName) {
