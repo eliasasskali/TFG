@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.authentication.AuthRepository
-import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
 import com.eliasasskali.tfg.ui.error.ErrorHandler
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class AthleteProfileViewModel(
     private val preferences: Preferences,
     private val authRepository: AuthRepository,
-    private val repository: ClubAthleteRepositoryImpl,
+    private val repository: ClubAthleteRepository,
     executor: Executor,
     errorHandler: ErrorHandler
 ) : RootViewModel(executor, errorHandler) {

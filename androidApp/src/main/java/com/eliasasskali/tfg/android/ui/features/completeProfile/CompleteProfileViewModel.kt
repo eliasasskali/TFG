@@ -11,7 +11,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.AthleteDto
@@ -29,7 +29,7 @@ import java.util.*
 private const val TAG = "RegisterViewModel"
 
 class CompleteProfileViewModel(
-    private val repository: ClubAthleteRepositoryImpl,
+    private val repository: ClubAthleteRepository,
     private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler,

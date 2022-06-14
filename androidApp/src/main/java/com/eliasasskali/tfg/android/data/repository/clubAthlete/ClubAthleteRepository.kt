@@ -25,4 +25,15 @@ interface ClubAthleteRepository {
         newAthleteName: String,
         newInterests: List<String>
     ) : Either<DomainError, Success>
+
+    suspend fun updateClub(
+        club: Club,
+        newName: String = "",
+        newContactEmail: String = "",
+        newContactPhone: String = "",
+        newDescription: String = "",
+        newServices: List<String> = emptyList(),
+        newLocation: ClubLocation = ClubLocation(),
+        newAddress: String = ""
+    ): Either<DomainError, Success>
 }
