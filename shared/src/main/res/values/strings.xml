@@ -140,6 +140,17 @@
     <string name="not_following_any_club">You are not following any club</string>
     <string name="find_clubs_to_follow">Find clubs to follow:</string>
 
+    <!-- Days of Week -->
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <string name="today">Today</string>
+
     <!-- Others -->
     <string name="unknown">Unknown</string>
     <string name="next">Next</string>

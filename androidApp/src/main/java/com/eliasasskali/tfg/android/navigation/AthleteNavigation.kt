@@ -166,7 +166,8 @@ fun AthleteNavigation(
                             viewModel.getOrCreateChatWithClub { chatId ->
                                 navController.navigate(HomeRoutesAthlete.ChatDetail.routeName.plus("/${chatId}"))
                             }
-                        }
+                        },
+                        clubDetailViewModel = viewModel
                     )
                     1 -> {
                         val postsViewModel: PostsViewModel = get()

@@ -15,6 +15,7 @@ import com.eliasasskali.tfg.android.ui.features.chat.ChatViewModel
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsScreen
 import com.eliasasskali.tfg.android.ui.features.chats.ChatsViewModel
 import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailScreen
+import com.eliasasskali.tfg.android.ui.features.clubDetail.ClubDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.clubProfile.ClubProfileViewModel
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileScreen
 import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileViewModel
@@ -158,6 +159,8 @@ fun ClubNavigation(
 
         composable(route = HomeRoutesClub.Profile.routeName) {
             val viewModel: ClubProfileViewModel = get()
+            val clubDetailViewModel: ClubDetailViewModel = get()
+
             LaunchedEffect(Unit) {
                 viewModel.initClubProfile()
             }
@@ -185,7 +188,8 @@ fun ClubNavigation(
                                 viewModel.logOut {
                                     goToLogin(context)
                                 }
-                            }
+                            },
+                            clubDetailViewModel = clubDetailViewModel
                         )
                     1 -> {
                         val postsViewModel: PostsViewModel = get()

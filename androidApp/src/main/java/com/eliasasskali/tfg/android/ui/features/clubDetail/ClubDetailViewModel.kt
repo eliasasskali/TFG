@@ -1,9 +1,12 @@
 package com.eliasasskali.tfg.android.ui.features.clubDetail
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepository
 import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
@@ -113,6 +116,19 @@ class ClubDetailViewModel(
                     onChatFoundOrCreated(it)
                 }
             )
+        }
+    }
+
+    fun convertIntToWeekdayString(weekDayInt: Int, context: Context) : String {
+        return when (weekDayInt) {
+            0 -> context.getString(R.string.monday)
+            1 -> context.getString(R.string.tuesday)
+            2 -> context.getString(R.string.wednesday)
+            3 -> context.getString(R.string.thursday)
+            4 -> context.getString(R.string.friday)
+            5 -> context.getString(R.string.saturday)
+            6 -> context.getString(R.string.sunday)
+            else -> context.getString(R.string.unknown)
         }
     }
 }
