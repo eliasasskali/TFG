@@ -1,9 +1,11 @@
 package com.eliasasskali.tfg.android.navigation
 
 import android.app.Activity
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,6 +24,8 @@ import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
+import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsScreen
+import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsViewModel
 import com.eliasasskali.tfg.model.Post
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -155,30 +159,76 @@ fun ClubNavigation(
         }
 
         composable(route = HomeRoutesClub.Profile.routeName) {
-            val scaffoldState = rememberScaffoldState()
-
-            NavDrawerScaffold(
-                scaffoldState = scaffoldState,
-                scope = rememberCoroutineScope(),
-                navController = navController
-            ) { paddingValues ->
-                val viewModel: ClubProfileViewModel = get()
+            val viewModel: ClubProfileViewModel = get()
+            LaunchedEffect(Unit) {
                 viewModel.initClubProfile()
+            }
 
-                ClubDetailScreen(
-                    club = viewModel.state.value.club,
-                    isClubOwner = true,
-                    onBackClicked = { navController.popBackStack() },
-                    onEditButtonClick = {
-                        navController.navigate(HomeRoutesClub.EditClubProfile.routeName)
-                    },
-                    paddingValues = paddingValues,
-                    onLogOutButtonClick = {
-                        viewModel.logOut {
-                            goToLogin(context)
-                        }
+            var tabIndex by remember { mutableStateOf(0) }
+            val tabTitles = listOf("Club Detail", "Posts", "Reviews")
+            Column {
+                TabRow(selectedTabIndex = tabIndex) {
+                    tabTitles.forEachIndexed { index, title ->
+                        Tab(selected = tabIndex == index,
+                            onClick = { tabIndex = index },
+                            text = { Text(text = title) })
                     }
-                )
+                }
+                when (tabIndex) {
+                    0 ->
+                        ClubDetailScreen(
+                            club = viewModel.state.value.club,
+                            isClubOwner = true,
+                            onBackClicked = { navController.popBackStack() },
+                            onEditButtonClick = {
+                                navController.navigate(HomeRoutesClub.EditClubProfile.routeName)
+                            },
+                            onLogOutButtonClick = {
+                                viewModel.logOut {
+                                    goToLogin(context)
+                                }
+                            }
+                        )
+                    1 -> {
+                        val postsViewModel: PostsViewModel = get()
+
+                        LaunchedEffect(Unit) {
+                            postsViewModel.initPostsScreen(listOf(viewModel.state.value.club.id))
+                        }
+                        PostsScreen(
+                            viewModel = postsViewModel,
+                            paddingValues = PaddingValues(0.dp),
+                            onPostClicked = { post ->
+                                val jsonPost = Gson().toJson(post)
+                                navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
+                            },
+                            onCreatePostClicked = {
+                                navController.navigate(HomeRoutesClub.Post.routeName) {
+                                    navController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(screen_route) {
+                                            saveState = true
+                                        }
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            onFindClubsClicked = {}
+                        )
+                    }
+                    2 -> {
+                        val reviewsViewModel: ReviewsViewModel = get()
+
+                        LaunchedEffect(Unit) {
+                            reviewsViewModel.initReviewsScreen(viewModel.state.value.club.id)
+                        }
+
+                        ReviewsScreen(
+                            viewModel = reviewsViewModel,
+                            paddingValues = PaddingValues(0.dp)
+                        )
+                    }
+                }
             }
         }
 
