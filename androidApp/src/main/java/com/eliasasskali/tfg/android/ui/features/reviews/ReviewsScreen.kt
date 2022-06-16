@@ -22,7 +22,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.eliasasskali.tfg.R
+import com.eliasasskali.tfg.android.ui.components.ErrorDialog
 import com.eliasasskali.tfg.android.ui.features.clubs.Loading
+import com.eliasasskali.tfg.android.ui.features.posts.PostsSteps
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Review
 
@@ -30,9 +32,20 @@ import com.eliasasskali.tfg.model.Review
 fun ReviewsScreen(
     viewModel: ReviewsViewModel,
     paddingValues: PaddingValues,
+    onCancelErrorClicked: () -> Unit = {}
 ) {
     when (viewModel.state.value.step) {
-        is ReviewsSteps.Error -> {}
+        is ReviewsSteps.Error -> {
+            val errorStep = viewModel.state.value.step as ReviewsSteps.Error
+            ErrorDialog(
+                errorMessage = errorStep.error,
+                onRetryClick = errorStep.onRetry,
+                onCancelClick = {
+                    viewModel.setStep(ReviewsSteps.ShowReviews)
+                    onCancelErrorClicked()
+                }
+            )
+        }
         is ReviewsSteps.IsLoading -> Loading()
         is ReviewsSteps.ShowReviews ->
             ReviewsView(

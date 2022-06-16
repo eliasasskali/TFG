@@ -57,7 +57,12 @@ class ReviewsViewModel(
                 repository.postReview(review)
             }.fold(
                 error = {
-                    // TODO: handle error
+                    setStep(
+                        ReviewsSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { postReview() }
+                        )
+                    )
                 },
                 success = {
                     state.value = state.value.copy(newComment = "", newRating = 0)

@@ -214,7 +214,18 @@ fun ClubNavigation(
                                     restoreState = true
                                 }
                             },
-                            onFindClubsClicked = {}
+                            onFindClubsClicked = {},
+                            onCancelErrorClicked = {
+                                navController.navigate(HomeRoutesClub.Home.routeName) {
+                                    navController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(screen_route) {
+                                            saveState = true
+                                        }
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                         )
                     }
                     2 -> {

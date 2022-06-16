@@ -1,6 +1,7 @@
 package com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfileClub
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eliasasskali.tfg.android.R
@@ -133,13 +135,14 @@ fun ClubDescriptionField(viewModel: CompleteProfileViewModel) {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SchedulePicker(viewModel: CompleteProfileViewModel) {
     val schedule = viewModel.state.value.schedule
 
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth(),
         elevation = 2.dp,
         shape = RoundedCornerShape(corner = CornerSize(16.dp))
@@ -180,7 +183,7 @@ fun SchedulePicker(viewModel: CompleteProfileViewModel) {
                             maxLines = 1,
                             modifier = Modifier
                                 .width(120.dp)
-                                .align(CenterVertically)
+                                .align(CenterVertically),
                         )
                     }
                 }

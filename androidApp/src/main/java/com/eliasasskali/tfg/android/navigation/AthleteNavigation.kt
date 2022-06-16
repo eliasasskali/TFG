@@ -192,6 +192,17 @@ fun AthleteNavigation(
                                     launchSingleTop = true
                                     restoreState = true
                                 }
+                            },
+                            onCancelErrorClicked = {
+                                navController.navigate(HomeRoutesAthlete.Home.routeName) {
+                                    navController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(screen_route) {
+                                            saveState = true
+                                        }
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         )
                     }

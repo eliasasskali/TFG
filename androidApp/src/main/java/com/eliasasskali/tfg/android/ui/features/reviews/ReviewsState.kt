@@ -12,5 +12,5 @@ data class ReviewsState(
 sealed class ReviewsSteps {
     object IsLoading : ReviewsSteps()
     object ShowReviews : ReviewsSteps()
-    class Error(val error: DomainError) : ReviewsSteps()
+    class Error(val error: String, val onRetry: () -> Unit) : ReviewsSteps()
 }

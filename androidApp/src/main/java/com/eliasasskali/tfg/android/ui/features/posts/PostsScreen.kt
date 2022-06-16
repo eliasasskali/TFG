@@ -35,7 +35,8 @@ fun PostsScreen(
     onPostClicked: (Post) -> Unit = {},
     paddingValues: PaddingValues,
     onCreatePostClicked: () -> Unit,
-    onFindClubsClicked: () -> Unit
+    onFindClubsClicked: () -> Unit,
+    onCancelErrorClicked: () -> Unit = {}
 ) {
     when (viewModel.state.value.step) {
         is PostsSteps.Error -> {
@@ -44,8 +45,8 @@ fun PostsScreen(
                 errorMessage = errorStep.error,
                 onRetryClick = errorStep.onRetry,
                 onCancelClick = {
-                    // TODO: Go to another screen
                     viewModel.setStep(PostsSteps.ShowPosts)
+                    onCancelErrorClicked()
                 }
             )
         }
@@ -70,70 +71,19 @@ fun PostsView(
     onFindClubsClicked: () -> Unit
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
-    var isAppending by remember { mutableStateOf(false) }
 
     posts.apply {
         when {
             loadState.refresh is LoadState.Loading -> {
-                isAppending = false
                 Loading()
             }
-            loadState.refresh is LoadState.NotLoading -> {
-                isAppending = false
-                PostsList(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues,
-                    posts = posts,
-                    onCreatePostClicked = onCreatePostClicked,
-                    onFindClubsClicked = onFindClubsClicked,
-                    onPostClicked = onPostClicked,
-                    isAppending = isAppending
-                )
-            }
-            loadState.refresh is LoadState.Error -> {
-                isAppending = false
-                viewModel.setStep(
-                    PostsSteps.Error(
-                        error = stringResource(id = R.string.get_posts_error),
-                        onRetry = { viewModel.initPostsScreen(viewModel.state.value.clubIds) }
-                    )
-                )
-            }
-            loadState.append is LoadState.Loading -> {
-                isAppending = true
-                PostsList(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues,
-                    posts = posts,
-                    onCreatePostClicked = onCreatePostClicked,
-                    onFindClubsClicked = onFindClubsClicked,
-                    onPostClicked = onPostClicked,
-                    isAppending = isAppending
-                )
-            }
-            loadState.append is LoadState.Error -> {
-                isAppending = false
-                viewModel.setStep(
-                    PostsSteps.Error(
-                        error = stringResource(id = R.string.get_posts_error),
-                        onRetry = { viewModel.initPostsScreen(viewModel.state.value.clubIds) }
-                    )
-                )
-            }
+            loadState.refresh is LoadState.NotLoading -> {}
+            loadState.refresh is LoadState.Error -> {}
+            loadState.append is LoadState.Loading -> {}
+            loadState.append is LoadState.Error -> {}
         }
     }
-}
 
-@Composable
-fun PostsList(
-    viewModel: PostsViewModel,
-    paddingValues: PaddingValues,
-    posts: LazyPagingItems<Post>,
-    onPostClicked: (Post) -> Unit = {},
-    onCreatePostClicked: () -> Unit,
-    onFindClubsClicked: () -> Unit,
-    isAppending: Boolean
-) {
     Surface(
         Modifier
             .padding(paddingValues)
@@ -212,13 +162,22 @@ fun PostsList(
                         }
                     }
                 }
-                if (isAppending) {
-                    Spacer(Modifier.height(12.dp))
-                    CircularProgressIndicator(Modifier.align(CenterHorizontally))
-                }
             }
         }
     }
+}
+
+@Composable
+fun PostsList(
+    viewModel: PostsViewModel,
+    paddingValues: PaddingValues,
+    posts: LazyPagingItems<Post>,
+    onPostClicked: (Post) -> Unit = {},
+    onCreatePostClicked: () -> Unit,
+    onFindClubsClicked: () -> Unit,
+    isAppending: Boolean
+) {
+
 }
 
 @Composable
