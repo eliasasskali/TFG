@@ -121,13 +121,13 @@ class ClubDetailViewModel(
 
     fun convertIntToWeekdayString(weekDayInt: Int, context: Context) : String {
         return when (weekDayInt) {
-            0 -> context.getString(R.string.monday)
-            1 -> context.getString(R.string.tuesday)
-            2 -> context.getString(R.string.wednesday)
-            3 -> context.getString(R.string.thursday)
-            4 -> context.getString(R.string.friday)
-            5 -> context.getString(R.string.saturday)
-            6 -> context.getString(R.string.sunday)
+            1 -> context.getString(R.string.monday)
+            2 -> context.getString(R.string.tuesday)
+            3 -> context.getString(R.string.wednesday)
+            4 -> context.getString(R.string.thursday)
+            5 -> context.getString(R.string.friday)
+            6 -> context.getString(R.string.saturday)
+            7 -> context.getString(R.string.sunday)
             else -> context.getString(R.string.unknown)
         }
     }

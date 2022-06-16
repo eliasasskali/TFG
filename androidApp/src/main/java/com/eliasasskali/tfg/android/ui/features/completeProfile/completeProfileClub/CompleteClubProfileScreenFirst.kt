@@ -3,14 +3,23 @@ package com.eliasasskali.tfg.android.ui.features.completeProfile.completeProfile
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eliasasskali.tfg.android.R
@@ -66,6 +75,7 @@ fun CompleteClubProfileScreenFirst(
                     ContactEmailField(viewModel)
                     ContactPhoneField(viewModel)
                     ClubDescriptionField(viewModel)
+                    SchedulePicker(viewModel)
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = onContinueButtonClick,
@@ -122,3 +132,68 @@ fun ClubDescriptionField(viewModel: CompleteProfileViewModel) {
         onValueChange = { viewModel.setDescription(it) },
     )
 }
+
+@Composable
+fun SchedulePicker(viewModel: CompleteProfileViewModel) {
+    val schedule = viewModel.state.value.schedule
+
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        elevation = 2.dp,
+        shape = RoundedCornerShape(corner = CornerSize(16.dp))
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+
+            for ((weekDayInt, scheduleString) in schedule) {
+                val scheduleVal = remember { mutableStateOf(scheduleString) }
+                val dayOfWeek = viewModel.convertIntToWeekdayString(
+                    weekDayInt = weekDayInt.toInt(),
+                    context = LocalContext.current
+                )
+                Row(Modifier.fillMaxWidth()) {
+                    Row(
+                        Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "$dayOfWeek:",
+                            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium),
+                            modifier = Modifier
+                                .align(CenterVertically)
+                        )
+
+                        Spacer(Modifier.weight(1f))
+
+                        OutlinedTextField(
+                            value = scheduleVal.value,
+                            onValueChange = { value ->
+                                scheduleVal.value = value
+                                viewModel.setSchedule(weekDayInt, value)
+                            },
+                            maxLines = 1,
+                            modifier = Modifier
+                                .width(120.dp)
+                                .align(CenterVertically)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun SchedulePickerPreview() {
+    val viewModel: CompleteProfileViewModel = getViewModel()
+    AppTheme() {
+        SchedulePicker(viewModel)
+    }
+}*/

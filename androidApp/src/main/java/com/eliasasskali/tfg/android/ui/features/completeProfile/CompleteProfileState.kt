@@ -16,7 +16,16 @@ data class CompleteProfileState(
     val address: String = "",
     val location: ClubLocation = ClubLocation(0.0, 0.0),
     val clubImages: List<Uri> = emptyList(),
-    val step: CompleteProfileSteps = CompleteProfileSteps.ShowCompleteProfile
+    val step: CompleteProfileSteps = CompleteProfileSteps.ShowCompleteProfile,
+    val schedule: MutableMap<String, String> = mutableMapOf(
+        "1" to "08:00-22:00",
+        "2" to "08:00-22:00",
+        "3" to "08:00-22:00",
+        "4" to "08:00-22:00",
+        "5" to "08:00-22:00",
+        "6" to "08:00-22:00",
+        "7" to "08:00-22:00",
+    )
 )
 
 sealed class CompleteProfileSteps {

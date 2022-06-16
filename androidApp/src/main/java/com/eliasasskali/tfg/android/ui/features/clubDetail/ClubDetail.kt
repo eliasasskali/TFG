@@ -1,5 +1,7 @@
 package com.eliasasskali.tfg.android.ui.features.clubDetail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -23,6 +25,8 @@ import com.eliasasskali.tfg.android.ui.components.*
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Club
 import org.koin.androidx.compose.getViewModel
+import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.*
 
 @Composable
@@ -240,6 +244,7 @@ fun FollowChatButtons(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClubScheduleCard(
@@ -269,19 +274,21 @@ fun ClubScheduleCard(
                         context = LocalContext.current
                     )
                     Row(Modifier.fillMaxWidth()) {
-                        DayScheduleCard(dayOfWeek, schedule, true)
+                        DayScheduleCard(dayOfWeek, schedule, false)
                     }
                 }
             } else {
-                val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+                val today = LocalDate.now().dayOfWeek.value
                 val schedule = club.schedule.getOrDefault(today.toString(), stringResource(id = R.string.unknown))
                 val dayOfWeek = viewModel.convertIntToWeekdayString(
                     weekDayInt = today,
                     context = LocalContext.current
                 )
+
                 DayScheduleCard(
                     "${stringResource(id = R.string.today)} ($dayOfWeek)",
-                    schedule
+                    schedule,
+                    true
                 )
             }
         }
@@ -292,7 +299,7 @@ fun ClubScheduleCard(
 fun DayScheduleCard(
     dayOfWeek: String,
     schedule: String,
-    addIcon: Boolean = false
+    addIcon: Boolean
 ) {
     Row(
         Modifier
@@ -325,14 +332,14 @@ fun DayScheduleCard(
 @Composable
 fun ClubScheduleCardPreview() {
     val schedule = mapOf(
-        "0" to "8:00-22:00",
         "1" to "8:00-22:00",
         "2" to "8:00-22:00",
         "3" to "8:00-22:00",
         "4" to "8:00-22:00",
         "5" to "9:00-20:00",
         "6" to "9:00-20:00",
-    )
+        "7" to "8:00-22:00",
+        )
     val club = Club(schedule = schedule)
     val viewModel: ClubDetailViewModel = getViewModel()
     AppTheme() {
