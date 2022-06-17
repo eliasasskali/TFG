@@ -148,7 +148,9 @@ fun ClubDetailScreen(
                         if (club.schedule.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(12.dp))
                             if (clubDetailViewModel != null) {
-                                ClubScheduleCard(clubDetailViewModel, club)
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    ClubScheduleCard(clubDetailViewModel, club)
+                                }
                             }
                         }
 
