@@ -1,11 +1,14 @@
 package com.eliasasskali.tfg.android.ui.features.clubDetail
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.data.repository.chats.ChatsRepository
-import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Athlete
 import com.eliasasskali.tfg.model.DomainError
@@ -16,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ClubDetailViewModel(
-    private val repository: ClubAthleteRepositoryImpl,
+    private val repository: ClubAthleteRepository,
     private val chatsRepository: ChatsRepository,
     private val executor: Executor,
     private val preferences: Preferences
@@ -113,6 +116,19 @@ class ClubDetailViewModel(
                     onChatFoundOrCreated(it)
                 }
             )
+        }
+    }
+
+    fun convertIntToWeekdayString(weekDayInt: Int, context: Context) : String {
+        return when (weekDayInt) {
+            1 -> context.getString(R.string.monday)
+            2 -> context.getString(R.string.tuesday)
+            3 -> context.getString(R.string.wednesday)
+            4 -> context.getString(R.string.thursday)
+            5 -> context.getString(R.string.friday)
+            6 -> context.getString(R.string.saturday)
+            7 -> context.getString(R.string.sunday)
+            else -> context.getString(R.string.unknown)
         }
     }
 }

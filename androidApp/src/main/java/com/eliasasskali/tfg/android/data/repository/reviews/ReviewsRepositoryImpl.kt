@@ -39,7 +39,7 @@ class ReviewsRepositoryImpl(
 
             clubsRef
                 .document(reviewDto.clubId)
-                .update("reviews", FieldValue.arrayUnion(reviewDto.rating))
+                .update("ratings", FieldValue.arrayUnion(reviewDto.rating))
                 .await()
 
             Either.Right(Success)

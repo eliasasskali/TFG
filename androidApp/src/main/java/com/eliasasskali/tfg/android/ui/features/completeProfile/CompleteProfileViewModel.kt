@@ -10,8 +10,9 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.AthleteDto
@@ -29,7 +30,7 @@ import java.util.*
 private const val TAG = "RegisterViewModel"
 
 class CompleteProfileViewModel(
-    private val repository: ClubAthleteRepositoryImpl,
+    private val repository: ClubAthleteRepository,
     private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler,
@@ -169,14 +170,15 @@ class CompleteProfileViewModel(
             if (state.value.isClub) {
                 uid?.let {
                     val club = Club(
-                        uid,
-                        state.value.name,
-                        state.value.contactEmail,
-                        state.value.contactPhone,
-                        state.value.description,
-                        state.value.address,
-                        state.value.location,
-                        state.value.services.toList()
+                        id = uid,
+                        name = state.value.name,
+                        contactEmail = state.value.contactEmail,
+                        contactPhone = state.value.contactPhone,
+                        description = state.value.description,
+                        address = state.value.address,
+                        location = state.value.location,
+                        services = state.value.services.toList(),
+                        schedule = state.value.schedule
                     )
 
                     db.collection("Clubs").document(uid).set(club.toModel()).addOnCompleteListener {
@@ -245,6 +247,28 @@ class CompleteProfileViewModel(
                     }
                 }
             )
+        }
+    }
+
+    fun setSchedule(day: String, schedule: String) {
+        var newSchedule = state.value.schedule
+        newSchedule[day] = schedule
+        state.value = state.value.copy(
+            schedule = newSchedule
+        )
+        println(state.value.schedule)
+    }
+
+    fun convertIntToWeekdayString(weekDayInt: Int, context: Context) : String {
+        return when (weekDayInt) {
+            1 -> context.getString(R.string.monday)
+            2 -> context.getString(R.string.tuesday)
+            3 -> context.getString(R.string.wednesday)
+            4 -> context.getString(R.string.thursday)
+            5 -> context.getString(R.string.friday)
+            6 -> context.getString(R.string.saturday)
+            7 -> context.getString(R.string.sunday)
+            else -> context.getString(R.string.unknown)
         }
     }
 }

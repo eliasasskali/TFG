@@ -1,25 +1,33 @@
 package com.eliasasskali.tfg.android.ui.features.clubDetail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eliasasskali.tfg.android.R
 import com.eliasasskali.tfg.android.ui.components.*
 import com.eliasasskali.tfg.android.ui.theme.AppTheme
 import com.eliasasskali.tfg.model.Club
-import com.eliasasskali.tfg.model.ClubDto
-import com.eliasasskali.tfg.model.ClubLocation
+import org.koin.androidx.compose.getViewModel
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.util.*
 
 @Composable
 fun ClubDetailScreen(
@@ -33,7 +41,8 @@ fun ClubDetailScreen(
     onUnfollowButtonClick: () -> Unit = {},
     onChatButtonClick: () -> Unit = {},
     onLogOutButtonClick: () -> Unit = {},
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    clubDetailViewModel: ClubDetailViewModel?
 ) {
     Scaffold(
         topBar = {
@@ -135,6 +144,16 @@ fun ClubDetailScreen(
                                 style = MaterialTheme.typography.body1
                             )
                         }
+
+                        if (club.schedule.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            if (clubDetailViewModel != null) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    ClubScheduleCard(clubDetailViewModel, club)
+                                }
+                            }
+                        }
+
                         Spacer(modifier = Modifier.height(12.dp))
                         ClubDetailContact(club)
                         Spacer(modifier = Modifier.height(12.dp))
@@ -227,8 +246,110 @@ fun FollowChatButtons(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ClubScheduleCard(
+    viewModel: ClubDetailViewModel,
+    club: Club
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        onClick = {
+            isExpanded = !isExpanded
+        },
+        elevation = 2.dp,
+        shape = RoundedCornerShape(corner = CornerSize(16.dp))
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+            if (isExpanded) {
+                for ((weekDayInt, schedule) in club.schedule) {
+                    val dayOfWeek = viewModel.convertIntToWeekdayString(
+                        weekDayInt = weekDayInt.toInt(),
+                        context = LocalContext.current
+                    )
+                    Row(Modifier.fillMaxWidth()) {
+                        DayScheduleCard(dayOfWeek, schedule, false)
+                    }
+                }
+            } else {
+                val today = LocalDate.now().dayOfWeek.value
+                val schedule = club.schedule.getOrDefault(today.toString(), stringResource(id = R.string.unknown))
+                val dayOfWeek = viewModel.convertIntToWeekdayString(
+                    weekDayInt = today,
+                    context = LocalContext.current
+                )
 
-@Preview(showBackground = true)
+                DayScheduleCard(
+                    "${stringResource(id = R.string.today)} ($dayOfWeek)",
+                    schedule,
+                    true
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DayScheduleCard(
+    dayOfWeek: String,
+    schedule: String,
+    addIcon: Boolean
+) {
+    Row(
+        Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
+        if (addIcon) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_time),
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+        
+        Text(
+            text = "$dayOfWeek:",
+            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Medium),
+        )
+        Spacer(Modifier.weight(1f))
+
+        Text(
+            text = schedule,
+            style = MaterialTheme.typography.body1,
+        )
+    }
+}
+
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun ClubScheduleCardPreview() {
+    val schedule = mapOf(
+        "1" to "8:00-22:00",
+        "2" to "8:00-22:00",
+        "3" to "8:00-22:00",
+        "4" to "8:00-22:00",
+        "5" to "9:00-20:00",
+        "6" to "9:00-20:00",
+        "7" to "8:00-22:00",
+        )
+    val club = Club(schedule = schedule)
+    val viewModel: ClubDetailViewModel = getViewModel()
+    AppTheme() {
+        ClubScheduleCard(club = club, viewModel = viewModel)
+    }
+}
+
+/*@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ClubDetailScreenPreview() {
     val club = ClubDto(
@@ -255,4 +376,4 @@ fun ClubDetailScreenPreview() {
     AppTheme {
         //ClubDetailScreen(clubDetailState, , {})
     }
-}
+}*/

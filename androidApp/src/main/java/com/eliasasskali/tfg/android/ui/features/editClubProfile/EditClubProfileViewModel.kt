@@ -16,7 +16,7 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
-import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepositoryImpl
+import com.eliasasskali.tfg.android.data.repository.clubAthlete.ClubAthleteRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
 import com.eliasasskali.tfg.model.Club
 import com.eliasasskali.tfg.model.ClubLocation
@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 class EditClubProfileViewModel(
-    private val repository: ClubAthleteRepositoryImpl,
+    private val repository: ClubAthleteRepository,
     private val preferences: Preferences,
     executor: Executor,
     errorHandler: ErrorHandler

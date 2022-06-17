@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.eliasasskali.tfg.android.core.ui.RootViewModel
 import com.eliasasskali.tfg.android.data.repository.posts.PostsRepository
 import com.eliasasskali.tfg.data.preferences.Preferences
-import com.eliasasskali.tfg.model.Post
 import com.eliasasskali.tfg.ui.error.ErrorHandler
 import com.eliasasskali.tfg.ui.executor.Executor
 import kotlinx.coroutines.launch
@@ -20,17 +19,33 @@ class PostDetailViewModel(
 
     val state: MutableState<PostDetailState> = mutableStateOf(PostDetailState())
 
-    fun initPostDetailScreen(post: Post) {
+    fun initPostDetailScreen(postId: String) {
         setStep(PostDetailSteps.IsLoading)
-
-        val isPostOwner = (post.clubId == preferences.getLoggedUid())
-        state.value = state.value.copy(
-            post = post,
-            isPostOwner = isPostOwner,
-            step = PostDetailSteps.ShowPostDetail,
-            newPostTitle = post.title,
-            newPostContent = post.content
-        )
+        viewModelScope.launch {
+            execute {
+                repository.getPost(postId)
+            }.fold(
+                error = {
+                    setStep(
+                        PostDetailSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { initPostDetailScreen(postId) }
+                        )
+                    )
+                },
+                success = { post ->
+                    val isPostOwner = (post.clubId == preferences.getLoggedUid())
+                    state.value = state.value.copy(
+                        post = post,
+                        isPostOwner = isPostOwner,
+                        step = PostDetailSteps.ShowPostDetail,
+                        newPostTitle = post.title,
+                        newPostContent = post.content
+                    )
+                    setStep(PostDetailSteps.ShowPostDetail)
+                }
+            )
+        }
     }
 
     fun setStep(step: PostDetailSteps) {
@@ -77,7 +92,7 @@ class PostDetailViewModel(
                                 )
                             },
                             success = { post ->
-                                initPostDetailScreen(post = post)
+                                initPostDetailScreen(postId = post.postId)
                             }
                         )
                     }

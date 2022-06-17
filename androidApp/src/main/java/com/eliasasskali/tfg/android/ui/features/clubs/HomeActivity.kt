@@ -52,12 +52,6 @@ class HomeActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(this@HomeActivity,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
             }
-        } else {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location : Location? ->
-                    Toast.makeText(this, "${location?.latitude}, ${location?.longitude}", Toast.LENGTH_SHORT).show()
-                }
         }
     }
 

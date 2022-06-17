@@ -22,15 +22,12 @@ import com.eliasasskali.tfg.android.ui.features.clubs.ClubsScreen
 import com.eliasasskali.tfg.android.ui.features.clubs.ClubsViewModel
 import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileScreen
 import com.eliasasskali.tfg.android.ui.features.editAthleteProfile.EditAthleteProfileViewModel
-import com.eliasasskali.tfg.android.ui.features.editClubProfile.EditClubProfileScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailScreen
 import com.eliasasskali.tfg.android.ui.features.postDetail.PostDetailViewModel
 import com.eliasasskali.tfg.android.ui.features.posts.PostsScreen
 import com.eliasasskali.tfg.android.ui.features.posts.PostsViewModel
 import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsScreen
 import com.eliasasskali.tfg.android.ui.features.reviews.ReviewsViewModel
-import com.eliasasskali.tfg.model.Post
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
@@ -61,8 +58,7 @@ fun AthleteNavigation(
                     viewModel = viewModel,
                     paddingValues = paddingValues,
                     onPostClicked = { post ->
-                        val jsonPost = Gson().toJson(post)
-                        navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
+                        navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/${post.postId}"))
                     },
                     onCreatePostClicked = {},
                     onFindClubsClicked = {
@@ -80,12 +76,13 @@ fun AthleteNavigation(
             }
         }
 
-        composable(route = HomeRoutesAthlete.PostDetail.routeName.plus("/{${HomeRoutesAthlete.JSON_POST}}")) { entry ->
+        composable(route = HomeRoutesAthlete.PostDetail.routeName.plus("/{${HomeRoutesAthlete.POST_ID}}")) { entry ->
             val viewModel: PostDetailViewModel = get()
-            val jsonPost = entry.arguments?.getString(HomeRoutesAthlete.JSON_POST)
-            val post = Gson().fromJson(jsonPost, Post::class.java)
+            val postId = entry.arguments?.getString(HomeRoutesAthlete.POST_ID)
             LaunchedEffect(Unit) {
-                viewModel.initPostDetailScreen(post)
+                if (postId != null) {
+                    viewModel.initPostDetailScreen(postId)
+                }
             }
 
             PostDetailScreen(
@@ -169,7 +166,8 @@ fun AthleteNavigation(
                             viewModel.getOrCreateChatWithClub { chatId ->
                                 navController.navigate(HomeRoutesAthlete.ChatDetail.routeName.plus("/${chatId}"))
                             }
-                        }
+                        },
+                        clubDetailViewModel = viewModel
                     )
                     1 -> {
                         val postsViewModel: PostsViewModel = get()
@@ -181,12 +179,22 @@ fun AthleteNavigation(
                             viewModel = postsViewModel,
                             paddingValues = PaddingValues(0.dp),
                             onPostClicked = { post ->
-                                val jsonPost = Gson().toJson(post)
-                                navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/$jsonPost"))
+                                navController.navigate(HomeRoutesAthlete.PostDetail.routeName.plus("/${post.postId}"))
                             },
                             onCreatePostClicked = {},
                             onFindClubsClicked = {
                                 navController.navigate(HomeRoutesAthlete.Clubs.routeName) {
+                                    navController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(screen_route) {
+                                            saveState = true
+                                        }
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            onCancelErrorClicked = {
+                                navController.navigate(HomeRoutesAthlete.Home.routeName) {
                                     navController.graph.startDestinationRoute?.let { screen_route ->
                                         popUpTo(screen_route) {
                                             saveState = true

@@ -46,7 +46,12 @@ class ClubProfileViewModel(
                 authRepository.logOut()
             }.fold(
                 error = {
-                    // TODO: Handle error
+                    setStep(
+                        ClubProfileSteps.Error(
+                            error = errorHandler.convert(it),
+                            onRetry = { logOut(onLoggedOut) }
+                        )
+                    )
                 },
                 success = {
                     onLoggedOut()

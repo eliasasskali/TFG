@@ -39,7 +39,7 @@ class ClubAthleteRepositoryImpl(
                     .toObject(ClubDto::class.java)
                     ?.toModel(clubId)
             )
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: Exception) {
             Either.Left(DomainError.ServiceError)
         }
     }
@@ -54,7 +54,7 @@ class ClubAthleteRepositoryImpl(
                     .toObject(AthleteDto::class.java)
                     ?.toModel()
             )
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: Exception) {
             Either.Left(DomainError.ServiceError)
         }
     }
@@ -222,6 +222,69 @@ class ClubAthleteRepositoryImpl(
                     .await()
             }
 
+            Either.Right(Success)
+        } catch (e: Exception) {
+            Either.Left(DomainError.UpdateProfileError)
+        }
+    }
+
+    override suspend fun updateClub(
+        club: Club,
+        newName: String,
+        newContactEmail: String,
+        newContactPhone: String,
+        newDescription: String,
+        newServices: List<String>,
+        newLocation: ClubLocation,
+        newAddress: String
+    ) : Either<DomainError, Success> {
+        return try {
+            val clubReference = FirebaseFirestore
+                .getInstance()
+                .collection("Clubs")
+                .document(club.id)
+
+            if (club.name != newName && newName.isNotBlank()) {
+                val keywords = generateKeywords(newName)
+                clubReference
+                    .update(
+                        "name", newName,
+                        "keywords", keywords
+                    )
+                    .await()
+            }
+            if (club.contactEmail != newContactEmail && newContactEmail.isNotBlank()) {
+                clubReference
+                    .update("contactEmail", newContactEmail)
+                    .await()
+            }
+            if (club.contactPhone != newContactPhone && newContactPhone.isNotBlank()) {
+                clubReference
+                    .update("contactPhone", newContactPhone)
+                    .await()
+            }
+            if (club.description != newDescription && newDescription.isNotBlank()) {
+                clubReference
+                    .update("description", newDescription)
+                    .await()
+            }
+            if (club.services != newServices && newServices.isNotEmpty()) {
+                clubReference
+                    .update("services", newServices)
+                    .await()
+            }
+            if (
+                club.location != newLocation
+                && newLocation.latitude != 0.0
+                && newLocation.longitude != 0.0
+            ) {
+                clubReference
+                    .update(
+                        "address", newAddress,
+                        "location", newLocation
+                    )
+                    .await()
+            }
             Either.Right(Success)
         } catch (e: Exception) {
             Either.Left(DomainError.UpdateProfileError)
